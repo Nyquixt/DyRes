@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# From the repo
+.vscode/
+trained_nets/
+plots/
+data/
