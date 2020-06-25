@@ -5,7 +5,7 @@ Results on the CIFAR10 Dataset
 | Models        | Accuracy      |
 | ------------- |---------------|
 | ResNet_AC20   | 93.55%        |
-| ResNet_AC56   | -----         |
+| ResNet_AC56   | 94.04%        |
 | ResNet_AC110  | -----         |
 | ResNet_AC164  | -----         |
 
