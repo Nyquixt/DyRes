@@ -11,11 +11,11 @@ from datetime import timedelta
 
 from models import *
 from config import *
-from utils import calculate_acc, get_network, get_dataloader, init_params
+from utils import calculate_acc, get_network, get_dataloader, init_params, count_parameters
 
 parser = argparse.ArgumentParser(description='Training CNN models on CIFAR')
 
-parser.add_argument('--network', '-n', choices=['resnet_ac18', 'resnet_ac34', 'resnet_ac50', 'resnet_ac101', 'resnet_ac152'], required=True)
+parser.add_argument('--network', '-n', choices=['resnet_ac20', 'resnet_ac56', 'resnet_ac110', 'resnet_ac164'], required=True)
 parser.add_argument('--epoch', '-e', type=int, default=200, help='Number of epochs')
 parser.add_argument('--batch', '-b', type=int, default=256, help='The batch size')
 parser.add_argument('--lr', '-l', type=float, default=0.1, help='Learning rate')
@@ -45,6 +45,8 @@ val_accuracy = []
 # Define model
 net = get_network(args.network, device, args.nclass)
 init_params(net)
+
+print('Training {} with {} parameters...'.format(args.network, count_parameters(net)))
 
 net.train()
 

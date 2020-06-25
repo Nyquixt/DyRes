@@ -45,21 +45,18 @@ def calculate_acc(dataloader, net, device):
 
 def get_network(network, device, num_classes=10):
 
-    if network == 'resnet_ac18':
-        from models.resnet_ac import ResNet_AC18
-        net = ResNet_AC18(num_classes)
-    elif network == 'resnet_ac34':
-        from models.resnet_ac import ResNet_AC34
-        net = ResNet_AC34(num_classes)
-    elif network == 'resnet_ac50':
-        from models.resnet_ac import ResNet_AC50
-        net = ResNet_AC50(num_classes)
-    elif network == 'resnet_ac101':
-        from models.resnet_ac import ResNet_AC101
-        net = ResNet_AC101(num_classes)
-    elif network == 'resnet_ac152':
-        from models.resnet_ac import ResNet_AC152
-        net = ResNet_AC152(num_classes)
+    if network == 'resnet_ac20':
+        from models.resnet_ac import ResNet_AC20
+        net = ResNet_AC20(num_classes)
+    elif network == 'resnet_ac56':
+        from models.resnet_ac import ResNet_AC56
+        net = ResNet_AC56(num_classes)
+    elif network == 'resnet_ac110':
+        from models.resnet_ac import ResNet_AC110
+        net = ResNet_AC110(num_classes)
+    elif network == 'resnet_ac164':
+        from models.resnet_ac import ResNet_AC164
+        net = ResNet_AC164(num_classes)
     else:
         print('the network is not supported')
         sys.exit()

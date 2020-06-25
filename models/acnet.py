@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-__all__ = ['AC_Conv2dBN', 'AC_Conv2dBNReLU']
+__all__ = ['AC_Conv2dBN']
 
 class CropLayer(nn.Module):
 
@@ -85,22 +85,11 @@ def AC_Conv2dBN(in_channels, out_channels, kernel_size, stride=1, padding=0, dil
     return ACBlock(in_channels, out_channels, kernel_size=kernel_size, stride=stride,
         padding=padding, dilation=dilation, groups=groups, padding_mode=padding_mode, deploy=False)
 
-def AC_Conv2dBNReLU(in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, padding_mode='zeros'):
-    return nn.Sequential(
-        ACBlock(in_channels, out_channels, kernel_size=kernel_size, stride=stride,
-            padding=padding, dilation=dilation, groups=groups, padding_mode=padding_mode, deploy=False),
-        nn.ReLU(inplace=True)
-    )
-
 def test():
     x = torch.randn(32, 64, 32, 32)
-    net1 = AC_Conv2dBN(x.size(1), 128, 3, padding=1)
-    net2 = AC_Conv2dBNReLU(x.size(1), 128, 3, padding=1)
+    net = AC_Conv2dBN(x.size(1), 128, 3, padding=1)
 
-    y1 = net1(x)
-    print('y1 shape: {}'.format(y1.size()))
-
-    y2 = net2(x)
-    print('y2 shape: {}'.format(y2.size()))
+    y = net(x)
+    print('y shape: {}'.format(y.size()))
 
 # test()
