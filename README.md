@@ -5,7 +5,7 @@ Results on the CIFAR10 Dataset
 | Models        | Basic         | ACNet         |
 |---------------|---------------|---------------|
 | ResNet18      | 94.12%        | 94.00%        |
-| ResNet34      | -----         | -----         |
+| ResNet34      | 94.25%        | 93.81%        |
 | ResNet50      | -----         | -----         |
 | ResNet101     | -----         | -----         |
 | ResNet152     | -----         | -----         |
