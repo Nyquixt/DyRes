@@ -2,21 +2,23 @@
 
 Results on the CIFAR10 Dataset
 
-| Models        | Accuracy      |
-| ------------- |---------------|
-| ResNet_AC20   | 93.55%        |
-| ResNet_AC56   | 94.04%        |
-| ResNet_AC110  | -----         |
-| ResNet_AC164  | -----         |
+| Models        | Basic         | ACNet         |
+|---------------|---------------|---------------|
+| ResNet18      | 94.12%        | 94.00%        |
+| ResNet34      | -----         | -----         |
+| ResNet50      | -----         | -----         |
+| ResNet101     | -----         | -----         |
+| ResNet152     | -----         | -----         |
 
 Results on the CIFAR100 Dataset
 
-| Models        | Accuracy      |
-| ------------- |---------------|
-| ResNet_AC20   | -----         |
-| ResNet_AC56   | -----         |
-| ResNet_AC110  | -----         |
-| ResNet_AC164  | -----         |
+| Models        | Basic         | ACNet         |
+|---------------|---------------|---------------|
+| ResNet18      | -----         | -----         |
+| ResNet34      | -----         | -----         |
+| ResNet50      | -----         | -----         |
+| ResNet101     | -----         | -----         |
+| ResNet152     | -----         | -----         |
 
 ### How To Set Up Python and Pip
 

@@ -14,12 +14,6 @@ class CropLayer(nn.Module):
         assert self.cols_to_crop >= 0
 
     def forward(self, x):
-        print("x in crop layer size: {}".format(x.size()))
-        if self.rows_to_crop == 0:
-            return x[:, :, :, self.cols_to_crop:-self.cols_to_crop]
-        if self.cols_to_crop == 0:
-            return x[:, :, self.rows_to_crop: -self.rows_to_crop, :]
-
         return x[:, :, self.rows_to_crop:-self.rows_to_crop, self.cols_to_crop: -self.cols_to_crop]
 
 class ACBlock(nn.Module):

@@ -133,3 +133,4 @@ dmypy.json
 trained_nets/
 plots/
 data/
+logs/

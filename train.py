@@ -11,24 +11,35 @@ from datetime import timedelta
 
 from models import *
 from config import *
-from utils import calculate_acc, get_network, get_dataloader, init_params, count_parameters
+from utils import calculate_acc, get_network, get_dataloader, init_params, count_parameters, save_plot
 
 parser = argparse.ArgumentParser(description='Training CNN models on CIFAR')
 
-parser.add_argument('--network', '-n', choices=['resnet_ac20', 'resnet_ac56', 'resnet_ac110', 'resnet_ac164'], required=True)
-parser.add_argument('--epoch', '-e', type=int, default=200, help='Number of epochs')
+parser.add_argument('--network', '-n', required=True)
+parser.add_argument('--epoch', '-e', type=int, default=120, help='Number of epochs')
 parser.add_argument('--batch', '-b', type=int, default=256, help='The batch size')
 parser.add_argument('--lr', '-l', type=float, default=0.1, help='Learning rate')
 parser.add_argument('--momentum', '-m', type=float, default=0.9, help='Momentum for SGD')
-parser.add_argument('--update', '-u', type=int, default=50, help='Print out stats after x batches')
 parser.add_argument('--weight-decay', '-d', type=float, default=0.0005, help='Weight decay for SGD optimizer')
-parser.add_argument('--step-size', '-s', type=int, default=50, help='Step in learning rate scheduler')
-parser.add_argument('--gamma', '-g', type=float, default=0.2, help='Gamma in learning rate scheduler')
+parser.add_argument('--update', '-u', type=int, default=50, help='Print out stats after x batches')
+parser.add_argument('--step-size', '-s', type=int, default=30, help='Step in learning rate scheduler')
+parser.add_argument('--gamma', '-g', type=float, default=0.1, help='Gamma in learning rate scheduler')
 parser.add_argument('--nclass', choices=[10, 100], type=int, help='CIFAR10 or CIFAR100', default=10)
 parser.add_argument('--cuda', action='store_true')
 
 args = parser.parse_args()
 print(args)
+
+TIME_STAMP = int(round(time.time() * 1000))
+LOG_FILE = 'logs/{}-cifar{}-b{}-e{}-{}.txt'.format(args.network, args.nclass, args.batch, args.epoch, TIME_STAMP)
+
+# Log basic hyper-params to log file
+with open(LOG_FILE, 'w') as f:
+    f.write('Training model {}\n'.format(args.network))
+    f.write('Hyper-parameters:\n')
+    f.write('Epoch {}; Batch {}; LR {}; SGD Momentum {}; SGD Weight Decay {};\n'.format(str(args.epoch), str(args.batch), str(args.lr), str(args.momentum), str(args.weight_decay)))
+    f.write('LR Scheduler Step {}; LR Scheduler Gamma {}; CIFAR{};\n'.format(str(args.step_size), str(args.gamma), str(args.nclass)))
+    f.write('TrainLoss,TrainAcc,ValLoss,ValAcc\n')
 
 # Device
 device = torch.device('cuda:0' if (torch.cuda.is_available() and args.cuda) else 'cpu')
@@ -109,6 +120,9 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
             print('[Epoch: %d, Batch: %5d] Train Loss: %.3f    Train Acc: %.3f%%    Val Loss: %.3f    Val Acc: %.3f%%' %
                   ( epoch + 1, i + 1, training_loss / args.update, train_acc, validation_loss / (10000/args.batch), val_acc ))
             
+            with open(LOG_FILE, 'a+') as f:
+                f.write('%.3f,%.3f,%.3f,%.3f\n' % (training_loss / args.update, train_acc, validation_loss / (10000/args.batch), val_acc))
+
             training_loss = 0.0
 
     # Step the scheduler after every epoch
@@ -123,28 +137,7 @@ val_acc = calculate_acc(testloader, net, device)
 print('Test Accuracy of the network on the 10000 test images: {} %'.format(val_acc))
 
 # Save the model
-torch.save(net.state_dict(), 'trained_nets/{}-cifar{}-b{}-e{}-{}.pth'.format(args.network, args.nclass, args.batch, args.epoch, int(round(time.time() * 1000))))
+torch.save(net.state_dict(), 'trained_nets/{}-cifar{}-b{}-e{}-{}.pth'.format(args.network, args.nclass, args.batch, args.epoch, TIME_STAMP))
 
 # Save plot
-x = np.array([x for x in range(len(train_losses))]) * args.update
-y1 = np.array(train_losses)
-y2 = np.array(val_losses)
-
-y3 = np.array(train_accuracy)
-y4 = np.array(val_accuracy)
-
-fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1)
-
-ax1.plot(x, y1, label='train loss')
-ax1.plot(x, y2, label='val loss')
-ax1.legend()
-ax1.xaxis.set_visible(False)
-ax1.set_ylabel('losses')
-
-ax2.plot(x, y3, label='train acc')
-ax2.plot(x, y4, label='val acc')
-ax2.legend()
-ax2.set_xlabel('batches')
-ax2.set_ylabel('acc')
-
-plt.savefig('plots/{}-losses-cifar{}-b{}-e{}-{}.png'.format(args.network, args.nclass, args.batch, args.epoch, int(round(time.time() * 1000))))
+save_plot(train_losses, train_accuracy, val_losses, val_accuracy, args, TIME_STAMP)

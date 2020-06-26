@@ -5,6 +5,9 @@ import torchvision
 import torchvision.transforms as transforms
 
 import sys
+import numpy as np
+import matplotlib.pyplot as plt
+import time
 
 from config import *
 
@@ -45,18 +48,36 @@ def calculate_acc(dataloader, net, device):
 
 def get_network(network, device, num_classes=10):
 
-    if network == 'resnet_ac20':
-        from models.resnet_ac import ResNet_AC20
-        net = ResNet_AC20(num_classes)
-    elif network == 'resnet_ac56':
-        from models.resnet_ac import ResNet_AC56
-        net = ResNet_AC56(num_classes)
-    elif network == 'resnet_ac110':
-        from models.resnet_ac import ResNet_AC110
-        net = ResNet_AC110(num_classes)
-    elif network == 'resnet_ac164':
-        from models.resnet_ac import ResNet_AC164
-        net = ResNet_AC164(num_classes)
+    if network == 'resnet_ac18':
+        from models.resnet_ac import ResNet_AC18
+        net = ResNet_AC18(num_classes)
+    elif network == 'resnet18':
+        from models.resnet import ResNet18
+        net = ResNet18(num_classes)
+    elif network == 'resnet_ac34':
+        from models.resnet_ac import ResNet_AC34
+        net = ResNet_AC34(num_classes)
+    elif network == 'resnet34':
+        from models.resnet import ResNet34
+        net = ResNet34(num_classes)
+    elif network == 'resnet_ac50':
+        from models.resnet_ac import ResNet_AC50
+        net = ResNet_AC50(num_classes)
+    elif network == 'resnet50':
+        from models.resnet import ResNet50
+        net = ResNet50(num_classes)
+    elif network == 'resnet_ac101':
+        from models.resnet_ac import ResNet_AC101
+        net = ResNet_AC101(num_classes)
+    elif network == 'resnet101':
+        from models.resnet import ResNet101
+        net = ResNet101(num_classes)
+    elif network == 'resnet_ac152':
+        from models.resnet_ac import ResNet_AC152
+        net = ResNet_AC152(num_classes)
+    elif network == 'resnet152':
+        from models.resnet import ResNet152
+        net = ResNet152(num_classes)
     else:
         print('the network is not supported')
         sys.exit()
@@ -101,3 +122,27 @@ def get_dataloader(num_classes, batch_size):
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=4)
 
     return trainloader, testloader
+
+def save_plot(train_losses, train_accuracy, val_losses, val_accuracy, args, time_stamp):
+    x = np.array([x for x in range(len(train_losses))]) * args.update
+    y1 = np.array(train_losses)
+    y2 = np.array(val_losses)
+
+    y3 = np.array(train_accuracy)
+    y4 = np.array(val_accuracy)
+
+    fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1)
+
+    ax1.plot(x, y1, label='train loss')
+    ax1.plot(x, y2, label='val loss')
+    ax1.legend()
+    ax1.xaxis.set_visible(False)
+    ax1.set_ylabel('losses')
+
+    ax2.plot(x, y3, label='train acc')
+    ax2.plot(x, y4, label='val acc')
+    ax2.legend()
+    ax2.set_xlabel('batches')
+    ax2.set_ylabel('acc')
+
+    plt.savefig('plots/{}-losses-cifar{}-b{}-e{}-{}.png'.format(args.network, args.nclass, args.batch, args.epoch, time_stamp))
