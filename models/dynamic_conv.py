@@ -3,18 +3,20 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.parameter import Parameter
 
-class CondConv(nn.Module):
+class DynamicConv(nn.Module):
 
     def __init__(self, in_channels, out_channels, num_experts, kernel_size, 
                     stride=1, padding=0, bias=False):
-        super(CondConv, self).__init__()
+        super(DynamicConv, self).__init__()
 
         self.stride = stride
         self.padding = padding
 
-        self.routing_fn = nn.Sequential(
-            nn.Linear(in_channels, num_experts),
-            nn.Sigmoid()
+        self.attention = nn.Sequential(
+            nn.Linear(in_channels, 64),
+            nn.ReLU(inplace=True),
+            nn.Linear(64, num_experts),
+            nn.Softmax(1)
         )
 
         self.conv1_weight = Parameter(torch.Tensor(out_channels, in_channels, kernel_size, kernel_size))
@@ -27,7 +29,8 @@ class CondConv(nn.Module):
     def forward(self, x):
         alphas = F.adaptive_avg_pool2d(x, 1)
         alphas = alphas.view(alphas.size(0), -1)
-        alphas = self.routing_fn(alphas)
+        alphas = self.attention(alphas)
+        print(alphas)
 
         a = (torch.sum(alphas, 0) / x.size(0)).detach()
 
@@ -45,7 +48,7 @@ class CondConv(nn.Module):
         return out
 
 def test():
-    net = CondConv(in_channels=4, out_channels=8, num_experts=3, kernel_size=3, stride=1, padding=1, bias=False)
+    net = DynamicConv(in_channels=4, out_channels=8, num_experts=3, kernel_size=3, stride=1, padding=1, bias=False)
     x = torch.randn(4, 4, 32, 32)
     y = net(x)
     print(y.size())
