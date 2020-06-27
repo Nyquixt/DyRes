@@ -10,13 +10,18 @@ class Dy_AlexNet(nn.Module):
     def __init__(self, num_classes=10):
         super(Dy_AlexNet, self).__init__()
         self.features = nn.Sequential(
-            DyConv(3, 64, kernel_size=3, stride=2),
+            DyConv(3, 64, kernel_size=3, stride=2, padding=1),
+            nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            DyConv(64, 192, kernel_size=3),
+            DyConv(64, 192, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            DyConv(192, 384, kernel_size=3),
-            DyConv(384, 256, kernel_size=3),
-            DyConv(256, 256, kernel_size=3),
+            DyConv(192, 384, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            DyConv(384, 256, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            DyConv(256, 256, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
         )
         self.classifier = nn.Sequential(

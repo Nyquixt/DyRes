@@ -10,13 +10,18 @@ class CC_AlexNet(nn.Module):
     def __init__(self, num_classes=10):
         super(CC_AlexNet, self).__init__()
         self.features = nn.Sequential(
-            CondConv(3, 64, kernel_size=3, stride=2),
+            CondConv(3, 64, kernel_size=3, stride=2, padding=1),
+            nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            CondConv(64, 192, kernel_size=3),
+            CondConv(64, 192, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            CondConv(192, 384, kernel_size=3),
-            CondConv(384, 256, kernel_size=3),
-            CondConv(256, 256, kernel_size=3),
+            CondConv(192, 384, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            CondConv(384, 256, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            CondConv(256, 256, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
         )
         self.classifier = nn.Sequential(

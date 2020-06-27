@@ -6,3 +6,4 @@ from .dyconv import *
 
 from .resnet_ac import *
 from .cc_alexnet import *
+from .dy_resnet import *

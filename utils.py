@@ -51,30 +51,45 @@ def get_network(network, device, num_classes=10):
     if network == 'resnet_ac18':
         from models.resnet_ac import ResNet_AC18
         net = ResNet_AC18(num_classes)
+    elif network == 'dy_resnet18':
+        from models.dy_resnet import Dy_ResNet18
+        net = Dy_ResNet18(num_classes)
     elif network == 'resnet18':
         from models.resnet import ResNet18
         net = ResNet18(num_classes)
     elif network == 'resnet_ac34':
         from models.resnet_ac import ResNet_AC34
         net = ResNet_AC34(num_classes)
+    elif network == 'dy_resnet34':
+        from models.dy_resnet import Dy_ResNet34
+        net = Dy_ResNet34(num_classes)
     elif network == 'resnet34':
         from models.resnet import ResNet34
         net = ResNet34(num_classes)
     elif network == 'resnet_ac50':
         from models.resnet_ac import ResNet_AC50
         net = ResNet_AC50(num_classes)
+    elif network == 'dy_resnet50':
+        from models.dy_resnet import Dy_ResNet50
+        net = Dy_ResNet50(num_classes)
     elif network == 'resnet50':
         from models.resnet import ResNet50
         net = ResNet50(num_classes)
     elif network == 'resnet_ac101':
         from models.resnet_ac import ResNet_AC101
         net = ResNet_AC101(num_classes)
+    elif network == 'dy_resnet101':
+        from models.dy_resnet import Dy_ResNet101
+        net = Dy_ResNet101(num_classes)
     elif network == 'resnet101':
         from models.resnet import ResNet101
         net = ResNet101(num_classes)
     elif network == 'resnet_ac152':
         from models.resnet_ac import ResNet_AC152
         net = ResNet_AC152(num_classes)
+    elif network == 'dy_resnet152':
+        from models.dy_resnet import Dy_ResNet152
+        net = Dy_ResNet152(num_classes)
     elif network == 'resnet152':
         from models.resnet import ResNet152
         net = ResNet152(num_classes)
@@ -84,6 +99,9 @@ def get_network(network, device, num_classes=10):
     elif network == 'cc_alexnet':
         from models.cc_alexnet import CC_AlexNet
         net = CC_AlexNet(num_classes)
+    elif network == 'dy_alexnet':
+        from models.dy_alexnet import Dy_AlexNet
+        net = Dy_AlexNet(num_classes)
     else:
         print('the network is not supported')
         sys.exit()

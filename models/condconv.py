@@ -4,7 +4,7 @@ import torch.nn as nn
 __all__ = ['CondConv']
 
 class CondConv(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=1, bias=False):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, bias=False):
         super(CondConv, self).__init__()
         self.one_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, bias=bias)
         self.two_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, bias=bias)
@@ -13,9 +13,6 @@ class CondConv(nn.Module):
             nn.Linear(in_channels, 3),
             nn.Sigmoid()
         )
-
-        self.bn = nn.BatchNorm2d(out_channels)
-        self.relu = nn.ReLU(inplace=True)
 
     def forward(self, x):
         one_out = self.one_conv(x).unsqueeze(dim=1)
@@ -26,7 +23,6 @@ class CondConv(nn.Module):
         weights = self.attention(gap).unsqueeze(dim=-1).unsqueeze(dim=-1).unsqueeze(dim=-1)
         out = weights * all_out
         out = out.sum(dim=1, keepdim=False)
-        out = self.relu(self.bn(out))
         return out
 
 def test():
