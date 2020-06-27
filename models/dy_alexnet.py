@@ -1,22 +1,22 @@
 import torch
 import torch.nn as nn
 
-from .condconv import *
+from .dyconv import *
 
-__all__ = ['CC_AlexNet']
+__all__ = ['Dy_AlexNet']
 
-class CC_AlexNet(nn.Module):
+class Dy_AlexNet(nn.Module):
 
     def __init__(self, num_classes=10):
-        super(CC_AlexNet, self).__init__()
+        super(Dy_AlexNet, self).__init__()
         self.features = nn.Sequential(
-            CondConv(3, 64, kernel_size=3, stride=2),
+            DyConv(3, 64, kernel_size=3, stride=2),
             nn.MaxPool2d(kernel_size=2),
-            CondConv(64, 192, kernel_size=3),
+            DyConv(64, 192, kernel_size=3),
             nn.MaxPool2d(kernel_size=2),
-            CondConv(192, 384, kernel_size=3),
-            CondConv(384, 256, kernel_size=3),
-            CondConv(256, 256, kernel_size=3),
+            DyConv(192, 384, kernel_size=3),
+            DyConv(384, 256, kernel_size=3),
+            DyConv(256, 256, kernel_size=3),
             nn.MaxPool2d(kernel_size=2),
         )
         self.classifier = nn.Sequential(

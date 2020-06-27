@@ -1,17 +1,19 @@
 import torch
-import torch.nn as nn
+import torch.nn as nn 
 
-__all__ = ['CondConv']
+__all__ = ['DyConv']
 
-class CondConv(nn.Module):
+class DyConv(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=1, bias=False):
-        super(CondConv, self).__init__()
+        super(DyConv, self).__init__()
         self.one_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, bias=bias)
         self.two_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, bias=bias)
         self.three_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, bias=bias)
         self.attention = nn.Sequential(
-            nn.Linear(in_channels, 3),
-            nn.Sigmoid()
+            nn.Linear(in_channels, 64),
+            nn.ReLU(inplace=True),
+            nn.Linear(64, 3),
+            nn.Softmax(1)
         )
 
         self.bn = nn.BatchNorm2d(out_channels)
@@ -31,7 +33,7 @@ class CondConv(nn.Module):
 
 def test():
     x = torch.randn(4, 3 , 32, 32)
-    conv = CondConv(x.size(1), 64, 3)
+    conv = DyConv(x.size(1), 64, 3)
     y = conv(x)
     print(y.size())
 
