@@ -78,6 +78,12 @@ def get_network(network, device, num_classes=10):
     elif network == 'resnet152':
         from models.resnet import ResNet152
         net = ResNet152(num_classes)
+    elif network == 'alexnet':
+        from models.alexnet import AlexNet
+        net = AlexNet(num_classes)
+    elif network == 'cc_alexnet':
+        from models.cc_alexnet import CC_AlexNet
+        net = CC_AlexNet(num_classes)
     else:
         print('the network is not supported')
         sys.exit()

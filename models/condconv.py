@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.parameter import Parameter
 
+__all__ = ['CondConv']
+
 class CondConv(nn.Module):
 
     def __init__(self, in_channels, out_channels, num_experts, kernel_size, 
@@ -22,26 +24,25 @@ class CondConv(nn.Module):
         self.conv3_weight = Parameter(torch.Tensor(out_channels, in_channels, kernel_size, kernel_size))
 
         self.bn = nn.BatchNorm2d(out_channels)
-        self.relu = nn.ReLU(inplace=True)
 
     def forward(self, x):
         alphas = F.adaptive_avg_pool2d(x, 1)
         alphas = alphas.view(alphas.size(0), -1)
         alphas = self.routing_fn(alphas)
 
-        a = (torch.sum(alphas, 0) / x.size(0)).detach()
+        a = torch.sum(alphas, 0) / x.size(0)
 
         W1 = a[0] * self.conv1_weight
         W2 = a[1] * self.conv2_weight
         W3 = a[2] * self.conv3_weight
 
-        out = F.conv2d(x, W1, bias=None, stride=self.stride, padding=self.padding) \
-            + F.conv2d(x, W2, bias=None, stride=self.stride, padding=self.padding) \
-            + F.conv2d(x, W3, bias=None, stride=self.stride, padding=self.padding)
+        out = F.conv2d(x, W1, bias=None, stride=self.stride, padding=self.padding)
+        out = out + F.conv2d(x, W2, bias=None, stride=self.stride, padding=self.padding)
+        out = out + F.conv2d(x, W3, bias=None, stride=self.stride, padding=self.padding)
     
         out = self.bn(out)
-        out = self.relu(out)
-
+        out = F.relu(out)
+        
         return out
 
 def test():
@@ -50,4 +51,4 @@ def test():
     y = net(x)
     print(y.size())
 
-test()
+# test()

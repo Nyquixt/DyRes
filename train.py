@@ -78,7 +78,7 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
         inputs, labels = data
         inputs = inputs.to(device)
         labels = labels.to(device)
-
+        
         # Zero the parameter gradients
         optimizer.zero_grad()
 
@@ -103,7 +103,7 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
 
                     outputs = net(inputs)
                     loss = criterion(outputs, labels)
-
+                    
                     validation_loss += loss.item()
             
             train_losses.append(training_loss / args.update)

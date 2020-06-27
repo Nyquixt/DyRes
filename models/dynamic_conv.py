@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.parameter import Parameter
 
+__all__ = ['DynamicConv']
+
 class DynamicConv(nn.Module):
 
     def __init__(self, in_channels, out_channels, num_experts, kernel_size, 
@@ -53,4 +55,4 @@ def test():
     y = net(x)
     print(y.size())
 
-test()
+# test()
