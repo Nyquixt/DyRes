@@ -22,6 +22,10 @@ from .cc_resnet import *
 from .dy_resnet import *
 from .dycbam_resnet import *
 
+from .ac_mobilenetv2 import *
+from .cc_mobilenetv2 import *
+from .dy_mobilenetv2 import *
+
 from .ac_squeezenet import *
 from .cc_squeezenet import *
 from .dy_squeezenet import *

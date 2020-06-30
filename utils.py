@@ -183,6 +183,18 @@ def get_network(network, device, num_classes=10):
     elif network == 'dycbam5_lenet':
         from models.dycbam_lenet import DyCBAM5_LeNet
         net = DyCBAM5_LeNet(num_classes)
+    elif network == 'mobilenetv2':
+        from models.mobilenetv2 import MobileNetV2
+        net = MobileNetV2(num_classes)
+    elif network == 'ac_mobilenetv2':
+        from models.ac_mobilenetv2 import AC_MobileNetV2
+        net = AC_MobileNetV2(num_classes)
+    elif network == 'cc_mobilenetv2':
+        from models.cc_mobilenetv2 import CC_MobileNetV2
+        net = CC_MobileNetV2(num_classes)
+    elif network == 'dy_mobilenetv2':
+        from models.dy_mobilenetv2 import Dy_MobileNetV2
+        net = Dy_MobileNetV2(num_classes)
     else:
         print('the network is not supported')
         sys.exit()

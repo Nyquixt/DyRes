@@ -135,6 +135,8 @@ print('Total time trained: {}'.format( str(timedelta(seconds=int(end - start)) )
 net.eval()
 val_acc = calculate_acc(testloader, net, device)
 print('Test Accuracy of the network on the 10000 test images: {} %'.format(val_acc))
+with open(LOG_FILE, 'a+') as f:
+    f.write('Test Accuracy of the network on the 10000 test images: {} %'.format(val_acc))
 
 # Save the model
 torch.save(net.state_dict(), 'trained_nets/{}-cifar{}-b{}-e{}-{}.pth'.format(args.network, args.nclass, args.batch, args.epoch, TIME_STAMP))
