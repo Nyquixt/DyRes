@@ -7,17 +7,23 @@ from .condconv import *
 from .dyconv import *
 from .dyse_conv import *
 
+from .ac_lenet import *
+from .cc_lenet import *
 from .dy_lenet import *
 
+from .ac_alexnet import *
 from .cc_alexnet import *
 from .dy_alexnet import *
 from .dyse_alexnet import *
 from .dycbam_alexnet import *
 
-from .resnet_ac import *
+from .ac_resnet import *
+from .cc_resnet import *
 from .dy_resnet import *
 from .dycbam_resnet import *
 
+from .ac_squeezenet import *
+from .cc_squeezenet import *
 from .dy_squeezenet import *
 from .dycbam_squeezenet import *
 from .dycbam2_squeezenet import *

@@ -48,9 +48,12 @@ def calculate_acc(dataloader, net, device):
 
 def get_network(network, device, num_classes=10):
 
-    if network == 'resnet_ac18':
-        from models.resnet_ac import ResNet_AC18
-        net = ResNet_AC18(num_classes)
+    if network == 'ac_resnet18':
+        from models.ac_resnet import AC_ResNet18
+        net = AC_ResNet18(num_classes)
+    elif network == 'cc_resnet18':
+        from models.cc_resnet import CC_ResNet18
+        net = CC_ResNet18(num_classes)
     elif network == 'dy_resnet18':
         from models.dy_resnet import Dy_ResNet18
         net = Dy_ResNet18(num_classes)
@@ -60,36 +63,48 @@ def get_network(network, device, num_classes=10):
     elif network == 'resnet18':
         from models.resnet import ResNet18
         net = ResNet18(num_classes)
-    elif network == 'resnet_ac34':
-        from models.resnet_ac import ResNet_AC34
-        net = ResNet_AC34(num_classes)
+    elif network == 'ac_resnet34':
+        from models.ac_resnet import AC_ResNet34
+        net = AC_ResNet34(num_classes)
+    elif network == 'cc_resnet34':
+        from models.cc_resnet import CC_ResNet34
+        net = CC_ResNet34(num_classes)
     elif network == 'dy_resnet34':
         from models.dy_resnet import Dy_ResNet34
         net = Dy_ResNet34(num_classes)
     elif network == 'resnet34':
         from models.resnet import ResNet34
         net = ResNet34(num_classes)
-    elif network == 'resnet_ac50':
-        from models.resnet_ac import ResNet_AC50
-        net = ResNet_AC50(num_classes)
+    elif network == 'ac_resnet50':
+        from models.ac_resnet import AC_ResNet50
+        net = AC_ResNet50(num_classes)
+    elif network == 'cc_resnet50':
+        from models.cc_resnet import CC_ResNet50
+        net = CC_ResNet50(num_classes)
     elif network == 'dy_resnet50':
         from models.dy_resnet import Dy_ResNet50
         net = Dy_ResNet50(num_classes)
     elif network == 'resnet50':
         from models.resnet import ResNet50
         net = ResNet50(num_classes)
-    elif network == 'resnet_ac101':
-        from models.resnet_ac import ResNet_AC101
-        net = ResNet_AC101(num_classes)
+    elif network == 'ac_resnet101':
+        from models.ac_resnet import AC_ResNet101
+        net = AC_ResNet101(num_classes)
+    elif network == 'cc_resnet101':
+        from models.cc_resnet import CC_ResNet101
+        net = CC_ResNet101(num_classes)
     elif network == 'dy_resnet101':
         from models.dy_resnet import Dy_ResNet101
         net = Dy_ResNet101(num_classes)
     elif network == 'resnet101':
         from models.resnet import ResNet101
         net = ResNet101(num_classes)
-    elif network == 'resnet_ac152':
-        from models.resnet_ac import ResNet_AC152
-        net = ResNet_AC152(num_classes)
+    elif network == 'ac_resnet152':
+        from models.ac_resnet import AC_ResNet152
+        net = AC_ResNet152(num_classes)
+    elif network == 'cc_resnet152':
+        from models.cc_resnet import CC_ResNet152
+        net = CC_ResNet152(num_classes)
     elif network == 'dy_resnet152':
         from models.dy_resnet import Dy_ResNet152
         net = Dy_ResNet152(num_classes)
@@ -123,12 +138,21 @@ def get_network(network, device, num_classes=10):
     elif network == 'dycbam4_alexnet':
         from models.dycbam_alexnet import DyCBAM4_AlexNet
         net = DyCBAM4_AlexNet(num_classes)
-    elif network == 'squeezenet':
-        from models.squeezenet import SqueezeNet
-        net = SqueezeNet(num_classes)
+    elif network == 'dycbam5_alexnet':
+        from models.dycbam_alexnet import DyCBAM5_AlexNet
+        net = DyCBAM5_AlexNet(num_classes)
+    elif network == 'ac_squeezenet':
+        from models.ac_squeezenet import AC_SqueezeNet
+        net = AC_SqueezeNet(num_classes)
+    elif network == 'cc_squeezenet':
+        from models.cc_squeezenet import CC_SqueezeNet
+        net = CC_SqueezeNet(num_classes)
     elif network == 'dy_squeezenet':
         from models.dy_squeezenet import Dy_SqueezeNet
         net = Dy_SqueezeNet(num_classes)
+    elif network == 'squeezenet':
+        from models.squeezenet import SqueezeNet
+        net = SqueezeNet(num_classes)
     elif network == 'dycbam_squeezenet':
         from models.dycbam_squeezenet import DyCBAM_SqueezeNet
         net = DyCBAM_SqueezeNet(num_classes)
@@ -141,6 +165,12 @@ def get_network(network, device, num_classes=10):
     elif network == 'lenet':
         from models.lenet import LeNet
         net = LeNet(num_classes)
+    elif network == 'ac_lenet':
+        from models.ac_lenet import AC_LeNet
+        net = AC_LeNet(num_classes)
+    elif network == 'cc_lenet':
+        from models.cc_lenet import CC_LeNet
+        net = CC_LeNet(num_classes)
     elif network == 'dy_lenet':
         from models.dy_lenet import Dy_LeNet
         net = Dy_LeNet(num_classes)
@@ -150,6 +180,9 @@ def get_network(network, device, num_classes=10):
     elif network == 'dycbam4_lenet':
         from models.dycbam_lenet import DyCBAM4_LeNet
         net = DyCBAM4_LeNet(num_classes)
+    elif network == 'dycbam5_lenet':
+        from models.dycbam_lenet import DyCBAM5_LeNet
+        net = DyCBAM5_LeNet(num_classes)
     else:
         print('the network is not supported')
         sys.exit()

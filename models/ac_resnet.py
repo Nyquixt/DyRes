@@ -3,13 +3,13 @@ import torch.nn as nn
 import torch.nn.functional as F
 from .acnet import *
 
-__all__ = ['ResNet_AC18', 'ResNet_AC34', 'ResNet_AC50', 'ResNet_AC101', 'ResNet_AC152']
+__all__ = ['AC_ResNet18', 'AC_ResNet34', 'AC_ResNet50', 'AC_ResNet101', 'AC_ResNet152']
 
-class Basic_AC_Block(nn.Module):
+class AC_BasicBlock(nn.Module):
     expansion = 1
 
     def __init__(self, in_channels, channels, stride=1):
-        super(Basic_AC_Block, self).__init__()
+        super(AC_BasicBlock, self).__init__()
         self.conv1 = AC_Conv2dBN(in_channels, channels, kernel_size=3, stride=stride, padding=1)
         self.conv2 = AC_Conv2dBN(channels, channels, kernel_size=3, stride=1, padding=1)
 
@@ -30,11 +30,11 @@ class Basic_AC_Block(nn.Module):
         out = F.relu(out)
         return out
 
-class Bottleneck_AC_Block(nn.Module):
+class AC_Bottleneck(nn.Module):
     expansion = 4
 
     def __init__(self, in_channels, channels, stride=1):
-        super(Bottleneck_AC_Block, self).__init__()
+        super(AC_Bottleneck, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, channels, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(channels)
         self.ac = AC_Conv2dBN(channels, channels, kernel_size=3, stride=stride, padding=1)
@@ -56,9 +56,9 @@ class Bottleneck_AC_Block(nn.Module):
         out = F.relu(out)
         return out
 
-class ResNet_AC(nn.Module):
+class AC_ResNet(nn.Module):
     def __init__(self, block, num_blocks, num_classes=10):
-        super(ResNet_AC, self).__init__()
+        super(AC_ResNet, self).__init__()
         self.in_channels = 64
 
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3,
@@ -89,25 +89,25 @@ class ResNet_AC(nn.Module):
         out = self.linear(out)
         return out
 
-def ResNet_AC18(num_classes):
-    return ResNet_AC(Basic_AC_Block, [2, 2, 2, 2], num_classes)
+def AC_ResNet18(num_classes):
+    return AC_ResNet(AC_BasicBlock, [2, 2, 2, 2], num_classes)
 
-def ResNet_AC34(num_classes):
-    return ResNet_AC(Basic_AC_Block, [3, 4, 6, 3], num_classes)
+def AC_ResNet34(num_classes):
+    return AC_ResNet(AC_BasicBlock, [3, 4, 6, 3], num_classes)
 
-def ResNet_AC50(num_classes):
-    return ResNet_AC(Bottleneck_AC_Block, [3, 4, 6, 3], num_classes)
+def AC_ResNet50(num_classes):
+    return AC_ResNet(AC_Bottleneck, [3, 4, 6, 3], num_classes)
 
-def ResNet_AC101(num_classes):
-    return ResNet_AC(Bottleneck_AC_Block, [3, 4, 23, 3], num_classes)
+def AC_ResNet101(num_classes):
+    return AC_ResNet(AC_Bottleneck, [3, 4, 23, 3], num_classes)
 
-def ResNet_AC152(num_classes):
-    return ResNet_AC(Bottleneck_AC_Block, [3, 8, 36, 3], num_classes)
+def AC_ResNet152(num_classes):
+    return AC_ResNet(AC_Bottleneck, [3, 8, 36, 3], num_classes)
 
 def test():
     x = torch.randn(128, 3, 32, 32)
-    net1 = ResNet_AC18(10)
-    net2 = ResNet_AC50(100)
+    net1 = AC_ResNet18(10)
+    net2 = AC_ResNet50(100)
 
     y1 = net1(x); print(y1.size())
     y2 = net2(x); print(y2.size())
