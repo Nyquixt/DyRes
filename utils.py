@@ -114,6 +114,9 @@ def get_network(network, device, num_classes=10):
     elif network == 'alexnet':
         from models.alexnet import AlexNet
         net = AlexNet(num_classes)
+    elif network == 'ac_alexnet':
+        from models.ac_alexnet import AC_AlexNet
+        net = AC_AlexNet(num_classes)
     elif network == 'cc_alexnet':
         from models.cc_alexnet import CC_AlexNet
         net = CC_AlexNet(num_classes)
