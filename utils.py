@@ -54,6 +54,9 @@ def get_network(network, device, num_classes=10):
     elif network == 'dy_resnet18':
         from models.dy_resnet import Dy_ResNet18
         net = Dy_ResNet18(num_classes)
+    elif network == 'dycbam_resnet18':
+        from models.dycbam_resnet import DyCBAM_ResNet18
+        net = DyCBAM_ResNet18(num_classes)
     elif network == 'resnet18':
         from models.resnet import ResNet18
         net = ResNet18(num_classes)
@@ -102,6 +105,51 @@ def get_network(network, device, num_classes=10):
     elif network == 'dy_alexnet':
         from models.dy_alexnet import Dy_AlexNet
         net = Dy_AlexNet(num_classes)
+    elif network == 'dyse_alexnet':
+        from models.dyse_alexnet import DySE_AlexNet
+        net = DySE_AlexNet(num_classes)
+    elif network == 'dyse2b_alexnet':
+        from models.dyse_alexnet import DySE2B_AlexNet
+        net = DySE2B_AlexNet(num_classes)
+    elif network == 'dycbam_alexnet':
+        from models.dycbam_alexnet import DyCBAM_AlexNet
+        net = DyCBAM_AlexNet(num_classes)
+    elif network == 'dycbam2_alexnet':
+        from models.dycbam_alexnet import DyCBAM2_AlexNet
+        net = DyCBAM2_AlexNet(num_classes)
+    elif network == 'dycbam3_alexnet':
+        from models.dycbam_alexnet import DyCBAM3_AlexNet
+        net = DyCBAM3_AlexNet(num_classes)
+    elif network == 'dycbam4_alexnet':
+        from models.dycbam_alexnet import DyCBAM4_AlexNet
+        net = DyCBAM4_AlexNet(num_classes)
+    elif network == 'squeezenet':
+        from models.squeezenet import SqueezeNet
+        net = SqueezeNet(num_classes)
+    elif network == 'dy_squeezenet':
+        from models.dy_squeezenet import Dy_SqueezeNet
+        net = Dy_SqueezeNet(num_classes)
+    elif network == 'dycbam_squeezenet':
+        from models.dycbam_squeezenet import DyCBAM_SqueezeNet
+        net = DyCBAM_SqueezeNet(num_classes)
+    elif network == 'dycbam2_squeezenet':
+        from models.dycbam2_squeezenet import DyCBAM2_SqueezeNet
+        net = DyCBAM2_SqueezeNet(num_classes)
+    elif network == 'dycbam4_squeezenet':
+        from models.dycbam4_squeezenet import DyCBAM4_SqueezeNet
+        net = DyCBAM4_SqueezeNet(num_classes)
+    elif network == 'lenet':
+        from models.lenet import LeNet
+        net = LeNet(num_classes)
+    elif network == 'dy_lenet':
+        from models.dy_lenet import Dy_LeNet
+        net = Dy_LeNet(num_classes)
+    elif network == 'dycbam2_lenet':
+        from models.dycbam_lenet import DyCBAM2_LeNet
+        net = DyCBAM2_LeNet(num_classes)
+    elif network == 'dycbam4_lenet':
+        from models.dycbam_lenet import DyCBAM4_LeNet
+        net = DyCBAM4_LeNet(num_classes)
     else:
         print('the network is not supported')
         sys.exit()
