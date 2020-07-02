@@ -14,6 +14,7 @@ from .dy_lenet import *
 from .ac_alexnet import *
 from .cc_alexnet import *
 from .dy_alexnet import *
+from .dybn_alexnet import *
 from .dyse_alexnet import *
 from .dycbam_alexnet import *
 
@@ -29,6 +30,7 @@ from .dy_mobilenetv2 import *
 from .ac_squeezenet import *
 from .cc_squeezenet import *
 from .dy_squeezenet import *
+from .dybn2_squeezenet import *
 from .dycbam_squeezenet import *
 from .dycbam2_squeezenet import *
 from .dycbam4_squeezenet import *

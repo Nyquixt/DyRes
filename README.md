@@ -2,25 +2,25 @@
 
 Results on the CIFAR10 Dataset
 
-| Models        | Basic         | ACNet         | CondConv      | DynamicConv   |  
-|---------------|---------------|---------------|---------------|---------------|
-| AlexNet       | 86.26%        | 87.77%        | 86.20%        | 86.89%        |
-| SqueezeNet    | 90.09%        | 91.90%        | 90.14%        | 90.75%        |
-| ResNet18      | 94.12%        | 94.00%        | ------        | 94.24%        |
-| MobileNetV2   | 92.99%        | ------        | ------        | ------        |
+| Models        | Basic         | ACNet         | CondConv      | DyConv        | DyConv no AL  |
+|---------------|---------------|---------------|---------------|---------------|---------------|
+| AlexNet       | 86.26%        | 87.77%        | 86.20%        | 86.89%        | 86.89%        |
+| SqueezeNet    | 90.09%        | 91.90%        | 90.14%        | 90.75%        | ------        |
+| ResNet18      | 94.12%        | 94.00%        | ------        | 94.24%        | ------        |
+| MobileNetV2   | 92.99%        | 94.00%        | ------        | ------        | ------        |
 
 Results on the CIFAR100 Dataset
 
-| Models        | Basic         | ACNet         | CondConv      | DynamicConv   |
-|---------------|---------------|---------------|---------------|---------------|
-| AlexNet       | ------        | ------        | ------        | ------        |
-| SqueezeNet    | 66.82%        | ------        | ------        | 68.18%        |
-| ResNet18      | ------        | ------        | ------        | ------        |
-| MobileNetV2   | ------        | ------        | ------        | ------        |
+| Models        | Basic         | ACNet         | CondConv      | DyConv        | DyConv no AL  |
+|---------------|---------------|---------------|---------------|---------------|---------------|
+| AlexNet       | ------        | ------        | ------        | 60.60%        | 61.30%        |
+| SqueezeNet    | 66.82%        | 69.67%        | ------        | 68.18%        | ------        |
+| ResNet18      | ------        | ------        | ------        | ------        | ------        |
+| MobileNetV2   | ------        | ------        | ------        | ------        | ------        |
 
 Results on the SVHN Dataset
 
-| Models        | Basic         | ACNet         | CondConv      | DynamicConv   |
+| Models        | Basic         | ACNet         | CondConv      | DyConv        |
 |---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | ------        | ------        | ------        | ------        |
 | SqueezeNet    | ------        | ------        | ------        | ------        |
@@ -29,7 +29,7 @@ Results on the SVHN Dataset
 
 Results on the Downsample ImageNet Dataset
 
-| Models        | Basic         | ACNet         | CondConv      | DynamicConv   |
+| Models        | Basic         | ACNet         | CondConv      | DyConv        |
 |---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | ------        | ------        | ------        | ------        |
 | SqueezeNet    | ------        | ------        | ------        | ------        |
@@ -38,7 +38,7 @@ Results on the Downsample ImageNet Dataset
 
 Results on the Tiny ImageNet Dataset
 
-| Models        | Basic         | ACNet         | CondConv      | DynamicConv   |
+| Models        | Basic         | ACNet         | CondConv      | DyConv        |
 |---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | ------        | ------        | ------        | ------        |
 | SqueezeNet    | ------        | ------        | ------        | ------        |

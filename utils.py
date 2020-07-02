@@ -123,6 +123,12 @@ def get_network(network, device, num_classes=10):
     elif network == 'dy_alexnet':
         from models.dy_alexnet import Dy_AlexNet
         net = Dy_AlexNet(num_classes)
+    elif network == 'dybn_alexnet':
+        from models.dybn_alexnet import DyBN_AlexNet
+        net = DyBN_AlexNet(num_classes)
+    elif network == 'dybn2_alexnet':
+        from models.dybn_alexnet import DyBN2_AlexNet
+        net = DyBN2_AlexNet(num_classes)
     elif network == 'dyse_alexnet':
         from models.dyse_alexnet import DySE_AlexNet
         net = DySE_AlexNet(num_classes)
@@ -153,6 +159,9 @@ def get_network(network, device, num_classes=10):
     elif network == 'dy_squeezenet':
         from models.dy_squeezenet import Dy_SqueezeNet
         net = Dy_SqueezeNet(num_classes)
+    elif network == 'dybn2_squeezenet':
+        from models.dybn2_squeezenet import DyBN2_SqueezeNet
+        net = DyBN2_SqueezeNet(num_classes)
     elif network == 'squeezenet':
         from models.squeezenet import SqueezeNet
         net = SqueezeNet(num_classes)
