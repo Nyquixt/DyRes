@@ -4,9 +4,9 @@ import torch.nn as nn
 __all__ = ['DyConv']
 
 class DyConv(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, bias=False):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, bias=False, temp=30):
         super(DyConv, self).__init__()
-
+        self.temp = temp
         self.one_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, groups=groups, bias=bias)
         self.two_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, groups=groups, bias=bias)
         self.three_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, groups=groups, bias=bias)
@@ -14,7 +14,7 @@ class DyConv(nn.Module):
             nn.Linear(in_channels, 64),
             nn.ReLU(inplace=True),
             nn.Linear(64, 3),
-            nn.Softmax(1)
+            # nn.Softmax(1)
         )
 
     def forward(self, x):
@@ -23,7 +23,7 @@ class DyConv(nn.Module):
         three_out = self.three_conv(x).unsqueeze(dim=1)
         all_out = torch.cat([one_out, two_out, three_out], dim=1)
         gap = x.mean(dim=-1).mean(dim=-1)
-        weights = self.attention(gap).unsqueeze(dim=-1).unsqueeze(dim=-1).unsqueeze(dim=-1)
+        weights = torch.softmax(self.attention(gap) / self.temp, 1).unsqueeze(dim=-1).unsqueeze(dim=-1).unsqueeze(dim=-1)
         out = weights * all_out
         out = out.sum(dim=1, keepdim=False)
         return out
