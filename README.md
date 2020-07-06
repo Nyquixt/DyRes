@@ -7,13 +7,13 @@ Results on the CIFAR10 Dataset
 | AlexNet       | 86.26%        | 87.77%        | 86.20%        | 86.89%        | 86.89%        |
 | SqueezeNet    | 90.09%        | 91.90%        | 90.14%        | 90.75%        | 91.39%        |
 | ResNet18      | 94.12%        | 94.00%        | ------        | 94.24%        | ------        |
-| MobileNetV2   | 92.99%        | 93.90%        | ------        | ------        | ------        |
+| MobileNetV2   | 92.99%        | 93.90%        | ------        | 93.52%        | ------        |
 
 Results on the CIFAR100 Dataset
 
 | Models        | Basic         | ACNet         | CondConv      | DyConv        | DyConv no AL  |
 |---------------|---------------|---------------|---------------|---------------|---------------|
-| AlexNet       | ------        | ------        | ------        | 60.60%        | 61.30%        |
+| AlexNet       | ------        | 62.39%        | 61.47%        | 60.60%        | 61.30%        |
 | SqueezeNet    | 66.82%        | 69.67%        | 67.93%        | 68.18%        | 69.86%        |
 | ResNet18      | ------        | ------        | ------        | ------        | ------        |
 | MobileNetV2   | ------        | ------        | ------        | ------        | ------        |
@@ -44,6 +44,7 @@ Results on the Tiny ImageNet Dataset
 | SqueezeNet    | ------        | ------        | ------        | ------        |
 | ResNet18      | ------        | ------        | ------        | ------        |
 | MobileNetV2   | ------        | ------        | ------        | ------        |
+
 ### How To Set Up Python and Pip
 
 https://www.python.org/downloads/

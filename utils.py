@@ -26,6 +26,20 @@ def init_params(net):
             if m.bias is not None:
                 nn.init.constant_(m.bias, 0)
 
+def get_mean_and_std(dataset):
+    '''Compute the mean and std value of dataset.'''
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True, num_workers=2)
+    mean = torch.zeros(3)
+    std = torch.zeros(3)
+    print('==> Computing mean and std..')
+    for inputs, targets in dataloader:
+        for i in range(3):
+            mean[i] += inputs[:,i,:,:].mean()
+            std[i] += inputs[:,i,:,:].std()
+    mean.div_(len(dataset))
+    std.div_(len(dataset))
+    return mean, std
+
 def count_parameters(net, all=True):
     # If all= Flase, we only return the trainable parameters; tested
     return sum(p.numel() for p in net.parameters() if p.requires_grad or all)
@@ -215,8 +229,8 @@ def get_network(network, device, num_classes=10):
 
     return net
 
-def get_dataloader(num_classes, batch_size):
-    if num_classes == 10:
+def get_dataloader(dataset, batch_size):
+    if dataset == 'cifar10':
         train_transform = transforms.Compose(
             [transforms.RandomCrop(size=32, padding=4),
             transforms.RandomHorizontalFlip(p=0.5),
@@ -231,7 +245,8 @@ def get_dataloader(num_classes, batch_size):
 
         trainset = torchvision.datasets.CIFAR10(root=DATA_ROOT, train=True, transform=train_transform, download=True)
         testset = torchvision.datasets.CIFAR10(root=DATA_ROOT, train=False, transform=test_transform, download=True)
-    else:
+    
+    elif dataset == 'cifar100':
         train_transform = transforms.Compose(
             [transforms.RandomCrop(size=32, padding=4),
             transforms.RandomHorizontalFlip(p=0.5),
@@ -243,9 +258,29 @@ def get_dataloader(num_classes, batch_size):
             [transforms.ToTensor(),
             transforms.Normalize(CIFAR100_MEAN, CIFAR100_STD)
             ])
-
+    
         trainset = torchvision.datasets.CIFAR100(root=DATA_ROOT, train=True, transform=train_transform, download=True)
         testset = torchvision.datasets.CIFAR100(root=DATA_ROOT, train=False, transform=test_transform, download=True)
+
+    elif dataset == 'svhn':
+        train_transform = transforms.Compose(
+            [transforms.RandomCrop(size=32, padding=4),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.ToTensor(),
+            transforms.Normalize(SVHN_MEAN, SVHN_STD)
+        ])
+
+        test_transform = transforms.Compose(
+        [transforms.ToTensor(),
+        transforms.Normalize(SVHN_MEAN, SVHN_STD)
+        ])
+
+        trainset = torchvision.datasets.SVHN(root=DATA_ROOT, split='train', transform=train_transform, download=True)
+        testset = torchvision.datasets.SVHN(root=DATA_ROOT, split='test', transform=test_transform, download=True)
+
+    else:
+        print('Dataset not supported yet...')
+        sys.exit()
 
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4)
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=4)

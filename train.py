@@ -24,28 +24,28 @@ parser.add_argument('--weight-decay', '-d', type=float, default=0.0005, help='We
 parser.add_argument('--update', '-u', type=int, default=50, help='Print out stats after x batches')
 parser.add_argument('--step-size', '-s', type=int, default=30, help='Step in learning rate scheduler')
 parser.add_argument('--gamma', '-g', type=float, default=0.1, help='Gamma in learning rate scheduler')
-parser.add_argument('--nclass', choices=[10, 100], type=int, help='CIFAR10 or CIFAR100', default=10)
+parser.add_argument('--dataset', type=str, help='cifar10 or cifar100 or svhn', default='cifar10')
 parser.add_argument('--cuda', action='store_true')
 
 args = parser.parse_args()
 print(args)
 
 TIME_STAMP = int(round(time.time() * 1000))
-LOG_FILE = 'logs/{}-cifar{}-b{}-e{}-{}.txt'.format(args.network, args.nclass, args.batch, args.epoch, TIME_STAMP)
+LOG_FILE = 'logs/{}-{}-b{}-e{}-{}.txt'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP)
 
 # Log basic hyper-params to log file
 with open(LOG_FILE, 'w') as f:
     f.write('Training model {}\n'.format(args.network))
     f.write('Hyper-parameters:\n')
     f.write('Epoch {}; Batch {}; LR {}; SGD Momentum {}; SGD Weight Decay {};\n'.format(str(args.epoch), str(args.batch), str(args.lr), str(args.momentum), str(args.weight_decay)))
-    f.write('LR Scheduler Step {}; LR Scheduler Gamma {}; CIFAR{};\n'.format(str(args.step_size), str(args.gamma), str(args.nclass)))
+    f.write('LR Scheduler Step {}; LR Scheduler Gamma {}; {};\n'.format(str(args.step_size), str(args.gamma), str(args.dataset)))
     f.write('TrainLoss,TrainAcc,ValLoss,ValAcc\n')
 
 # Device
 device = torch.device('cuda:0' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
 # Dataloader
-trainloader, testloader = get_dataloader(args.nclass, args.batch)
+trainloader, testloader = get_dataloader(args.dataset, args.batch)
 
 # Define losses lists to plot
 train_losses = []
@@ -54,7 +54,11 @@ train_accuracy = []
 val_accuracy = []
 
 # Define model
-net = get_network(args.network, device, args.nclass)
+if args.dataset == 'cifar10' or args.dataset == 'svhn':
+    num_classes = 10
+else:
+    num_classes = 100
+net = get_network(args.network, device, num_classes)
 init_params(net)
 
 print('Training {} with {} parameters...'.format(args.network, count_parameters(net)))
@@ -139,7 +143,7 @@ with open(LOG_FILE, 'a+') as f:
     f.write('Test Accuracy of the network on the 10000 test images: {} %'.format(val_acc))
 
 # Save the model
-torch.save(net.state_dict(), 'trained_nets/{}-cifar{}-b{}-e{}-{}.pth'.format(args.network, args.nclass, args.batch, args.epoch, TIME_STAMP))
+torch.save(net.state_dict(), 'trained_nets/{}-{}-b{}-e{}-{}.pth'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP))
 
 # Save plot
 save_plot(train_losses, train_accuracy, val_losses, val_accuracy, args, TIME_STAMP)
