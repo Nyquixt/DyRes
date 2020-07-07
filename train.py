@@ -13,7 +13,7 @@ from models import *
 from config import *
 from utils import calculate_acc, get_network, get_dataloader, init_params, count_parameters, save_plot
 
-parser = argparse.ArgumentParser(description='Training CNN models on CIFAR')
+parser = argparse.ArgumentParser(description='Training CNN models')
 
 parser.add_argument('--network', '-n', required=True)
 parser.add_argument('--epoch', '-e', type=int, default=120, help='Number of epochs')
@@ -24,7 +24,7 @@ parser.add_argument('--weight-decay', '-d', type=float, default=0.0005, help='We
 parser.add_argument('--update', '-u', type=int, default=50, help='Print out stats after x batches')
 parser.add_argument('--step-size', '-s', type=int, default=30, help='Step in learning rate scheduler')
 parser.add_argument('--gamma', '-g', type=float, default=0.1, help='Gamma in learning rate scheduler')
-parser.add_argument('--dataset', type=str, help='cifar10 or cifar100 or svhn', default='cifar10')
+parser.add_argument('--dataset', type=str, help='cifar10 or cifar100 or svhn or tinyimagenet', default='cifar10')
 parser.add_argument('--cuda', action='store_true')
 
 args = parser.parse_args()
@@ -53,11 +53,19 @@ val_losses = []
 train_accuracy = []
 val_accuracy = []
 
+VAL_LEN = 10000
+
 # Define model
-if args.dataset == 'cifar10' or args.dataset == 'svhn':
+if args.dataset == 'cifar10':
     num_classes = 10
-else:
+elif args.dataset == 'svhn':
+    num_classes = 10
+    VAL_LEN = 26032
+elif args.dataset == 'cifar100':
     num_classes = 100
+elif args.dataset == 'tinyimagenet':
+    num_classes = 200
+
 net = get_network(args.network, device, num_classes)
 init_params(net)
 
@@ -97,7 +105,6 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
         # Print statistics
         
         if i % args.update == (args.update - 1):    # print every args.update mini-batches
-
             with torch.no_grad():
                 validation_loss = 0.0
                 for j, data in enumerate(testloader): # (10,000 / args.batch) batches
@@ -111,7 +118,7 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
                     validation_loss += loss.item()
             
             train_losses.append(training_loss / args.update)
-            val_losses.append(validation_loss / (10000/args.batch))
+            val_losses.append(validation_loss / (VAL_LEN/args.batch))
 
             train_acc = calculate_acc(trainloader, net, device)
             net.eval()
@@ -122,10 +129,10 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
             val_accuracy.append(val_acc)
 
             print('[Epoch: %d, Batch: %5d] Train Loss: %.3f    Train Acc: %.3f%%    Val Loss: %.3f    Val Acc: %.3f%%' %
-                  ( epoch + 1, i + 1, training_loss / args.update, train_acc, validation_loss / (10000/args.batch), val_acc ))
+                  ( epoch + 1, i + 1, training_loss / args.update, train_acc, validation_loss / (VAL_LEN/args.batch), val_acc ))
             
             with open(LOG_FILE, 'a+') as f:
-                f.write('%.3f,%.3f,%.3f,%.3f\n' % (training_loss / args.update, train_acc, validation_loss / (10000/args.batch), val_acc))
+                f.write('%.3f,%.3f,%.3f,%.3f\n' % (training_loss / args.update, train_acc, validation_loss / (VAL_LEN/args.batch), val_acc))
 
             training_loss = 0.0
 
@@ -138,9 +145,9 @@ print('Total time trained: {}'.format( str(timedelta(seconds=int(end - start)) )
 # Test the model
 net.eval()
 val_acc = calculate_acc(testloader, net, device)
-print('Test Accuracy of the network on the 10000 test images: {} %'.format(val_acc))
+print('Test Accuracy of the network on the {} test images: {} %'.format(VAL_LEN, val_acc))
 with open(LOG_FILE, 'a+') as f:
-    f.write('Test Accuracy of the network on the 10000 test images: {} %'.format(val_acc))
+    f.write('Test Accuracy of the network on the {} test images: {} %'.format(VAL_LEN, val_acc))
 
 # Save the model
 torch.save(net.state_dict(), 'trained_nets/{}-{}-b{}-e{}-{}.pth'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP))

@@ -4,6 +4,7 @@ import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
 
+import os
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
@@ -278,6 +279,23 @@ def get_dataloader(dataset, batch_size):
         trainset = torchvision.datasets.SVHN(root=DATA_ROOT, split='train', transform=train_transform, download=True)
         testset = torchvision.datasets.SVHN(root=DATA_ROOT, split='test', transform=test_transform, download=True)
 
+    elif dataset == 'tinyimagenet':
+        train_transform = transforms.Compose(
+            [transforms.RandomCrop(size=64, padding=4),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.ToTensor(),
+            transforms.Normalize(TINY_IMAGENET_MEAN, TINY_IMAGENET_STD)
+        ])
+
+        test_transform = transforms.Compose(
+        [transforms.ToTensor(),
+        transforms.Normalize(TINY_IMAGENET_MEAN, TINY_IMAGENET_STD)
+        ])
+
+        DATA_DIR = 'tiny-imagenet-200/'
+        trainset = torchvision.datasets.ImageFolder(root=os.path.join(DATA_DIR, 'train'), transform=train_transform)
+        testset = torchvision.datasets.ImageFolder(root=os.path.join(DATA_DIR, 'val'), transform=test_transform)
+    
     else:
         print('Dataset not supported yet...')
         sys.exit()
@@ -309,4 +327,4 @@ def save_plot(train_losses, train_accuracy, val_losses, val_accuracy, args, time
     ax2.set_xlabel('batches')
     ax2.set_ylabel('acc')
 
-    plt.savefig('plots/{}-losses-cifar{}-b{}-e{}-{}.png'.format(args.network, args.nclass, args.batch, args.epoch, time_stamp))
+    plt.savefig('plots/{}-losses-{}-b{}-e{}-{}.png'.format(args.network, args.dataset, args.batch, args.epoch, time_stamp))
