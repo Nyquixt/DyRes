@@ -88,7 +88,7 @@ class ResNet(nn.Module):
         out = self.layer2(out)
         out = self.layer3(out)
         out = self.layer4(out)
-        out = F.avg_pool2d(out, 4)
+        out = F.avg_pool2d(out, 4) if x.size(2) == 32 else F.avg_pool2d(out, 8)
         out = out.view(out.size(0), -1)
         # print(out.size())
         out = self.linear(out)
@@ -109,3 +109,11 @@ def ResNet101(num_classes):
 def ResNet152(num_classes):
     return ResNet(Bottleneck, [3, 8, 36, 3], num_classes)
 
+def test():
+    import torch
+    x = torch.randn(4, 3 , 64, 64)
+    conv = ResNet18(10)
+    y = conv(x)
+    print(y.size())
+
+# test()
