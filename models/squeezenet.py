@@ -47,7 +47,7 @@ class SqueezeNet(nn.Module):
         self.maxpool3 = nn.MaxPool2d(kernel_size=2, stride=2) # 4
         self.fire9 = fire(512, 64, 256)
         self.conv2 = nn.Conv2d(512, num_classes, kernel_size=1, stride=1)
-        self.avg_pool = nn.AvgPool2d(kernel_size=4, stride=4)
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x):
@@ -69,3 +69,10 @@ class SqueezeNet(nn.Module):
         x = self.avg_pool(x)
         x = self.softmax(x)
         return x.squeeze(dim=-1).squeeze(dim=-1)
+
+def test():
+    x = torch.randn(4, 3, 32, 32)
+    net = SqueezeNet(10)
+    y = net(x)
+    print(y.size())
+test()

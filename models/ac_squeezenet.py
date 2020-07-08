@@ -42,7 +42,7 @@ class AC_SqueezeNet(nn.Module):
         self.maxpool3 = nn.MaxPool2d(kernel_size=2, stride=2) # 4
         self.fire9 = fire(512, 64, 256)
         self.conv2 = AC_Conv2dBN(512, num_classes, kernel_size=1, stride=1)
-        self.avg_pool = nn.AvgPool2d(kernel_size=4, stride=4)
+        self.avg_pool =  nn.AdaptiveAvgPool2d(1)
         self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x):
