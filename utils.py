@@ -292,9 +292,8 @@ def get_dataloader(dataset, batch_size):
         transforms.Normalize(TINY_IMAGENET_MEAN, TINY_IMAGENET_STD)
         ])
 
-        DATA_DIR = 'tiny-imagenet-200/'
-        trainset = torchvision.datasets.ImageFolder(root=os.path.join(DATA_DIR, 'train'), transform=train_transform)
-        testset = torchvision.datasets.ImageFolder(root=os.path.join(DATA_DIR, 'val'), transform=test_transform)
+        trainset = torchvision.datasets.ImageFolder(root=os.path.join(TINY_IMAGENET_DATA_DIR, 'train'), transform=train_transform)
+        testset = torchvision.datasets.ImageFolder(root=os.path.join(TINY_IMAGENET_DATA_DIR, 'val'), transform=test_transform)
     
     else:
         print('Dataset not supported yet...')
