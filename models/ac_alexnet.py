@@ -7,7 +7,7 @@ __all__ = ['AC_AlexNet']
 
 class AC_AlexNet(nn.Module):
 
-    def __init__(self, num_classes=10):
+    def __init__(self, num_classes=10, input_size=32):
         super(AC_AlexNet, self).__init__()
         self.features = nn.Sequential(
             AC_Conv2dBN(3, 64, kernel_size=3, stride=2, padding=1),
@@ -26,7 +26,7 @@ class AC_AlexNet(nn.Module):
         )
         self.classifier = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(256 * 2 * 2, 4096),
+            nn.Linear(256 * 2 * 2 if input_size==32 else 256 * 4 * 4, 4096),
             nn.ReLU(inplace=True),
             nn.Dropout(),
             nn.Linear(4096, 1024 if num_classes == 10 else 4096),
