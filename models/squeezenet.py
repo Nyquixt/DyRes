@@ -75,4 +75,4 @@ def test():
     net = SqueezeNet(10)
     y = net(x)
     print(y.size())
-test()
+# test()
