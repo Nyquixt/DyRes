@@ -161,10 +161,7 @@ def get_network(network, device, input_size=32, num_classes=10):
         net = DyBN2_AlexNet(num_classes, input_size)
     elif network == 'dyse_alexnet':
         from models.dyse_alexnet import DySE_AlexNet
-        net = DySE_AlexNet(num_classes)
-    elif network == 'dyse2b_alexnet':
-        from models.dyse_alexnet import DySE2B_AlexNet
-        net = DySE2B_AlexNet(num_classes)
+        net = DySE_AlexNet(num_classes, input_size)
     elif network == 'dycbam_alexnet':
         from models.dycbam_alexnet import DyCBAM_AlexNet
         net = DyCBAM_AlexNet(num_classes)
@@ -189,6 +186,9 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dy_squeezenet':
         from models.dy_squeezenet import Dy_SqueezeNet
         net = Dy_SqueezeNet(num_classes)
+    elif network == 'dyse_squeezenet':
+        from models.dyse_squeezenet import DySE_SqueezeNet
+        net = DySE_SqueezeNet(num_classes)
     elif network == 'dybn2_squeezenet':
         from models.dybn2_squeezenet import DyBN2_SqueezeNet
         net = DyBN2_SqueezeNet(num_classes)
