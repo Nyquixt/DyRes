@@ -11,9 +11,9 @@ class DySE_BasicBlock(nn.Module):
 
     def __init__(self, in_channels, channels, stride=1):
         super(DySE_BasicBlock, self).__init__()
-        self.conv1 = DySE_Conv(in_channels, channels, 
+        self.conv1 = DySEConv(in_channels, channels, 
                         kernel_size=3, stride=stride, padding=1)
-        self.conv2 = DySE_Conv(channels, channels, 
+        self.conv2 = DySEConv(channels, channels, 
                         kernel_size=3, stride=1, padding=1)
 
         self.shortcut = nn.Sequential()
@@ -40,7 +40,7 @@ class DySE_Bottleneck(nn.Module):
         self.conv1 = nn.Conv2d(in_channels, channels, kernel_size=1)
         self.bn1 = nn.BatchNorm2d(channels)
 
-        self.dyse = DySE_Conv(channels, channels, kernel_size=3, stride=stride, padding=1)
+        self.dyse = DySEConv(channels, channels, kernel_size=3, stride=stride, padding=1)
         
         self.conv2 = nn.Conv2d(channels, self.expansion*channels, kernel_size=1)
         self.bn2 = nn.BatchNorm2d(self.expansion*channels)
