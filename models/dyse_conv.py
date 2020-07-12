@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn 
 
-__all__ = ['DySE_Conv']
+__all__ = ['DySEConv']
 
 class DySEConv(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, bias=False, reduction=16):
