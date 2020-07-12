@@ -2,21 +2,19 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .dyconv import *
+from .dyse_conv import *
 
-__all__ = ['Dy_ResNet18', 'Dy_ResNet34', 'Dy_ResNet50', 'Dy_ResNet101', 'Dy_ResNet152']
+__all__ = ['DySE_ResNet18', 'DySE_ResNet34', 'DySE_ResNet50', 'DySE_ResNet101', 'DySE_ResNet152']
 
-class Dy_BasicBlock(nn.Module):
+class DySE_BasicBlock(nn.Module):
     expansion = 1
 
     def __init__(self, in_channels, channels, stride=1):
-        super(Dy_BasicBlock, self).__init__()
-        self.conv1 = DyConv(in_channels, channels, 
+        super(DySE_BasicBlock, self).__init__()
+        self.conv1 = DySE_Conv(in_channels, channels, 
                         kernel_size=3, stride=stride, padding=1)
-        self.bn1 = nn.BatchNorm2d(channels)
-        self.conv2 = DyConv(channels, channels, 
+        self.conv2 = DySE_Conv(channels, channels, 
                         kernel_size=3, stride=1, padding=1)
-        self.bn2 = nn.BatchNorm2d(channels)
 
         self.shortcut = nn.Sequential()
 
@@ -27,24 +25,25 @@ class Dy_BasicBlock(nn.Module):
             )
 
     def forward(self, x):
-        out = F.relu(self.bn1(self.conv1(x)))
-        out = self.bn2(self.conv2(out))
+        out = F.relu(self.conv1(x))
+        out = self.conv2(out)
         # Addition
         out += self.shortcut(x)
         out = F.relu(out)
         return out
 
-class Dy_Bottleneck(nn.Module):
+class DySE_Bottleneck(nn.Module):
     expansion = 4
 
     def __init__(self, in_channels, channels, stride=1):
-        super(Dy_Bottleneck, self).__init__()
+        super(DySE_Bottleneck, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, channels, kernel_size=1)
         self.bn1 = nn.BatchNorm2d(channels)
-        self.conv2 = DyConv(channels, channels, kernel_size=3, stride=stride, padding=1)
-        self.bn2 = nn.BatchNorm2d(channels)
-        self.conv3 = nn.Conv2d(channels, self.expansion*channels, kernel_size=1)
-        self.bn3 = nn.BatchNorm2d(self.expansion*channels)
+
+        self.dyse = DySE_Conv(channels, channels, kernel_size=3, stride=stride, padding=1)
+        
+        self.conv2 = nn.Conv2d(channels, self.expansion*channels, kernel_size=1)
+        self.bn2 = nn.BatchNorm2d(self.expansion*channels)
         
         self.shortcut = nn.Sequential()
         if stride != 1 or in_channels != self.expansion*channels:
@@ -55,15 +54,15 @@ class Dy_Bottleneck(nn.Module):
 
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
-        out = F.relu(self.bn2(self.conv2(out)))
-        out = self.bn3(self.conv3(out))
+        out = F.relu(self.dyse(out))
+        out = self.bn2(self.conv2(out))
         out += self.shortcut(x)
         out = F.relu(out)
         return out
 
-class Dy_ResNet(nn.Module):
+class DySE_ResNet(nn.Module):
     def __init__(self, block, num_blocks, num_classes=10):
-        super(Dy_ResNet, self).__init__()
+        super(DySE_ResNet, self).__init__()
         self.in_channels = 64
 
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3, padding=1)
@@ -94,17 +93,17 @@ class Dy_ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def Dy_ResNet18(num_classes):
-    return Dy_ResNet(Dy_BasicBlock, [2, 2, 2, 2], num_classes)
+def DySE_ResNet18(num_classes):
+    return DySE_ResNet(DySE_BasicBlock, [2, 2, 2, 2], num_classes)
 
-def Dy_ResNet34(num_classes):
-    return Dy_ResNet(Dy_BasicBlock, [3, 4, 6, 3], num_classes)
+def DySE_ResNet34(num_classes):
+    return DySE_ResNet(DySE_BasicBlock, [3, 4, 6, 3], num_classes)
 
-def Dy_ResNet50(num_classes):
-    return Dy_ResNet(Dy_Bottleneck, [3, 4, 6, 3], num_classes)
+def DySE_ResNet50(num_classes):
+    return DySE_ResNet(DySE_Bottleneck, [3, 4, 6, 3], num_classes)
 
-def Dy_ResNet101(num_classes):
-    return Dy_ResNet(Dy_Bottleneck, [3, 4, 23, 3], num_classes)
+def DySE_ResNet101(num_classes):
+    return DySE_ResNet(DySE_Bottleneck, [3, 4, 23, 3], num_classes)
 
-def Dy_ResNet152(num_classes):
-    return Dy_ResNet(Dy_Bottleneck, [3, 8, 36, 3], num_classes)
+def DySE_ResNet152(num_classes):
+    return DySE_ResNet(DySE_Bottleneck, [3, 8, 36, 3], num_classes)

@@ -54,6 +54,7 @@ train_accuracy = []
 val_accuracy = []
 
 VAL_LEN = 10000
+INPUT_SIZE = 32
 
 # Define model
 if args.dataset == 'cifar10':
@@ -65,8 +66,9 @@ elif args.dataset == 'cifar100':
     num_classes = 100
 elif args.dataset == 'tinyimagenet':
     num_classes = 200
+    INPUT_SIZE = 64
 
-net = get_network(args.network, device, num_classes)
+net = get_network(args.network, device, INPUT_SIZE, num_classes)
 init_params(net)
 
 print('Training {} with {} parameters...'.format(args.network, count_parameters(net)))

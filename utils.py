@@ -61,7 +61,7 @@ def calculate_acc(dataloader, net, device):
 
     return (correct / total) * 100
 
-def get_network(network, device, num_classes=10):
+def get_network(network, device, input_size=32, num_classes=10):
 
     if network == 'ac_resnet18':
         from models.ac_resnet import AC_ResNet18
@@ -72,6 +72,9 @@ def get_network(network, device, num_classes=10):
     elif network == 'dy_resnet18':
         from models.dy_resnet import Dy_ResNet18
         net = Dy_ResNet18(num_classes)
+    elif network == 'dyse_resnet18':
+        from models.dyse_resnet import DySE_ResNet18
+        net = DySE_ResNet18(num_classes)
     elif network == 'dycbam_resnet18':
         from models.dycbam_resnet import DyCBAM_ResNet18
         net = DyCBAM_ResNet18(num_classes)
@@ -87,6 +90,9 @@ def get_network(network, device, num_classes=10):
     elif network == 'dy_resnet34':
         from models.dy_resnet import Dy_ResNet34
         net = Dy_ResNet34(num_classes)
+    elif network == 'dyse_resnet34':
+        from models.dyse_resnet import DySE_ResNet34
+        net = DySE_ResNet34(num_classes)
     elif network == 'resnet34':
         from models.resnet import ResNet34
         net = ResNet34(num_classes)
@@ -99,6 +105,9 @@ def get_network(network, device, num_classes=10):
     elif network == 'dy_resnet50':
         from models.dy_resnet import Dy_ResNet50
         net = Dy_ResNet50(num_classes)
+    elif network == 'dyse_resnet50':
+        from models.dyse_resnet import DySE_ResNet50
+        net = DySE_ResNet50(num_classes)
     elif network == 'resnet50':
         from models.resnet import ResNet50
         net = ResNet50(num_classes)
@@ -111,6 +120,9 @@ def get_network(network, device, num_classes=10):
     elif network == 'dy_resnet101':
         from models.dy_resnet import Dy_ResNet101
         net = Dy_ResNet101(num_classes)
+    elif network == 'dyse_resnet101':
+        from models.dyse_resnet import DySE_ResNet101
+        net = DySE_ResNet101(num_classes)
     elif network == 'resnet101':
         from models.resnet import ResNet101
         net = ResNet101(num_classes)
@@ -123,27 +135,30 @@ def get_network(network, device, num_classes=10):
     elif network == 'dy_resnet152':
         from models.dy_resnet import Dy_ResNet152
         net = Dy_ResNet152(num_classes)
+    elif network == 'dyse_resnet152':
+        from models.dyse_resnet import DySE_ResNet152
+        net = DySE_ResNet152(num_classes)
     elif network == 'resnet152':
         from models.resnet import ResNet152
         net = ResNet152(num_classes)
     elif network == 'alexnet':
         from models.alexnet import AlexNet
-        net = AlexNet(num_classes)
+        net = AlexNet(num_classes, input_size)
     elif network == 'ac_alexnet':
         from models.ac_alexnet import AC_AlexNet
-        net = AC_AlexNet(num_classes)
+        net = AC_AlexNet(num_classes, input_size)
     elif network == 'cc_alexnet':
         from models.cc_alexnet import CC_AlexNet
-        net = CC_AlexNet(num_classes)
+        net = CC_AlexNet(num_classes, input_size)
     elif network == 'dy_alexnet':
         from models.dy_alexnet import Dy_AlexNet
-        net = Dy_AlexNet(num_classes)
+        net = Dy_AlexNet(num_classes, input_size)
     elif network == 'dybn_alexnet':
         from models.dybn_alexnet import DyBN_AlexNet
-        net = DyBN_AlexNet(num_classes)
+        net = DyBN_AlexNet(num_classes, input_size)
     elif network == 'dybn2_alexnet':
         from models.dybn_alexnet import DyBN2_AlexNet
-        net = DyBN2_AlexNet(num_classes)
+        net = DyBN2_AlexNet(num_classes, input_size)
     elif network == 'dyse_alexnet':
         from models.dyse_alexnet import DySE_AlexNet
         net = DySE_AlexNet(num_classes)

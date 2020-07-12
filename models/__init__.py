@@ -21,6 +21,7 @@ from .dycbam_alexnet import *
 from .ac_resnet import *
 from .cc_resnet import *
 from .dy_resnet import *
+from .dyse_resnet import *
 from .dycbam_resnet import *
 
 from .ac_mobilenetv2 import *
