@@ -23,11 +23,11 @@ Results on the SVHN Dataset
 | Models        | Basic         | ACNet         | CondConv      | DyConv        |
 |---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | ------        | ------        | ------        | ------        |
-| SqueezeNet    | ------        | ------        | ------        | ------        |
+| SqueezeNet    | 95.74%        | 96.05%        | 96.14%        | 95.94%        |
 | ResNet18      | 96.09%        | 96.36%        | 96.41%        | 96.34%        |
 | MobileNetV2   | ------        | ------        | ------        | ------        |
 
-Results on the Downsample ImageNet Dataset
+Results on the Downsampled ImageNet Dataset
 
 | Models        | Basic         | ACNet         | CondConv      | DyConv        |
 |---------------|---------------|---------------|---------------|---------------|
