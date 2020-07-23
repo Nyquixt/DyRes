@@ -6,6 +6,7 @@ from .acnet import *
 from .condconv import *
 from .dyconv import *
 from .dyse_conv import *
+from .dysq_conv import *
 
 from .ac_lenet import *
 from .cc_lenet import *
@@ -17,6 +18,7 @@ from .dy_alexnet import *
 from .dybn_alexnet import *
 from .dyse_alexnet import *
 from .dycbam_alexnet import *
+from .dysq_alexnet import *
 
 from .ac_resnet import *
 from .cc_resnet import *
