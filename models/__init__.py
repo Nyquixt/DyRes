@@ -19,6 +19,7 @@ from .dybn_alexnet import *
 from .dyse_alexnet import *
 from .dycbam_alexnet import *
 from .dysq_alexnet import *
+from .dyres_alexnet import *
 
 from .ac_resnet import *
 from .cc_resnet import *

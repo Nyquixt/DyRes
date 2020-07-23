@@ -156,6 +156,9 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dysq_alexnet':
         from models.dysq_alexnet import DySQ_AlexNet
         net = DySQ_AlexNet(num_classes, input_size)
+    elif network == 'dyres_alexnet':
+        from models.dyres_alexnet import DyRes_AlexNet
+        net = DyRes_AlexNet(num_classes, input_size)
     elif network == 'dybn_alexnet':
         from models.dybn_alexnet import DyBN_AlexNet
         net = DyBN_AlexNet(num_classes, input_size)
