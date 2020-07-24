@@ -5,7 +5,7 @@ import torch.nn.functional as F
 __all__ = ['DyResConv'] # Dynamic "Squeeze?" Conv
 
 class DyResConv(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, bias=False, reduction=16):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, bias=False, reduction=16):
         super(DyResConv, self).__init__()
 
         # Global Average Pool
@@ -28,11 +28,11 @@ class DyResConv(nn.Module):
         self.softmax = nn.Softmax(1)
 
         # 3x3 Convs
-        self.one_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding=padding, bias=bias)
+        self.one_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, groups=groups, padding=padding, bias=bias)
         self.one_bn = nn.BatchNorm2d(out_channels)
-        self.two_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding=padding, bias=bias)
+        self.two_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, groups=groups, padding=padding, bias=bias)
         self.two_bn = nn.BatchNorm2d(out_channels)
-        self.three_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding=padding, bias=bias)
+        self.three_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, groups=groups, padding=padding, bias=bias)
         self.three_bn = nn.BatchNorm2d(out_channels)
 
     def forward(self, x):
