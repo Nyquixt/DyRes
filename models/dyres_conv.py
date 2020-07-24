@@ -37,16 +37,16 @@ class DyResConv(nn.Module):
 
     def forward(self, x):
         b, c, h, w = x.size()
-
-        a1 = F.interpolate(self.gap1(x), 5, mode='bicubic', align_corners=False)
+        a1 = self.gap1(x)
         a3 = F.interpolate(self.gap3(x), 5, mode='bicubic', align_corners=False)
         a5 = self.gap5(x)
+        a1 = a1.expand_as(a5)
         attention = torch.cat([a1, a3, a5], dim=0)
         attention = F.relu(self.pointwise1(attention))
-        attention = self.pointwise2(attention)
+        attention = F.relu(self.pointwise2(attention))
         attention = F.relu(self.channelwise1(attention))
         attention = self.channelwise2(attention)
-        attention = self.softmax(attention)
+        attention = self.softmax(attention.squeeze(dim=-1).squeeze(dim=-1)).unsqueeze(dim=-1).unsqueeze(dim=-1)
         x1 = x * attention[0:b].expand_as(x)
         y1 = self.one_bn(self.one_conv(x1))
         x2 = x * attention[b:2*b].expand_as(x)
