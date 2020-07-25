@@ -14,16 +14,17 @@ class DyResConv(nn.Module):
         self.gap5 = nn.AdaptiveAvgPool2d(5)
 
         squeeze_channels = in_channels // reduction if in_channels > reduction else 1
+        attention_groups = squeeze_channels // 4 if squeeze_channels > 4 else 1
 
         self.pointwise1 = nn.Conv2d(in_channels, squeeze_channels, kernel_size=1, stride=1,
-                                groups=squeeze_channels, bias=False)
+                                groups=attention_groups, bias=False)
         self.pointwise2 = nn.Conv2d(squeeze_channels, in_channels, kernel_size=1, stride=1,
-                                groups=squeeze_channels, bias=False)
+                                groups=attention_groups, bias=False)
 
         self.channelwise1 = nn.Conv2d(in_channels, squeeze_channels, kernel_size=3, stride=1,
-                                groups=squeeze_channels, bias=False)
+                                groups=attention_groups, bias=False)
         self.channelwise2 = nn.Conv2d(squeeze_channels, in_channels, kernel_size=3, stride=1,
-                                groups=squeeze_channels, bias=False)               
+                                groups=attention_groups, bias=False)               
         
         self.softmax = nn.Softmax(1)
 
