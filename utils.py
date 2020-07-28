@@ -141,9 +141,12 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dysq_alexnet':
         from models.dysq_alexnet import DySQ_AlexNet
         net = DySQ_AlexNet(num_classes, input_size)
-    elif network == 'dyres_alexnet':
-        from models.dyres_alexnet import DyRes_AlexNet
-        net = DyRes_AlexNet(num_classes, input_size)
+    elif network == 'dyres_alexnet1':
+        from models.dyres_alexnet import DyRes_AlexNet1
+        net = DyRes_AlexNet1(num_classes, input_size)
+    elif network == 'dyres_alexnet2':
+        from models.dyres_alexnet import DyRes_AlexNet2
+        net = DyRes_AlexNet2(num_classes, input_size)
     elif network == 'ac_squeezenet':
         from models.ac_squeezenet import AC_SqueezeNet
         net = AC_SqueezeNet(num_classes)
