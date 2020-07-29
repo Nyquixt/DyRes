@@ -10,6 +10,7 @@ from .condconv import *
 from .dyconv import *
 from .dysq_conv import *
 from .dyres_conv import *
+from .weightnet import *
 
 # Experiments
 from .ac_alexnet import *
@@ -17,11 +18,13 @@ from .cc_alexnet import *
 from .dy_alexnet import *
 from .dysq_alexnet import *
 from .dyres_alexnet import *
+from .wn_alexnet import *
 
 from .ac_resnet import *
 from .cc_resnet import *
 from .dy_resnet import *
 from .dyres_resnet import *
+from .wn_resnet import *
 
 from .ac_mobilenetv2 import *
 from .cc_mobilenetv2 import *

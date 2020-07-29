@@ -13,8 +13,7 @@ class DyConv(nn.Module):
         self.attention = nn.Sequential(
             nn.Linear(in_channels, 64),
             nn.ReLU(inplace=True),
-            nn.Linear(64, 3),
-            # nn.Softmax(1)
+            nn.Linear(64, 3)
         )
 
     def forward(self, x):

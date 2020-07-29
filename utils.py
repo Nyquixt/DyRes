@@ -75,6 +75,9 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dyres_resnet18':
         from models.dyres_resnet import DyRes_ResNet18
         net = DyRes_ResNet18(num_classes)
+    elif network == 'wn_resnet18':
+        from models.wn_resnet import WN_ResNet18
+        net = WN_ResNet18(num_classes)
     elif network == 'resnet18':
         from models.resnet import ResNet18
         net = ResNet18(num_classes)
@@ -147,6 +150,9 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dyres_alexnet2':
         from models.dyres_alexnet import DyRes_AlexNet2
         net = DyRes_AlexNet2(num_classes, input_size)
+    elif network == 'wn_alexnet':
+        from models.wn_alexnet import WN_AlexNet
+        net = WN_AlexNet(num_classes, input_size)
     elif network == 'ac_squeezenet':
         from models.ac_squeezenet import AC_SqueezeNet
         net = AC_SqueezeNet(num_classes)
