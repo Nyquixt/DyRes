@@ -9,13 +9,13 @@ __all__ = ['DyRes_ResNet18', 'DyRes_ResNet34', 'DyRes_ResNet50', 'DyRes_ResNet10
 class DyRes_BasicBlock(nn.Module):
     expansion = 1
 
-    def __init__(self, in_channels, channels, stride=1):
+    def __init__(self, in_channels, channels, stride=1, mode='A'):
         super(DyRes_BasicBlock, self).__init__()
         self.conv1 = DyResConv(in_channels, channels, 
-                        kernel_size=3, stride=stride, padding=1)
+                        kernel_size=3, stride=stride, padding=1, mode=mode)
         self.bn1 = nn.BatchNorm2d(channels)
         self.conv2 = DyResConv(channels, channels, 
-                        kernel_size=3, stride=1, padding=1)
+                        kernel_size=3, stride=1, padding=1, mode=mode)
         self.bn2 = nn.BatchNorm2d(channels)
 
         self.shortcut = nn.Sequential()
@@ -37,11 +37,11 @@ class DyRes_BasicBlock(nn.Module):
 class DyRes_Bottleneck(nn.Module):
     expansion = 4
 
-    def __init__(self, in_channels, channels, stride=1):
+    def __init__(self, in_channels, channels, stride=1, mode='A'):
         super(DyRes_Bottleneck, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, channels, kernel_size=1)
         self.bn1 = nn.BatchNorm2d(channels)
-        self.conv2 = DyResConv(channels, channels, kernel_size=3, stride=stride, padding=1)
+        self.conv2 = DyResConv(channels, channels, kernel_size=3, stride=stride, padding=1, mode=mode)
         self.bn2 = nn.BatchNorm2d(channels)
         self.conv3 = nn.Conv2d(channels, self.expansion*channels, kernel_size=1)
         self.bn3 = nn.BatchNorm2d(self.expansion*channels)
@@ -62,8 +62,9 @@ class DyRes_Bottleneck(nn.Module):
         return out
 
 class DyRes_ResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10):
+    def __init__(self, block, num_blocks, num_classes=10, mode='A'):
         super(DyRes_ResNet, self).__init__()
+        self.mode = mode
         self.in_channels = 64
 
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3, padding=1)
@@ -79,7 +80,7 @@ class DyRes_ResNet(nn.Module):
         strides = [stride] + [1] * (num_blocks - 1)
         layers = []
         for stride in strides:
-            layers.append(block(self.in_channels, channels, stride))
+            layers.append(block(self.in_channels, channels, stride, mode=self.mode))
             self.in_channels = channels * block.expansion
         return nn.Sequential(*layers)
 
@@ -94,17 +95,17 @@ class DyRes_ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def DyRes_ResNet18(num_classes):
-    return DyRes_ResNet(DyRes_BasicBlock, [2, 2, 2, 2], num_classes)
+def DyRes_ResNet18(num_classes, mode):
+    return DyRes_ResNet(DyRes_BasicBlock, [2, 2, 2, 2], num_classes, mode)
 
-def DyRes_ResNet34(num_classes):
-    return DyRes_ResNet(DyRes_BasicBlock, [3, 4, 6, 3], num_classes)
+def DyRes_ResNet34(num_classes, mode):
+    return DyRes_ResNet(DyRes_BasicBlock, [3, 4, 6, 3], num_classes, mode)
 
-def DyRes_ResNet50(num_classes):
-    return DyRes_ResNet(DyRes_Bottleneck, [3, 4, 6, 3], num_classes)
+def DyRes_ResNet50(num_classes, mode):
+    return DyRes_ResNet(DyRes_Bottleneck, [3, 4, 6, 3], num_classes, mode)
 
-def DyRes_ResNet101(num_classes):
-    return DyRes_ResNet(DyRes_Bottleneck, [3, 4, 23, 3], num_classes)
+def DyRes_ResNet101(num_classes, mode):
+    return DyRes_ResNet(DyRes_Bottleneck, [3, 4, 23, 3], num_classes, mode)
 
-def DyRes_ResNet152(num_classes):
-    return DyRes_ResNet(DyRes_Bottleneck, [3, 8, 36, 3], num_classes)
+def DyRes_ResNet152(num_classes, mode):
+    return DyRes_ResNet(DyRes_Bottleneck, [3, 8, 36, 3], num_classes, mode)

@@ -5,9 +5,9 @@ import torch.nn.functional as F
 __all__ = ['DyResConv'] # Dynamic "Squeeze?" Conv
 
 class DyResConv(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, bias=False, reduction=16, mode='p2d'):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, bias=False, reduction=16, mode='A'):
         super(DyResConv, self).__init__()
-        assert mode == 'p2d' or mode == 'd2p'
+        assert mode == 'A' or mode == 'B' or mode == 'C'
         self.mode = mode
 
         # Global Average Pool
@@ -16,18 +16,34 @@ class DyResConv(nn.Module):
         self.gap5 = nn.AdaptiveAvgPool2d(5)
 
         squeeze_channels = in_channels // reduction if in_channels > reduction else 1
-        # attention_groups = squeeze_channels // 4 if squeeze_channels > 4 else 1
-        # attention_groups = 1
-
-        self.pointwise1 = nn.Conv2d(in_channels, squeeze_channels, kernel_size=1, stride=1,
-                                groups=squeeze_channels, bias=False)
-        self.pointwise2 = nn.Conv2d(squeeze_channels, in_channels, kernel_size=1, stride=1,
-                                groups=squeeze_channels, bias=False)
-
-        self.depthwise1 = nn.Conv2d(in_channels, squeeze_channels, kernel_size=3, stride=1,
-                                groups=squeeze_channels, bias=False)
-        self.depthwise2 = nn.Conv2d(squeeze_channels, in_channels, kernel_size=3, stride=1,
-                                groups=squeeze_channels, bias=False)               
+        
+        if self.mode == 'A': # 1-1-3-3
+            self.pointwise1 = nn.Conv2d(in_channels, squeeze_channels, kernel_size=1, stride=1,
+                                    groups=squeeze_channels, bias=False)
+            self.pointwise2 = nn.Conv2d(squeeze_channels, squeeze_channels, kernel_size=1, stride=1,
+                                    groups=squeeze_channels, bias=False)
+            self.depthwise1 = nn.Conv2d(squeeze_channels, squeeze_channels, kernel_size=3, stride=1,
+                                    groups=squeeze_channels, bias=False)
+            self.depthwise2 = nn.Conv2d(squeeze_channels, in_channels, kernel_size=3, stride=1,
+                                    groups=squeeze_channels, bias=False) 
+        elif self.mode == 'B': # 3-3-1-1
+            self.depthwise1 = nn.Conv2d(in_channels, squeeze_channels, kernel_size=3, stride=1,
+                                    groups=squeeze_channels, bias=False)
+            self.depthwise2 = nn.Conv2d(squeeze_channels, squeeze_channels, kernel_size=3, stride=1,
+                                    groups=squeeze_channels, bias=False)
+            self.pointwise1 = nn.Conv2d(squeeze_channels, squeeze_channels, kernel_size=1, stride=1,
+                                    groups=squeeze_channels, bias=False)
+            self.pointwise2 = nn.Conv2d(squeeze_channels, in_channels, kernel_size=1, stride=1,
+                                    groups=squeeze_channels, bias=False)
+        elif self.mode == 'C': # 1-3-3-1
+            self.pointwise1 = nn.Conv2d(in_channels, squeeze_channels, kernel_size=1, stride=1,
+                                    groups=squeeze_channels, bias=False)
+            self.depthwise1 = nn.Conv2d(squeeze_channels, squeeze_channels, kernel_size=3, stride=1,
+                                    groups=squeeze_channels, bias=False)
+            self.depthwise2 = nn.Conv2d(squeeze_channels, squeeze_channels, kernel_size=3, stride=1,
+                                    groups=squeeze_channels, bias=False)
+            self.pointwise2 = nn.Conv2d(squeeze_channels, in_channels, kernel_size=1, stride=1,
+                                    groups=squeeze_channels, bias=False) 
         
         self.softmax = nn.Softmax(1)
 
@@ -46,15 +62,20 @@ class DyResConv(nn.Module):
         a5 = self.gap5(x)
         a1 = a1.expand_as(a5)
         attention = torch.cat([a1, a3, a5], dim=0)
-        if self.mode == 'p2d':
+        if self.mode == 'A':
             attention = F.relu(self.pointwise1(attention))
             attention = F.relu(self.pointwise2(attention))
             attention = F.relu(self.depthwise1(attention))
             attention = self.depthwise2(attention)
-        elif self.mode == 'd2p':
+        elif self.mode == 'B':
             attention = F.relu(self.depthwise1(attention))
             attention = F.relu(self.depthwise2(attention))
             attention = F.relu(self.pointwise1(attention))
+            attention = self.pointwise2(attention)
+        elif self.mode == 'C':
+            attention = F.relu(self.pointwise1(attention))
+            attention = F.relu(self.depthwise1(attention))
+            attention = F.relu(self.depthwise2(attention))
             attention = self.pointwise2(attention)
         attention = self.softmax(attention.squeeze(dim=-1).squeeze(dim=-1)).unsqueeze(dim=-1).unsqueeze(dim=-1)
         x1 = x * attention[0:b].expand_as(x)

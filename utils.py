@@ -69,9 +69,15 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dy_resnet18':
         from models.dy_resnet import Dy_ResNet18
         net = Dy_ResNet18(num_classes)
-    elif network == 'dyres_resnet18':
+    elif network == 'dyresA_resnet18':
         from models.dyres_resnet import DyRes_ResNet18
-        net = DyRes_ResNet18(num_classes)
+        net = DyRes_ResNet18(num_classes, mode='A')
+    elif network == 'dyresB_resnet18':
+        from models.dyres_resnet import DyRes_ResNet18
+        net = DyRes_ResNet18(num_classes, mode='B')
+    elif network == 'dyresC_resnet18':
+        from models.dyres_resnet import DyRes_ResNet18
+        net = DyRes_ResNet18(num_classes, mode='C')
     elif network == 'wn_resnet18':
         from models.wn_resnet import WN_ResNet18
         net = WN_ResNet18(num_classes)
@@ -123,12 +129,15 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dysq_alexnet':
         from models.dysq_alexnet import DySQ_AlexNet
         net = DySQ_AlexNet(num_classes, input_size)
-    elif network == 'dyres_alexnet1':
-        from models.dyres_alexnet import DyRes_AlexNet1
-        net = DyRes_AlexNet1(num_classes, input_size)
-    elif network == 'dyres_alexnet2':
-        from models.dyres_alexnet import DyRes_AlexNet2
-        net = DyRes_AlexNet2(num_classes, input_size)
+    elif network == 'dyresA_alexnet':
+        from models.dyres_alexnet import DyRes_AlexNet
+        net = DyRes_AlexNet(num_classes, input_size, mode='A')
+    elif network == 'dyresB_alexnet':
+        from models.dyres_alexnet import DyRes_AlexNet
+        net = DyRes_AlexNet(num_classes, input_size, mode='B')
+    elif network == 'dyresC_alexnet':
+        from models.dyres_alexnet import DyRes_AlexNet
+        net = DyRes_AlexNet(num_classes, input_size, mode='C')
     elif network == 'wn_alexnet':
         from models.wn_alexnet import WN_AlexNet
         net = WN_AlexNet(num_classes, input_size)
@@ -141,9 +150,15 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dy_mobilenetv2':
         from models.dy_mobilenetv2 import Dy_MobileNetV2
         net = Dy_MobileNetV2(num_classes)
-    elif network == 'dyres_mobilenetv2':
+    elif network == 'dyresA_mobilenetv2':
         from models.dyres_mobilenetv2 import DyRes_MobileNetV2
-        net = DyRes_MobileNetV2(num_classes)
+        net = DyRes_MobileNetV2(num_classes, mode='A')
+    elif network == 'dyresB_mobilenetv2':
+        from models.dyres_mobilenetv2 import DyRes_MobileNetV2
+        net = DyRes_MobileNetV2(num_classes, mode='B')
+    elif network == 'dyresC_mobilenetv2':
+        from models.dyres_mobilenetv2 import DyRes_MobileNetV2
+        net = DyRes_MobileNetV2(num_classes, mode='C')
     elif network == 'wn_mobilenetv2':
         from models.wn_mobilenetv2 import WN_MobileNetV2
         net = WN_MobileNetV2(num_classes)
