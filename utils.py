@@ -63,10 +63,7 @@ def calculate_acc(dataloader, net, device):
 
 def get_network(network, device, input_size=32, num_classes=10):
 
-    if network == 'ac_resnet18':
-        from models.ac_resnet import AC_ResNet18
-        net = AC_ResNet18(num_classes)
-    elif network == 'cc_resnet18':
+    if network == 'cc_resnet18':
         from models.cc_resnet import CC_ResNet18
         net = CC_ResNet18(num_classes)
     elif network == 'dy_resnet18':
@@ -81,9 +78,6 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'resnet18':
         from models.resnet import ResNet18
         net = ResNet18(num_classes)
-    elif network == 'ac_resnet34':
-        from models.ac_resnet import AC_ResNet34
-        net = AC_ResNet34(num_classes)
     elif network == 'cc_resnet34':
         from models.cc_resnet import CC_ResNet34
         net = CC_ResNet34(num_classes)
@@ -93,9 +87,6 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'resnet34':
         from models.resnet import ResNet34
         net = ResNet34(num_classes)
-    elif network == 'ac_resnet50':
-        from models.ac_resnet import AC_ResNet50
-        net = AC_ResNet50(num_classes)
     elif network == 'cc_resnet50':
         from models.cc_resnet import CC_ResNet50
         net = CC_ResNet50(num_classes)
@@ -105,9 +96,6 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'resnet50':
         from models.resnet import ResNet50
         net = ResNet50(num_classes)
-    elif network == 'ac_resnet101':
-        from models.ac_resnet import AC_ResNet101
-        net = AC_ResNet101(num_classes)
     elif network == 'cc_resnet101':
         from models.cc_resnet import CC_ResNet101
         net = CC_ResNet101(num_classes)
@@ -117,9 +105,6 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'resnet101':
         from models.resnet import ResNet101
         net = ResNet101(num_classes)
-    elif network == 'ac_resnet152':
-        from models.ac_resnet import AC_ResNet152
-        net = AC_ResNet152(num_classes)
     elif network == 'cc_resnet152':
         from models.cc_resnet import CC_ResNet152
         net = CC_ResNet152(num_classes)
@@ -129,12 +114,6 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'resnet152':
         from models.resnet import ResNet152
         net = ResNet152(num_classes)
-    elif network == 'alexnet':
-        from models.alexnet import AlexNet
-        net = AlexNet(num_classes, input_size)
-    elif network == 'ac_alexnet':
-        from models.ac_alexnet import AC_AlexNet
-        net = AC_AlexNet(num_classes, input_size)
     elif network == 'cc_alexnet':
         from models.cc_alexnet import CC_AlexNet
         net = CC_AlexNet(num_classes, input_size)
@@ -153,24 +132,9 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'wn_alexnet':
         from models.wn_alexnet import WN_AlexNet
         net = WN_AlexNet(num_classes, input_size)
-    elif network == 'ac_squeezenet':
-        from models.ac_squeezenet import AC_SqueezeNet
-        net = AC_SqueezeNet(num_classes)
-    elif network == 'cc_squeezenet':
-        from models.cc_squeezenet import CC_SqueezeNet
-        net = CC_SqueezeNet(num_classes)
-    elif network == 'dy_squeezenet':
-        from models.dy_squeezenet import Dy_SqueezeNet
-        net = Dy_SqueezeNet(num_classes)
-    elif network == 'dyres_squeezenet':
-        from models.dyres_squeezenet import DyRes_SqueezeNet
-        net = DyRes_SqueezeNet(num_classes)
-    elif network == 'squeezenet':
-        from models.squeezenet import SqueezeNet
-        net = SqueezeNet(num_classes)
-    elif network == 'ac_mobilenetv2':
-        from models.ac_mobilenetv2 import AC_MobileNetV2
-        net = AC_MobileNetV2(num_classes)
+    elif network == 'alexnet':
+        from models.alexnet import AlexNet
+        net = AlexNet(num_classes, input_size)
     elif network == 'cc_mobilenetv2':
         from models.cc_mobilenetv2 import CC_MobileNetV2
         net = CC_MobileNetV2(num_classes)
@@ -180,6 +144,9 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dyres_mobilenetv2':
         from models.dyres_mobilenetv2 import DyRes_MobileNetV2
         net = DyRes_MobileNetV2(num_classes)
+    elif network == 'wn_mobilenetv2':
+        from models.wn_mobilenetv2 import WN_MobileNetV2
+        net = WN_MobileNetV2(num_classes)
     elif network == 'mobilenetv2':
         from models.mobilenetv2 import MobileNetV2
         net = MobileNetV2(num_classes)

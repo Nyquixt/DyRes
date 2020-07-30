@@ -58,7 +58,7 @@ class WeightNet_DW(nn.Module):
         self.fc2 = nn.Conv2d(self.M // self.G * channels, channels * kernel_size * kernel_size, 1, 1, 0, groups=channels)
 
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.reduce = nn.Conv2d(channels, input_gap, 1, 1, 0, bias=False)
+        self.reduce = nn.Conv2d(channels, input_gap, 1, 1, 0, bias=True)
 
     def forward(self, x):
         b, _, _, _ = x.size()
