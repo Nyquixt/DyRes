@@ -9,7 +9,7 @@ CIFAR100_STD = (0.267, 0.256, 0.276)
 SVHN_MEAN = (0.4377, 0.4438, 0.4728)
 SVHN_STD = (0.1201, 0.1231, 0.1052)
 
-TINY_IMAGENET_DATA_DIR = '/home/nyquixt/Desktop/dataset/tiny-imagenet-200/'
+TINY_IMAGENET_DATA_DIR = '/home/ai-lab/Desktop/tiny-imagenet-200/'
 
 TINY_IMAGENET_MEAN = (0.4802, 0.4481, 0.3975)
 TINY_IMAGENET_STD = (0.2302, 0.2265, 0.2262)
