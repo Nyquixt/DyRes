@@ -10,7 +10,7 @@ Results on the CIFAR10 Dataset
 
 Results on the CIFAR100 Dataset
 
-| Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes2 A      | DyRes B       | DyRes C       |
+| Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes A       | DyRes B       | DyRes C       |
 |---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | 61.01%        | 61.47%        | 60.60%        | 60.81%        | 61.70%        | 62.03%        | ------        |
 | ResNet18      | 75.65%        | ------        | ------        | ------        | ------        | ------        | ------        |
@@ -28,7 +28,7 @@ Results on the Tiny ImageNet Dataset
 
 | Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes A       | DyRes B       | DyRes C       |
 |---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|
-| AlexNet       | 52.68%        | 53.33%        | ------        | ------        | ------        | ------        | ------        |
+| AlexNet       | 52.68%        | 53.33%        | 53.39%        | ------        | ------        | ------        | ------        |
 | ResNet18      | 63.70%        | ------        | ------        | ------        | ------        | ------        | ------        |
 | MobileNetV2   | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
 
