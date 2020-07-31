@@ -77,7 +77,6 @@ If you want to play around with the hyper-parameters run ``python3 train.py -h``
     -l, --lr                Learning rate for SGD
     -m, --momentum          Momentum for SGD
     -d, --weight-decay      Weight decay for SGD
-    -u, --update            Print out the training stats every x number of batches
     -s, --step-size         Update the learning rate every x epochs
     -g, --gamma             Learning rate update factor. new_lr = old_lr * gamma
     
@@ -86,4 +85,4 @@ If you want to play around with the hyper-parameters run ``python3 train.py -h``
 
 Another example to run
 
-    python3 train.py --network resnet_ac50 -e 300 -b 512 -l 0.1 -m 0.9 -d 0.0005 -u 30 -s 80 -g 0.1 --nclass 100 --cuda
+    python3 train.py --network resnet_ac50 -e 300 -b 512 -l 0.1 -m 0.9 -d 0.0005 -s 80 -g 0.1 --nclass 100 --cuda

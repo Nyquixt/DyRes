@@ -21,7 +21,6 @@ parser.add_argument('--batch', '-b', type=int, default=256, help='The batch size
 parser.add_argument('--lr', '-l', type=float, default=0.1, help='Learning rate')
 parser.add_argument('--momentum', '-m', type=float, default=0.9, help='Momentum for SGD')
 parser.add_argument('--weight-decay', '-d', type=float, default=0.0005, help='Weight decay for SGD optimizer')
-parser.add_argument('--update', '-u', type=int, default=50, help='Print out stats after x batches')
 parser.add_argument('--step-size', '-s', type=int, default=30, help='Step in learning rate scheduler')
 parser.add_argument('--gamma', '-g', type=float, default=0.1, help='Gamma in learning rate scheduler')
 parser.add_argument('--dataset', type=str, help='cifar10 or cifar100 or svhn or tinyimagenet', default='cifar10')
@@ -53,19 +52,22 @@ val_losses = []
 train_accuracy = []
 val_accuracy = []
 
-VAL_LEN = 10000
-INPUT_SIZE = 32
-
 # Define model
 if args.dataset == 'cifar10':
     num_classes = 10
+    VAL_LEN = 10000
+    INPUT_SIZE = 32
 elif args.dataset == 'svhn':
     num_classes = 10
     VAL_LEN = 26032
+    INPUT_SIZE = 32
 elif args.dataset == 'cifar100':
     num_classes = 100
+    VAL_LEN = 10000
+    INPUT_SIZE = 32
 elif args.dataset == 'tinyimagenet':
     num_classes = 200
+    VAL_LEN = 10000
     INPUT_SIZE = 64
 
 net = get_network(args.network, device, INPUT_SIZE, num_classes)
@@ -104,39 +106,38 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
 
         training_loss += loss.item()
 
-        # Print statistics
-        
-        if i % args.update == (args.update - 1):    # print every args.update mini-batches
-            with torch.no_grad():
-                validation_loss = 0.0
-                for j, data in enumerate(testloader): # (10,000 / args.batch) batches
-                    inputs, labels = data
-                    inputs = inputs.to(device)
-                    labels = labels.to(device)
+    # Print statistics
+    with torch.no_grad():
+        validation_loss = 0.0
+        for j, data in enumerate(testloader): # (10,000 / args.batch) batches
+            inputs, labels = data
+            inputs = inputs.to(device)
+            labels = labels.to(device)
 
-                    outputs = net(inputs)
-                    loss = criterion(outputs, labels)
-                    
-                    validation_loss += loss.item()
+            outputs = net(inputs)
+            loss = criterion(outputs, labels)
             
-            train_losses.append(training_loss / args.update)
-            val_losses.append(validation_loss / (VAL_LEN/args.batch))
+            validation_loss += loss.item()
+    
+    train_losses.append(training_loss / len(trainloader))
+    val_losses.append(validation_loss / len(testloader))
 
-            train_acc = calculate_acc(trainloader, net, device)
-            net.eval()
-            val_acc = calculate_acc(testloader, net, device)
-            net.train()
+    # Calculate training accuracy, top-1
+    train_acc = calculate_acc(trainloader, net, device)
 
-            train_accuracy.append(train_acc)
-            val_accuracy.append(val_acc)
+    # Calculate validation accuracy
+    net.eval()
+    val_acc = calculate_acc(testloader, net, device)
+    net.train()
 
-            print('[Epoch: %d, Batch: %5d] Train Loss: %.3f    Train Acc: %.3f%%    Val Loss: %.3f    Val Acc: %.3f%%' %
-                  ( epoch + 1, i + 1, training_loss / args.update, train_acc, validation_loss / (VAL_LEN/args.batch), val_acc ))
-            
-            with open(LOG_FILE, 'a+') as f:
-                f.write('%.3f,%.3f,%.3f,%.3f\n' % (training_loss / args.update, train_acc, validation_loss / (VAL_LEN/args.batch), val_acc))
+    train_accuracy.append(train_acc)
+    val_accuracy.append(val_acc)
 
-            training_loss = 0.0
+    print('[Epoch: %d] Train Loss: %.3f    Train Acc: %.3f%%    Val Loss: %.3f    Val Acc: %.3f%%' %
+            ( epoch + 1, training_loss / len(trainloader), train_acc, validation_loss / len(testloader), val_acc ))
+    
+    with open(LOG_FILE, 'a+') as f:
+        f.write('%d,%.3f,%.3f,%.3f,%.3f\n' % (epoch + 1, training_loss / len(trainloader), train_acc, validation_loss / len(testloader), val_acc))
 
     # Step the scheduler after every epoch
     scheduler.step()
