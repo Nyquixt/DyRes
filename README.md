@@ -1,4 +1,4 @@
-# DyConv
+# DyRes
 
 Results on the CIFAR10 Dataset
 
