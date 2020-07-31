@@ -248,7 +248,7 @@ def get_dataloader(dataset, batch_size):
     return trainloader, testloader
 
 def save_plot(train_losses, train_accuracy, val_losses, val_accuracy, args, time_stamp):
-    x = np.array([x for x in range(len(train_losses))]) * args.update
+    x = np.array([x for x in range(1, args.epoch + 1)])
     y1 = np.array(train_losses)
     y2 = np.array(val_losses)
 
