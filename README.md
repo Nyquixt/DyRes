@@ -13,8 +13,8 @@ Results on the CIFAR100 Dataset
 | Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes A       | DyRes B       | DyRes C       |
 |---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | 61.01%        | 61.47%        | 60.60%        | 60.81%        | 61.70%        | 62.03%        | 61.84%        |
-| ResNet18      | 75.65%        | ------        | ------        | ------        | ------        | ------        | ------        |
-| MobileNetV2   | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
+| ResNet18      | 75.65%        | 75.85%        | ------        | ------        | ------        | ------        | ------        |
+| MobileNetV2   | 73.44%        | ------        | ------        | ------        | ------        | ------        | ------        |
 
 Results on the SVHN Dataset
 
@@ -22,7 +22,7 @@ Results on the SVHN Dataset
 |---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | 94.50%        | 94.65%        | 94.55%        | 94.61%        | 94.79%        | 94.82%        | 94.60%        |
 | ResNet18      | 96.09%        | 96.41%        | 96.34%        | ------        | 96.29%        | ------        | ------        |
-| MobileNetV2   | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
+| MobileNetV2   | 96.32%        | ------        | ------        | ------        | ------        | ------        | ------        |
 
 Results on the Tiny ImageNet Dataset
 
@@ -80,9 +80,9 @@ If you want to play around with the hyper-parameters run ``python3 train.py -h``
     -s, --step-size         Update the learning rate every x epochs
     -g, --gamma             Learning rate update factor. new_lr = old_lr * gamma
     
-    --nclass                Number of classes, 10 or 100 for CIFAR10 or CIFAR100
+    --dataset               Dataset to be trained with, CIFAR10, CIFAR100, SVHN, or Tiny ImageNet
     --cuda                  Use GPU to train if the flag is used
 
 Another example to run
 
-    python3 train.py --network resnet_ac50 -e 300 -b 512 -l 0.1 -m 0.9 -d 0.0005 -s 80 -g 0.1 --nclass 100 --cuda
+    python3 train.py --network resnet_ac50 -e 300 -b 512 -l 0.1 -m 0.9 -d 0.0005 -s 80 -g 0.1 --dataset cifar10 --cuda
