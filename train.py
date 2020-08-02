@@ -25,6 +25,7 @@ parser.add_argument('--step-size', '-s', type=int, default=30, help='Step in lea
 parser.add_argument('--gamma', '-g', type=float, default=0.1, help='Gamma in learning rate scheduler')
 parser.add_argument('--dataset', type=str, help='cifar10 or cifar100 or svhn or tinyimagenet', default='cifar10')
 parser.add_argument('--cuda', action='store_true')
+parser.add_argument('--ngpu', type=int, default=1)
 
 args = parser.parse_args()
 print(args)
@@ -71,6 +72,10 @@ elif args.dataset == 'tinyimagenet':
     INPUT_SIZE = 64
 
 net = get_network(args.network, device, INPUT_SIZE, num_classes)
+# Handle multi-gpu
+if args.cuda and args.ngpu > 1:
+    net = nn.DataParallel(net, list(range(args.ngpu)))
+# Init parameters
 init_params(net)
 
 print('Training {} with {} parameters...'.format(args.network, count_parameters(net)))
