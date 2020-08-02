@@ -61,6 +61,24 @@ def calculate_acc(dataloader, net, device):
 
     return (correct / total) * 100
 
+# INPUTS: output have shape of [batch_size, category_count]
+#    and target in the shape of [batch_size] * there is only one true class for each sample
+# topk is tuple of classes to be included in the precision
+# topk have to a tuple so if you are giving one number, do not forget the comma
+def accuracy(output, target, topk=(1,5)):
+    with torch.no_grad():
+        maxk = max(topk)
+        batch_size = target.size(0)
+        _, pred = torch.topk(input=output, k=maxk, dim=1, largest=True, sorted=True)
+        pred = pred.t()
+        correct = pred.eq(target.view(1, -1).expand_as(pred))
+
+        res = []
+        for k in topk:
+            correct_k = correct[:k].view(-1).float().sum(0, keepdim=True)
+            res.append(correct_k.mul(100.0/batch_size))
+        return res
+
 def get_network(network, device, input_size=32, num_classes=10):
 
     if network == 'cc_resnet18':

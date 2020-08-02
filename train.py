@@ -24,6 +24,7 @@ parser.add_argument('--weight-decay', '-d', type=float, default=0.0005, help='We
 parser.add_argument('--step-size', '-s', type=int, default=30, help='Step in learning rate scheduler')
 parser.add_argument('--gamma', '-g', type=float, default=0.1, help='Gamma in learning rate scheduler')
 parser.add_argument('--dataset', type=str, help='cifar10 or cifar100 or svhn or tinyimagenet', default='cifar10')
+parser.add_argument('--save', action='store_true')
 parser.add_argument('--cuda', action='store_true')
 parser.add_argument('--ngpu', type=int, default=1)
 
@@ -158,7 +159,8 @@ with open(LOG_FILE, 'a+') as f:
     f.write('Test Accuracy of the network on the {} test images: {} %'.format(VAL_LEN, val_acc))
 
 # Save the model
-torch.save(net.state_dict(), 'trained_nets/{}-{}-b{}-e{}-{}.pth'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP))
+if args.save:
+    torch.save(net.state_dict(), 'trained_nets/{}-{}-b{}-e{}-{}.pth'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP))
 
 # Save plot
 save_plot(train_losses, train_accuracy, val_losses, val_accuracy, args, TIME_STAMP)
