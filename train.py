@@ -42,7 +42,7 @@ with open(LOG_FILE, 'w') as f:
     f.write('TrainLoss,TrainAcc,ValLoss,ValAcc\n')
 
 # Device
-device = torch.device('cuda:0' if (torch.cuda.is_available() and args.cuda) else 'cpu')
+device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
 
 # Dataloader
 trainloader, testloader = get_dataloader(args.dataset, args.batch)
