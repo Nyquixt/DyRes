@@ -80,8 +80,10 @@ If you want to play around with the hyper-parameters run ``python3 train.py -h``
     -s, --step-size         Update the learning rate every x epochs
     -g, --gamma             Learning rate update factor. new_lr = old_lr * gamma
     
+    --save                  Whether to save network after training
     --dataset               Dataset to be trained with, CIFAR10, CIFAR100, SVHN, or Tiny ImageNet
     --cuda                  Use GPU to train if the flag is used
+    --ngpu                  Number of GPUs used for training
 
 Another example to run
 
