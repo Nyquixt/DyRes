@@ -156,18 +156,21 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dyresC_alexnet':
         from models.dyres_alexnet import DyRes_AlexNet
         net = DyRes_AlexNet(num_classes, input_size, mode='C')
-    elif network == 'dysep_alexnet':
-        from models.dysepA_alexnet import DySep_AlexNet
+    elif network == 'dysepA_alexnet':
+        from models.dysep_alexnet import DySep_AlexNet
         net = DySep_AlexNet(num_classes, input_size, mode='A')
-    elif network == 'dysep_alexnet':
-        from models.dysepB_alexnet import DySep_AlexNet
+    elif network == 'dysepB_alexnet':
+        from models.dysep_alexnet import DySep_AlexNet
         net = DySep_AlexNet(num_classes, input_size, mode='B')
-    elif network == 'dysep_alexnet':
-        from models.dysepC_alexnet import DySep_AlexNet
+    elif network == 'dysepC_alexnet':
+        from models.dysep_alexnet import DySep_AlexNet
         net = DySep_AlexNet(num_classes, input_size, mode='C')
-    elif network == 'dysep_alexnet':
-        from models.dysepD_alexnet import DySep_AlexNet
+    elif network == 'dysepD_alexnet':
+        from models.dysep_alexnet import DySep_AlexNet
         net = DySep_AlexNet(num_classes, input_size, mode='D')
+    elif network == 'dyressepD_alexnet':
+        from models.dyressep_alexnet import DyResSep_AlexNet
+        net = DyResSep_AlexNet(num_classes, input_size, mode='D')
     elif network == 'wn_alexnet':
         from models.wn_alexnet import WN_AlexNet
         net = WN_AlexNet(num_classes, input_size)

@@ -158,9 +158,8 @@ print('Test Accuracy of the network on the {} test images: {} %'.format(VAL_LEN,
 with open(LOG_FILE, 'a+') as f:
     f.write('Test Accuracy of the network on the {} test images: {} %'.format(VAL_LEN, val_acc))
 
-# Save the model
 if args.save:
+    # Save the model
     torch.save(net.state_dict(), 'trained_nets/{}-{}-b{}-e{}-{}.pth'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP))
-
-# Save plot
-save_plot(train_losses, train_accuracy, val_losses, val_accuracy, args, TIME_STAMP)
+    # Save plot
+    save_plot(train_losses, train_accuracy, val_losses, val_accuracy, args, TIME_STAMP)
