@@ -156,6 +156,18 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dyresC_alexnet':
         from models.dyres_alexnet import DyRes_AlexNet
         net = DyRes_AlexNet(num_classes, input_size, mode='C')
+    elif network == 'dysep_alexnet':
+        from models.dysepA_alexnet import DySep_AlexNet
+        net = DySep_AlexNet(num_classes, input_size, mode='A')
+    elif network == 'dysep_alexnet':
+        from models.dysepB_alexnet import DySep_AlexNet
+        net = DySep_AlexNet(num_classes, input_size, mode='B')
+    elif network == 'dysep_alexnet':
+        from models.dysepC_alexnet import DySep_AlexNet
+        net = DySep_AlexNet(num_classes, input_size, mode='C')
+    elif network == 'dysep_alexnet':
+        from models.dysepD_alexnet import DySep_AlexNet
+        net = DySep_AlexNet(num_classes, input_size, mode='D')
     elif network == 'wn_alexnet':
         from models.wn_alexnet import WN_AlexNet
         net = WN_AlexNet(num_classes, input_size)
@@ -177,6 +189,18 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dyresC_mobilenetv2':
         from models.dyres_mobilenetv2 import DyRes_MobileNetV2
         net = DyRes_MobileNetV2(num_classes, mode='C')
+    elif network == 'dysepA_mobilenetv2':
+        from models.dysep_mobilenetv2 import DySep_MobileNetV2
+        net = DySep_MobileNetV2(num_classes, mode='A')
+    elif network == 'dysepB_mobilenetv2':
+        from models.dysep_mobilenetv2 import DySep_MobileNetV2
+        net = DySep_MobileNetV2(num_classes, mode='B')
+    elif network == 'dysepC_mobilenetv2':
+        from models.dysep_mobilenetv2 import DySep_MobileNetV2
+        net = DySep_MobileNetV2(num_classes, mode='C')
+    elif network == 'dysepD_mobilenetv2':
+        from models.dysep_mobilenetv2 import DySep_MobileNetV2
+        net = DySep_MobileNetV2(num_classes, mode='D')
     elif network == 'wn_mobilenetv2':
         from models.wn_mobilenetv2 import WN_MobileNetV2
         net = WN_MobileNetV2(num_classes)

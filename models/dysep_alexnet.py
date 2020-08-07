@@ -1,26 +1,26 @@
 import torch
 import torch.nn as nn
 
-from .dyres_conv import *
+from .dysep_conv import *
 
-__all__ = ['DyRes_AlexNet']
+__all__ = ['DySep_AlexNet']
 
-class DyRes_AlexNet(nn.Module):
+class DySep_AlexNet(nn.Module):
 
-    def __init__(self, num_classes=10, input_size=32, mode='A'):
-        super(DyRes_AlexNet, self).__init__()
+    def __init__(self, num_classes=10, input_size=32, mode='D'):
+        super(DySep_AlexNet, self).__init__()
         self.features = nn.Sequential(
-            DyResConv(3, 64, kernel_size=3, stride=2, padding=1, mode=mode),
+            DySepConv(3, 64, kernel_size=3, stride=2, padding=1, mode=mode),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            DyResConv(64, 192, kernel_size=3, padding=1, mode=mode),
+            DySepConv(64, 192, kernel_size=3, padding=1, mode=mode),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            DyResConv(192, 384, kernel_size=3, padding=1, mode=mode),
+            DySepConv(192, 384, kernel_size=3, padding=1, mode=mode),
             nn.ReLU(inplace=True),
-            DyResConv(384, 256, kernel_size=3, padding=1, mode=mode),
+            DySepConv(384, 256, kernel_size=3, padding=1, mode=mode),
             nn.ReLU(inplace=True),
-            DyResConv(256, 256, kernel_size=3, padding=1, mode=mode),
+            DySepConv(256, 256, kernel_size=3, padding=1, mode=mode),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
         )
@@ -42,7 +42,7 @@ class DyRes_AlexNet(nn.Module):
 
 def test():
     x = torch.randn(256, 3, 32, 32)
-    net = DyRes_AlexNet(input_size=32)
+    net = DySep_AlexNet(input_size=32)
     y = net(x)
     print(y.shape)
 
