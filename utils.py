@@ -96,6 +96,21 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dyresC_resnet18':
         from models.dyres_resnet import DyRes_ResNet18
         net = DyRes_ResNet18(num_classes, mode='C')
+    elif network == 'dyresD_resnet18':
+        from models.dyres_resnet import DyRes_ResNet18
+        net = DyRes_ResNet18(num_classes, mode='D')
+    elif network == 'dysepA_resnet18':
+        from models.dysep_resnet import DySep_ResNet18
+        net = DySep_ResNet18(num_classes, mode='A')
+    elif network == 'dysepB_resnet18':
+        from models.dysep_resnet import DySep_ResNet18
+        net = DySep_ResNet18(num_classes, mode='B')
+    elif network == 'dysepC_resnet18':
+        from models.dysep_resnet import DySep_ResNet18
+        net = DySep_ResNet18(num_classes, mode='C')
+    elif network == 'dysepD_resnet18':
+        from models.dysep_resnet import DySep_ResNet18
+        net = DySep_ResNet18(num_classes, mode='D')
     elif network == 'wn_resnet18':
         from models.wn_resnet import WN_ResNet18
         net = WN_ResNet18(num_classes)
