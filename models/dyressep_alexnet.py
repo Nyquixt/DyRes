@@ -42,7 +42,7 @@ class DyResSep_AlexNet(nn.Module):
 
 def test():
     x = torch.randn(256, 3, 32, 32)
-    net = DySep_AlexNet(input_size=32)
+    net = DyResSep_AlexNet(input_size=32)
     y = net(x)
     print(y.shape)
 

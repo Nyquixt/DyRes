@@ -7,7 +7,7 @@ __all__ = ['DySep_AlexNet']
 
 class DySep_AlexNet(nn.Module):
 
-    def __init__(self, num_classes=10, input_size=32, mode='D'):
+    def __init__(self, num_classes=10, input_size=32, mode='A'):
         super(DySep_AlexNet, self).__init__()
         self.features = nn.Sequential(
             DySepConv(3, 64, kernel_size=3, stride=2, padding=1, mode=mode),
