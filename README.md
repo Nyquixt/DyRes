@@ -1,28 +1,26 @@
 # DyRes
-
-Results on the CIFAR10 Dataset
+<!-- Results on the CIFAR10 Dataset
 
 | Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes A       | DyRes B       | DyRes C       | 
 |---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | 86.26%        | 86.20%        | 86.89%        | 86.42%        | 86.94%        | 87.21%        | 87.19%        |
 | ResNet18      | 94.12%        | 93.76%        | 94.24%        | 92.79%        | 94.16%        | 94.15%        | 93.37%        |
-| MobileNetV2   | 92.99%        | 92.88%        | 93.52%        | ------        | ------        | ------        | ------        |
-
+| MobileNetV2   | 92.99%        | 92.88%        | 93.52%        | ------        | ------        | ------        | ------        | -->
 Results on the CIFAR100 Dataset
 
 | Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes A       | DyRes B       | DyRes C       |
 |---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | 61.01%        | 61.47%        | 60.60%        | 60.81%        | 61.70%        | 62.03%        | 61.84%        |
 | ResNet18      | 75.65%        | 75.85%        | 75.22%        | 73.00%        | 75.30%        | 74.77%        | 75.93%        |
-| MobileNetV2   | 73.44%        | ------        | ------        | 71.45%        | ------        | ------        | ------        |
+| MobileNetV2   | 73.44%        | ------        | ------        | ------        | ------        | ------        | ------        |
 
-Results on the SVHN Dataset
+<!-- Results on the SVHN Dataset
 
 | Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes A       | DyRes B       | DyRes C       |
 |---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | 94.50%        | 94.65%        | 94.55%        | 94.61%        | 94.79%        | 94.82%        | 94.60%        |
 | ResNet18      | 96.09%        | 96.41%        | 96.34%        | ------        | 96.29%        | ------        | ------        |
-| MobileNetV2   | 96.32%        | 96.25%        | ------        | ------        | ------        | ------        | ------        |
+| MobileNetV2   | 96.32%        | 96.25%        | ------        | ------        | ------        | ------        | ------        | -->
 
 Results on the Tiny ImageNet Dataset
 
@@ -32,13 +30,13 @@ Results on the Tiny ImageNet Dataset
 | ResNet18      | 63.70%        | ------        | ------        | ------        | ------        | ------        | ------        |
 | MobileNetV2   | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
 
-Results on the Downsampled ImageNet Dataset
+<!-- Results on the Downsampled ImageNet Dataset
 
 | Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes A       | DyRes B       | DyRes C       |
 |---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
 | ResNet18      | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
-| MobileNetV2   | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
+| MobileNetV2   | ------        | ------        | ------        | ------        | ------        | ------        | ------        | -->
 
 ### Training Configurations
 
@@ -88,3 +86,7 @@ If you want to play around with the hyper-parameters run ``python3 train.py -h``
 Another example to run
 
     python3 train.py --network resnet_ac50 -e 300 -b 512 -l 0.1 -m 0.9 -d 0.0005 -s 80 -g 0.1 --dataset cifar10 --cuda
+
+### TODO:
+
+- Fix MobileNetV2 models with subbing 3x3 kernels only
