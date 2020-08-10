@@ -16,11 +16,11 @@ class Block(nn.Module):
         self.stride = stride
 
         planes = expansion * in_planes
-        self.conv1 = DyResConv(in_planes, planes, kernel_size=1, stride=1, padding=0, bias=False, mode=mode)
+        self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
         self.conv2 = DyResConv(planes, planes, kernel_size=3, stride=stride, padding=1, groups=planes, bias=False, mode=mode)
         self.bn2 = nn.BatchNorm2d(planes)
-        self.conv3 = DyResConv(planes, out_planes, kernel_size=1, stride=1, padding=0, bias=False, mode=mode)
+        self.conv3 = nn.Conv2d(planes, out_planes, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn3 = nn.BatchNorm2d(out_planes)
 
         self.shortcut = nn.Sequential()

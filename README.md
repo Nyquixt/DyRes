@@ -89,4 +89,4 @@ Another example to run
 
 ### TODO:
 
-- Fix MobileNetV2 models with subbing 3x3 kernels only
+- Brainstorm and improve ideas
