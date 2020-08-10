@@ -171,6 +171,9 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dyresC_alexnet':
         from models.dyres_alexnet import DyRes_AlexNet
         net = DyRes_AlexNet(num_classes, input_size, mode='C')
+    elif network == 'dyresD_alexnet':
+        from models.dyres_alexnet import DyRes_AlexNet
+        net = DyRes_AlexNet(num_classes, input_size, mode='D')
     elif network == 'dysepA_alexnet':
         from models.dysep_alexnet import DySep_AlexNet
         net = DySep_AlexNet(num_classes, input_size, mode='A')
@@ -207,6 +210,9 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dyresC_mobilenetv2':
         from models.dyres_mobilenetv2 import DyRes_MobileNetV2
         net = DyRes_MobileNetV2(num_classes, mode='C')
+    elif network == 'dyresD_mobilenetv2':
+        from models.dyres_mobilenetv2 import DyRes_MobileNetV2
+        net = DyRes_MobileNetV2(num_classes, mode='D')
     elif network == 'dysepA_mobilenetv2':
         from models.dysep_mobilenetv2 import DySep_MobileNetV2
         net = DySep_MobileNetV2(num_classes, mode='A')
