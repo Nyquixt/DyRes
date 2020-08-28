@@ -6,6 +6,7 @@
 | AlexNet       | 86.26%        | 86.20%        | 86.89%        | 86.42%        | 86.94%        | 87.21%        | 87.19%        |
 | ResNet18      | 94.12%        | 93.76%        | 94.24%        | 92.79%        | 94.16%        | 94.15%        | 93.37%        |
 | MobileNetV2   | 92.99%        | 92.88%        | 93.52%        | ------        | ------        | ------        | ------        | -->
+
 Results on the CIFAR100 Dataset
 
 | Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes A       | DyRes B       | DyRes C       |
