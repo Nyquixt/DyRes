@@ -4,16 +4,17 @@ import torch.nn as nn
 __all__ = ['DyConv']
 
 class DyConv(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, bias=False, temp=30):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, bias=False, reduction=16, temp=30):
         super(DyConv, self).__init__()
         self.temp = temp
+        reduction_channels = max(in_channels // reduction, reduction)
         self.one_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, groups=groups, bias=bias)
         self.two_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, groups=groups, bias=bias)
         self.three_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, groups=groups, bias=bias)
         self.attention = nn.Sequential(
-            nn.Linear(in_channels, 64),
+            nn.Linear(in_channels, reduction_channels),
             nn.ReLU(inplace=True),
-            nn.Linear(64, 3)
+            nn.Linear(reduction_channels, 3)
         )
 
     def forward(self, x):

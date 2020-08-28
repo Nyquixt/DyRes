@@ -91,3 +91,4 @@ Another example to run
 ### TODO:
 
 - Brainstorm and improve ideas
+- Retrain DyConv
