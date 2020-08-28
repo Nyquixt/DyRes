@@ -24,6 +24,7 @@ class DyConvGroup(nn.Module):
         two_out = self.two_conv(x).unsqueeze(dim=1)
         three_out = self.three_conv(x).unsqueeze(dim=1)
         all_out = torch.cat([one_out, two_out, three_out], dim=1) # N x 3 x N x H_out x W_out
+        gap = self.gap(x)
         weights = self.attention(gap)
         out = weights.unsqueeze(dim=-1) * all_out
         out = out.sum(dim=1, keepdim=False)
