@@ -165,9 +165,6 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dyg_alexnet':
         from models.dyg_alexnet import DyGroup_AlexNet
         net = DyGroup_AlexNet(num_classes, input_size)
-    elif network == 'dysq_alexnet':
-        from models.dysq_alexnet import DySQ_AlexNet
-        net = DySQ_AlexNet(num_classes, input_size)
     elif network == 'dyresA_alexnet':
         from models.dyres_alexnet import DyRes_AlexNet
         net = DyRes_AlexNet(num_classes, input_size, mode='A')
@@ -192,9 +189,6 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'dysepD_alexnet':
         from models.dysep_alexnet import DySep_AlexNet
         net = DySep_AlexNet(num_classes, input_size, mode='D')
-    elif network == 'dyressepD_alexnet':
-        from models.dyressep_alexnet import DyResSep_AlexNet
-        net = DyResSep_AlexNet(num_classes, input_size, mode='D')
     elif network == 'wn_alexnet':
         from models.wn_alexnet import WN_AlexNet
         net = WN_AlexNet(num_classes, input_size)

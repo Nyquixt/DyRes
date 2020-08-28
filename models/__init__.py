@@ -7,20 +7,16 @@ from .mobilenetv2 import *
 from .condconv import *
 from .dyconv import *
 from .dyconv_group import *
-from .dysq_conv import *
 from .dyres_conv import *
 from .dysep_conv import *
-from .dyressep_conv import *
 from .weightnet import *
 
 # Experiments
 from .cc_alexnet import *
 from .dy_alexnet import *
 from .dyg_alexnet import *
-from .dysq_alexnet import *
 from .dyres_alexnet import *
 from .dysep_alexnet import *
-from .dyressep_alexnet import *
 from .wn_alexnet import *
 
 from .cc_resnet import *
