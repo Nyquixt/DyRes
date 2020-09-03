@@ -5,20 +5,21 @@ Mobile Networks for Classification, Detection and Segmentation" for more details
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from .dyres_conv import *
+from .ms_conv import MS1Conv
 
-__all__ = ['DyRes_MobileNetV2']
+__all__ = ['MS1_MobileNetV2']
 
 class Block(nn.Module):
     '''expand + depthwise + pointwise'''
-    def __init__(self, in_planes, out_planes, expansion, stride, mode):
+    def __init__(self, in_planes, out_planes, expansion, stride):
         super(Block, self).__init__()
         self.stride = stride
 
         planes = expansion * in_planes
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = DyResConv(planes, planes, kernel_size=3, stride=stride, padding=1, groups=planes, bias=False, mode=mode)
+        self.conv2 = MS1Conv(planes, planes, kernel_size=3, stride=stride, padding=1, groups=planes, bias=False)
+        self.bn2 = nn.BatchNorm2d(planes)
         self.conv3 = nn.Conv2d(planes, out_planes, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn3 = nn.BatchNorm2d(out_planes)
 
@@ -31,13 +32,13 @@ class Block(nn.Module):
 
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
-        out = F.relu(self.conv2(out))
+        out = F.relu(self.bn2(self.conv2(out)))
         out = self.bn3(self.conv3(out))
         out = out + self.shortcut(x) if self.stride==1 else out
         return out
 
 
-class DyRes_MobileNetV2(nn.Module):
+class MS1_MobileNetV2(nn.Module):
     # (expansion, out_planes, num_blocks, stride)
     cfg = [(1,  16, 1, 1),
            (6,  24, 2, 1),  # NOTE: change stride to 1 for CIFAR10, to 2 for TinyImageNet
@@ -47,9 +48,8 @@ class DyRes_MobileNetV2(nn.Module):
            (6, 160, 3, 2),
            (6, 320, 1, 1)]
 
-    def __init__(self, num_classes=10, mode='A'):
-        super(DyRes_MobileNetV2, self).__init__()
-        self.mode = mode
+    def __init__(self, num_classes=10):
+        super(MS1_MobileNetV2, self).__init__()
         # NOTE: change conv1 stride 2 -> 1 for CIFAR10
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(32)
@@ -63,7 +63,7 @@ class DyRes_MobileNetV2(nn.Module):
         for expansion, out_planes, num_blocks, stride in self.cfg:
             strides = [stride] + [1]*(num_blocks-1)
             for stride in strides:
-                layers.append(Block(in_planes, out_planes, expansion, stride, self.mode))
+                layers.append(Block(in_planes, out_planes, expansion, stride))
                 in_planes = out_planes
         return nn.Sequential(*layers)
 
@@ -79,7 +79,7 @@ class DyRes_MobileNetV2(nn.Module):
 
 
 def test():
-    net = DyRes_MobileNetV2(num_classes=100)
+    net = MS1_MobileNetV2(num_classes=100)
     x = torch.randn(2,3,32,32)
     y = net(x)
     print(y.size())

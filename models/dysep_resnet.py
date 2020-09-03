@@ -6,17 +6,15 @@ from .dysep_conv import *
 
 __all__ = ['DySep_ResNet18', 'DySep_ResNet34', 'DySep_ResNet50', 'DySep_ResNet101', 'DySep_ResNet152']
 
-class DySep_BasicBlock(nn.Module):
+class BasicBlock(nn.Module):
     expansion = 1
 
     def __init__(self, in_channels, channels, stride=1, mode='A'):
-        super(DySep_BasicBlock, self).__init__()
+        super(BasicBlock, self).__init__()
         self.conv1 = DySepConv(in_channels, channels, 
                         kernel_size=3, stride=stride, padding=1, mode=mode)
-        self.bn1 = nn.BatchNorm2d(channels)
         self.conv2 = DySepConv(channels, channels, 
                         kernel_size=3, stride=1, padding=1, mode=mode)
-        self.bn2 = nn.BatchNorm2d(channels)
 
         self.shortcut = nn.Sequential()
 
@@ -27,22 +25,21 @@ class DySep_BasicBlock(nn.Module):
             )
 
     def forward(self, x):
-        out = F.relu(self.bn1(self.conv1(x)))
-        out = self.bn2(self.conv2(out))
+        out = F.relu(self.conv1(x))
+        out = self.conv2(out)
         # Addition
         out += self.shortcut(x)
         out = F.relu(out)
         return out
 
-class DySep_Bottleneck(nn.Module):
+class Bottleneck(nn.Module):
     expansion = 4
 
     def __init__(self, in_channels, channels, stride=1, mode='A'):
-        super(DySep_Bottleneck, self).__init__()
+        super(Bottleneck, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, channels, kernel_size=1)
         self.bn1 = nn.BatchNorm2d(channels)
         self.conv2 = DySepConv(channels, channels, kernel_size=3, stride=stride, padding=1, mode=mode)
-        self.bn2 = nn.BatchNorm2d(channels)
         self.conv3 = nn.Conv2d(channels, self.expansion*channels, kernel_size=1)
         self.bn3 = nn.BatchNorm2d(self.expansion*channels)
         
@@ -55,7 +52,7 @@ class DySep_Bottleneck(nn.Module):
 
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
-        out = F.relu(self.bn2(self.conv2(out)))
+        out = F.relu(self.conv2(out))
         out = self.bn3(self.conv3(out))
         out += self.shortcut(x)
         out = F.relu(out)
@@ -96,16 +93,16 @@ class DySep_ResNet(nn.Module):
         return out
 
 def DySep_ResNet18(num_classes, mode):
-    return DySep_ResNet(DySep_BasicBlock, [2, 2, 2, 2], num_classes, mode)
+    return DySep_ResNet(BasicBlock, [2, 2, 2, 2], num_classes, mode)
 
 def DySep_ResNet34(num_classes, mode):
-    return DySep_ResNet(DySep_BasicBlock, [3, 4, 6, 3], num_classes, mode)
+    return DySep_ResNet(BasicBlock, [3, 4, 6, 3], num_classes, mode)
 
 def DySep_ResNet50(num_classes, mode):
-    return DySep_ResNet(DySep_Bottleneck, [3, 4, 6, 3], num_classes, mode)
+    return DySep_ResNet(Bottleneck, [3, 4, 6, 3], num_classes, mode)
 
 def DySep_ResNet101(num_classes, mode):
-    return DySep_ResNet(DySep_Bottleneck, [3, 4, 23, 3], num_classes, mode)
+    return DySep_ResNet(Bottleneck, [3, 4, 23, 3], num_classes, mode)
 
 def DySep_ResNet152(num_classes, mode):
-    return DySep_ResNet(DySep_Bottleneck, [3, 8, 36, 3], num_classes, mode)
+    return DySep_ResNet(Bottleneck, [3, 8, 36, 3], num_classes, mode)
