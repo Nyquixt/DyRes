@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from .msconv import MS2Conv
+from .ms_conv import MS2Conv
 
 __all__ = ['MS2_AlexNet']
 
