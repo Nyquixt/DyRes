@@ -122,7 +122,10 @@ def get_network(network, device, input_size=32, num_classes=10):
         net = MS1_ResNet18(num_classes)
     elif network == 'ms2_resnet18':
         from models.ms2_resnet import MS2_ResNet18
-        net = MS1_ResNet18(num_classes)
+        net = MS2_ResNet18(num_classes)
+    elif network == 'ms3_resnet18':
+        from models.ms3_resnet import MS3_ResNet18
+        net = MS3_ResNet18(num_classes)
     elif network == 'wn_resnet18':
         from models.wn_resnet import WN_ResNet18
         net = WN_ResNet18(num_classes)
@@ -207,6 +210,9 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'ms2_alexnet':
         from models.ms2_alexnet import MS2_AlexNet
         net = MS2_AlexNet(num_classes, input_size)
+    elif network == 'ms3_alexnet':
+        from models.ms3_alexnet import MS3_AlexNet
+        net = MS3_AlexNet(num_classes, input_size)
     elif network == 'wn_alexnet':
         from models.wn_alexnet import WN_AlexNet
         net = WN_AlexNet(num_classes, input_size)
@@ -255,6 +261,9 @@ def get_network(network, device, input_size=32, num_classes=10):
     elif network == 'ms2_mobilenetv2':
         from models.ms2_mobilenetv2 import MS2_MobileNetV2
         net = MS2_MobileNetV2(num_classes)
+    elif network == 'ms3_mobilenetv2':
+        from models.ms3_mobilenetv2 import MS3_MobileNetV2
+        net = MS3_MobileNetV2(num_classes)
     elif network == 'wn_mobilenetv2':
         from models.wn_mobilenetv2 import WN_MobileNetV2
         net = WN_MobileNetV2(num_classes)

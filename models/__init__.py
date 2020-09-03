@@ -20,6 +20,7 @@ from .dyres_alexnet import *
 from .dysep_alexnet import *
 from .ms1_alexnet import *
 from .ms2_alexnet import *
+from .ms3_alexnet import *
 from .wn_alexnet import *
 
 from .cc_resnet import *
@@ -29,6 +30,7 @@ from .dyres_resnet import *
 from .dysep_resnet import *
 from .ms1_resnet import *
 from .ms2_resnet import *
+from .ms3_resnet import *
 from .wn_resnet import *
 
 from .cc_mobilenetv2 import *
@@ -38,4 +40,5 @@ from .dyres_mobilenetv2 import *
 from .dysep_mobilenetv2 import *
 from .ms1_mobilenetv2 import *
 from .ms2_mobilenetv2 import *
+from .ms3_mobilenetv2 import *
 from .wn_mobilenetv2 import *
