@@ -23,9 +23,10 @@ class MS1Conv(nn.Module):
         self.scale_5 = nn.Sequential(
             nn.AdaptiveAvgPool2d(5),
             nn.Conv2d(in_channels, reduction, 3, stride=1),
+            nn.ReLU(inplace=True),
             nn.Conv2d(reduction, in_channels, 3, stride=1),
         )
-
+        
         self.attention = nn.Sequential(
             nn.Conv2d(3 * in_channels, 3, 1),
             nn.Sigmoid()
@@ -67,6 +68,7 @@ class MS2Conv(nn.Module):
         self.scale_5 = nn.Sequential(
             nn.AdaptiveAvgPool2d(5),
             nn.Conv2d(in_channels, reduction, 3, stride=1),
+            nn.ReLU(inplace=True),
             nn.Conv2d(reduction, in_channels, 3, stride=1),
         )
 
@@ -111,6 +113,7 @@ class MS3Conv(nn.Module):
         self.scale_5 = nn.Sequential(
             nn.AdaptiveAvgPool2d(5),
             nn.Conv2d(in_channels, reduction, 3, stride=1),
+            nn.ReLU(inplace=True),
             nn.Conv2d(reduction, in_channels, 3, stride=1),
         )
 
