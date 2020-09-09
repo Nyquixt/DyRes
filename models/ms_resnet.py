@@ -1,18 +1,18 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from .ms_conv import MS3Conv
+from .ms_conv import MSConv
 
-__all__ = ['MS3_ResNet18', 'MS3_ResNet34', 'MS3_ResNet50', 'MS3_ResNet101', 'MS3_ResNet152']
+__all__ = ['MS_ResNet18', 'MS_ResNet34', 'MS_ResNet50', 'MS_ResNet101', 'MS_ResNet152']
 
 class BasicBlock(nn.Module):
     expansion = 1
 
     def __init__(self, in_channels, channels, stride=1):
         super(BasicBlock, self).__init__()
-        self.conv1 = MS3Conv(in_channels, channels, kernel_size=3, stride=stride, padding=1)
+        self.conv1 = MSConv(in_channels, channels, kernel_size=3, stride=stride, padding=1)
         self.bn1 = nn.BatchNorm2d(channels)
-        self.conv2 = MS3Conv(channels, channels, kernel_size=3, stride=1, padding=1)
+        self.conv2 = MSConv(channels, channels, kernel_size=3, stride=1, padding=1)
         self.bn2 = nn.BatchNorm2d(channels)
         
         self.shortcut = nn.Sequential()
@@ -38,7 +38,7 @@ class Bottleneck(nn.Module):
         super(Bottleneck, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, channels, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(channels)
-        self.ms = MS3Conv(channels, channels, kernel_size=3, stride=stride, padding=1)
+        self.ms = MSConv(channels, channels, kernel_size=3, stride=stride, padding=1)
         self.ms_bn = nn.BatchNorm2d(channels)
         self.conv2 = nn.Conv2d(channels, self.expansion*channels, kernel_size=1, bias=False)
         self.bn2 = nn.BatchNorm2d(self.expansion*channels)
@@ -58,9 +58,9 @@ class Bottleneck(nn.Module):
         out = F.relu(out)
         return out
 
-class MS3_ResNet(nn.Module):
+class MS_ResNet(nn.Module):
     def __init__(self, block, num_blocks, num_classes=10):
-        super(MS3_ResNet, self).__init__()
+        super(MS_ResNet, self).__init__()
         self.in_channels = 64
 
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3,
@@ -91,25 +91,25 @@ class MS3_ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def MS3_ResNet18(num_classes):
-    return MS3_ResNet(BasicBlock, [2, 2, 2, 2], num_classes)
+def MS_ResNet18(num_classes):
+    return MS_ResNet(BasicBlock, [2, 2, 2, 2], num_classes)
 
-def MS3_ResNet34(num_classes):
-    return MS3_ResNet(BasicBlock, [3, 4, 6, 3], num_classes)
+def MS_ResNet34(num_classes):
+    return MS_ResNet(BasicBlock, [3, 4, 6, 3], num_classes)
 
-def MS3_ResNet50(num_classes):
-    return MS3_ResNet(Bottleneck, [3, 4, 6, 3], num_classes)
+def MS_ResNet50(num_classes):
+    return MS_ResNet(Bottleneck, [3, 4, 6, 3], num_classes)
 
-def MS3_ResNet101(num_classes):
-    return MS3_ResNet(Bottleneck, [3, 4, 23, 3], num_classes)
+def MS_ResNet101(num_classes):
+    return MS_ResNet(Bottleneck, [3, 4, 23, 3], num_classes)
 
-def MS3_ResNet152(num_classes):
-    return MS3_ResNet(Bottleneck, [3, 8, 36, 3], num_classes)
+def MS_ResNet152(num_classes):
+    return MS_ResNet(Bottleneck, [3, 8, 36, 3], num_classes)
 
 def test():
     x = torch.randn(128, 3, 32, 32)
-    net1 = MS3_ResNet18(10)
-    net2 = MS3_ResNet50(100)
+    net1 = MS_ResNet18(10)
+    net2 = MS_ResNet50(100)
 
     y1 = net1(x); print(y1.size())
     y2 = net2(x); print(y2.size())

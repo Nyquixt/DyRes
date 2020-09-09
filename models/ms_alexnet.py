@@ -1,30 +1,30 @@
 import torch
 import torch.nn as nn
 
-from .ms_conv import MS2Conv
+from .ms_conv import MSConv
 
-__all__ = ['MS2_AlexNet']
+__all__ = ['MS_AlexNet']
 
-class MS2_AlexNet(nn.Module):
+class MS_AlexNet(nn.Module):
 
     def __init__(self, num_classes=10, input_size=32):
-        super(MS2_AlexNet, self).__init__()
+        super(MS_AlexNet, self).__init__()
         self.features = nn.Sequential(
-            MS2Conv(3, 64, kernel_size=3, stride=2, padding=1),
+            MSConv(3, 64, kernel_size=3, stride=2, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            MS2Conv(64, 192, kernel_size=3, padding=1),
+            MSConv(64, 192, kernel_size=3, padding=1),
             nn.BatchNorm2d(192),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            MS2Conv(192, 384, kernel_size=3, padding=1),
+            MSConv(192, 384, kernel_size=3, padding=1),
             nn.BatchNorm2d(384),
             nn.ReLU(inplace=True),
-            MS2Conv(384, 256, kernel_size=3, padding=1),
+            MSConv(384, 256, kernel_size=3, padding=1),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
-            MS2Conv(256, 256, kernel_size=3, padding=1),
+            MSConv(256, 256, kernel_size=3, padding=1),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
