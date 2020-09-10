@@ -7,7 +7,7 @@ __all__ = ['DySep_AlexNet']
 
 class DySep_AlexNet(nn.Module):
 
-    def __init__(self, num_classes=100, input_size=32, mode='A'):
+    def __init__(self, num_classes=100, mode='A'):
         super(DySep_AlexNet, self).__init__()
         self.features = nn.Sequential(
             DySepConv(3, 64, kernel_size=3, stride=2, padding=1, mode=mode),
@@ -26,12 +26,12 @@ class DySep_AlexNet(nn.Module):
         )
         self.classifier = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(256 * 2 * 2 if input_size==32 else 256 * 4 * 4, 4096),
+            nn.Linear(256 * 2 * 2, 4096),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(4096, 1024 if num_classes == 10 else 4096),
+            nn.Linear(4096, 4096),
             nn.ReLU(inplace=True),
-            nn.Linear(1024 if num_classes == 10 else 4096, num_classes),
+            nn.Linear(4096, num_classes),
         )
 
     def forward(self, x):

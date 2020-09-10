@@ -130,11 +130,12 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
     # Calculate validation accuracy
     net.eval()
     val_acc = calculate_acc(testloader, net, device)
-    if args.save and val_acc > stats['best_acc']:
+    if val_acc > stats['best_acc']:
         stats['best_acc'] = val_acc
         stats['best_epoch'] = epoch + 1
-        # Save the model
-        torch.save(net.state_dict(), 'trained_nets/{}-{}-b{}-e{}-{}.pth'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP))
+        if args.save:
+            # Save the model
+            torch.save(net.state_dict(), 'trained_nets/{}-{}-b{}-e{}-{}.pth'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP))
         
     # Switch back to training mode
     net.train()
