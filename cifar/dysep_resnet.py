@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 from .dysep_conv import *
 
-__all__ = ['DySep_ResNet18', 'DySep_ResNet34', 'DySep_ResNet50', 'DySep_ResNet101', 'DySep_ResNet152']
+__all__ = ['DySep_ResNet18']
 
 class BasicBlock(nn.Module):
     expansion = 1
@@ -59,7 +59,7 @@ class Bottleneck(nn.Module):
         return out
 
 class DySep_ResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10, mode='A'):
+    def __init__(self, block, num_blocks, num_classes=100, mode='A'):
         super(DySep_ResNet, self).__init__()
         self.mode = mode
         self.in_channels = 64
@@ -87,7 +87,7 @@ class DySep_ResNet(nn.Module):
         out = self.layer2(out)
         out = self.layer3(out)
         out = self.layer4(out)
-        out = F.avg_pool2d(out, 4) if x.size(2) == 32 else F.avg_pool2d(out, 8)
+        out = F.avg_pool2d(out, 4)
         out = out.view(out.size(0), -1)
         out = self.linear(out)
         return out

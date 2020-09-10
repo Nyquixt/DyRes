@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from .ms_conv import MSConv
 
-__all__ = ['MS_ResNet18', 'MS_ResNet34', 'MS_ResNet50', 'MS_ResNet101', 'MS_ResNet152']
+__all__ = ['MS_ResNet18']
 
 class BasicBlock(nn.Module):
     expansion = 1
@@ -59,7 +59,7 @@ class Bottleneck(nn.Module):
         return out
 
 class MS_ResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10):
+    def __init__(self, block, num_blocks, num_classes=100):
         super(MS_ResNet, self).__init__()
         self.in_channels = 64
 
@@ -86,7 +86,7 @@ class MS_ResNet(nn.Module):
         out = self.layer2(out)
         out = self.layer3(out)
         out = self.layer4(out)
-        out = F.avg_pool2d(out, 4) if x.size(2) == 32 else F.avg_pool2d(out, 8)
+        out = F.avg_pool2d(out, 4)
         out = out.view(out.size(0), -1)
         out = self.linear(out)
         return out
@@ -94,25 +94,9 @@ class MS_ResNet(nn.Module):
 def MS_ResNet18(num_classes):
     return MS_ResNet(BasicBlock, [2, 2, 2, 2], num_classes)
 
-def MS_ResNet34(num_classes):
-    return MS_ResNet(BasicBlock, [3, 4, 6, 3], num_classes)
-
-def MS_ResNet50(num_classes):
-    return MS_ResNet(Bottleneck, [3, 4, 6, 3], num_classes)
-
-def MS_ResNet101(num_classes):
-    return MS_ResNet(Bottleneck, [3, 4, 23, 3], num_classes)
-
-def MS_ResNet152(num_classes):
-    return MS_ResNet(Bottleneck, [3, 8, 36, 3], num_classes)
-
 def test():
     x = torch.randn(128, 3, 32, 32)
     net1 = MS_ResNet18(10)
-    net2 = MS_ResNet50(100)
-
     y1 = net1(x); print(y1.size())
-    y2 = net2(x); print(y2.size())
     
-
 # test()

@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 from .weightnet import *
 
-__all__ = ['WN_ResNet18', 'WN_ResNet34', 'WN_ResNet50', 'WN_ResNet101', 'WN_ResNet152']
+__all__ = ['WN_ResNet18']
 
 class BasicBlock(nn.Module):
     expansion = 1

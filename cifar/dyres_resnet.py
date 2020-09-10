@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 from .dyres_conv import *
 
-__all__ = ['DyRes_ResNet18', 'DyRes_ResNet34', 'DyRes_ResNet50', 'DyRes_ResNet101', 'DyRes_ResNet152']
+__all__ = ['DyRes_ResNet18']
 
 class BasicBlock(nn.Module):
     expansion = 1
@@ -58,7 +58,7 @@ class Bottleneck(nn.Module):
         return out
 
 class DyRes_ResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10, mode='A'):
+    def __init__(self, block, num_blocks, num_classes=100, mode='A'):
         super(DyRes_ResNet, self).__init__()
         self.mode = mode
         self.in_channels = 64
@@ -86,22 +86,10 @@ class DyRes_ResNet(nn.Module):
         out = self.layer2(out)
         out = self.layer3(out)
         out = self.layer4(out)
-        out = F.avg_pool2d(out, 4) if x.size(2) == 32 else F.avg_pool2d(out, 8)
+        out = F.avg_pool2d(out, 4)
         out = out.view(out.size(0), -1)
         out = self.linear(out)
         return out
 
 def DyRes_ResNet18(num_classes, mode):
     return DyRes_ResNet(BasicBlock, [2, 2, 2, 2], num_classes, mode)
-
-def DyRes_ResNet34(num_classes, mode):
-    return DyRes_ResNet(BasicBlock, [3, 4, 6, 3], num_classes, mode)
-
-def DyRes_ResNet50(num_classes, mode):
-    return DyRes_ResNet(Bottleneck, [3, 4, 6, 3], num_classes, mode)
-
-def DyRes_ResNet101(num_classes, mode):
-    return DyRes_ResNet(Bottleneck, [3, 4, 23, 3], num_classes, mode)
-
-def DyRes_ResNet152(num_classes, mode):
-    return DyRes_ResNet(Bottleneck, [3, 8, 36, 3], num_classes, mode)

@@ -7,7 +7,7 @@ __all__ = ['MS_AlexNet']
 
 class MS_AlexNet(nn.Module):
 
-    def __init__(self, num_classes=10, input_size=32):
+    def __init__(self, num_classes=100, input_size=32):
         super(MS_AlexNet, self).__init__()
         self.features = nn.Sequential(
             MSConv(3, 64, kernel_size=3, stride=2, padding=1),
