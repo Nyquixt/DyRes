@@ -23,7 +23,7 @@ parser.add_argument('--momentum', '-m', type=float, default=0.9, help='Momentum 
 parser.add_argument('--weight-decay', '-d', type=float, default=0.0005, help='Weight decay for SGD optimizer')
 parser.add_argument('--step-size', '-s', type=int, default=30, help='Step in learning rate scheduler')
 parser.add_argument('--gamma', '-g', type=float, default=0.1, help='Gamma in learning rate scheduler')
-parser.add_argument('--dataset', type=str, help='cifar10 or cifar100 or svhn or tinyimagenet', default='cifar10')
+parser.add_argument('--dataset', type=str, help='cifar100 or imagenet', default='cifar100')
 parser.add_argument('--save', action='store_true')
 parser.add_argument('--cuda', action='store_true')
 parser.add_argument('--ngpu', type=int, default=1)
@@ -55,27 +55,18 @@ train_accuracy = []
 val_accuracy = []
 
 # Define model
-if args.dataset == 'cifar10':
-    num_classes = 10
+if args.dataset == 'cifar100':
     VAL_LEN = 10000
-    INPUT_SIZE = 32
-elif args.dataset == 'svhn':
-    num_classes = 10
-    VAL_LEN = 26032
-    INPUT_SIZE = 32
-elif args.dataset == 'cifar100':
-    num_classes = 100
-    VAL_LEN = 10000
-    INPUT_SIZE = 32
-elif args.dataset == 'tinyimagenet':
-    num_classes = 200
-    VAL_LEN = 10000
-    INPUT_SIZE = 64
+elif args.dataset == 'imagenet':
+    VAL_LEN = 150000
 
-net = get_network(args.network, device, INPUT_SIZE, num_classes)
+# Get network
+net = get_network(args.network, args.dataset, device)
+
 # Handle multi-gpu
 if args.cuda and args.ngpu > 1:
     net = nn.DataParallel(net, list(range(args.ngpu)))
+
 # Init parameters
 init_params(net)
 
