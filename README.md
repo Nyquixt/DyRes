@@ -23,21 +23,21 @@ Results on the CIFAR100 Dataset
 | ResNet18      | 96.09%        | 96.41%        | 96.34%        | ------        | 96.29%        | ------        | ------        |
 | MobileNetV2   | 96.32%        | 96.25%        | ------        | ------        | ------        | ------        | ------        | -->
 
-Results on the Tiny ImageNet Dataset
+<!-- Results on the Tiny ImageNet Dataset
 
 | Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes A       | DyRes B       | DyRes C       |
 |---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | 52.68%        | 53.33%        | 52.67%        | 52.78%        | 52.97%        | 52.92%        | 53.53%        |
 | ResNet18      | 63.70%        | 65.97%        | 64.73%        | 59.81%        | ------        | ------        | ------        |
-| MobileNetV2   | 56.49%        | 57.85%        | 55.84%        | 56.83%        | ------        | ------        | ------        |
+| MobileNetV2   | 56.49%        | 57.85%        | 55.84%        | 56.83%        | ------        | ------        | ------        | -->
 
-<!-- Results on the Downsampled ImageNet Dataset
+Results on the ImageNet Dataset
 
-| Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes A       | DyRes B       | DyRes C       |
+| Models        | Basic         | CondConv      | DyConv        | WeightNet     | DyRes A       | DyRes B       | MSConv        |
 |---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|
 | AlexNet       | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
 | ResNet18      | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
-| MobileNetV2   | ------        | ------        | ------        | ------        | ------        | ------        | ------        | -->
+| MobileNetV2   | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
 
 ### Training Configurations
 
@@ -80,7 +80,7 @@ If you want to play around with the hyper-parameters run ``python3 train.py -h``
     -g, --gamma             Learning rate update factor. new_lr = old_lr * gamma
     
     --save                  Whether to save network after training
-    --dataset               Dataset to be trained with, CIFAR10, CIFAR100, SVHN, or Tiny ImageNet
+    --dataset               Dataset to be trained with, CIFAR100 or ImageNet
     --cuda                  Use GPU to train if the flag is used
     --ngpu                  Number of GPUs used for training
 
@@ -91,4 +91,3 @@ Another example to run
 ### TODO:
 
 - Brainstorm and improve ideas
-- Retrain DyConv

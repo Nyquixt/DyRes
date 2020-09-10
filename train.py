@@ -9,16 +9,15 @@ import argparse
 import time
 from datetime import timedelta
 
-from models import *
 from config import *
 from utils import calculate_acc, get_network, get_dataloader, init_params, count_parameters, save_plot
 
 parser = argparse.ArgumentParser(description='Training CNN models')
 
 parser.add_argument('--network', '-n', required=True)
-parser.add_argument('--epoch', '-e', type=int, default=120, help='Number of epochs')
-parser.add_argument('--batch', '-b', type=int, default=256, help='The batch size')
-parser.add_argument('--lr', '-l', type=float, default=0.1, help='Learning rate')
+parser.add_argument('--epoch', '-e', type=int, default=90, help='Number of epochs')
+parser.add_argument('--batch', '-b', type=int, default=128, help='The batch size')
+parser.add_argument('--lr', '-l', type=float, default=0.01, help='Learning rate')
 parser.add_argument('--momentum', '-m', type=float, default=0.9, help='Momentum for SGD')
 parser.add_argument('--weight-decay', '-d', type=float, default=0.0005, help='Weight decay for SGD optimizer')
 parser.add_argument('--step-size', '-s', type=int, default=30, help='Step in learning rate scheduler')
@@ -34,13 +33,11 @@ print(args)
 TIME_STAMP = int(round(time.time() * 1000))
 LOG_FILE = 'logs/{}-{}-b{}-e{}-{}.txt'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP)
 
-# Log basic hyper-params to log file
-with open(LOG_FILE, 'w') as f:
-    f.write('Training model {}\n'.format(args.network))
-    f.write('Hyper-parameters:\n')
-    f.write('Epoch {}; Batch {}; LR {}; SGD Momentum {}; SGD Weight Decay {};\n'.format(str(args.epoch), str(args.batch), str(args.lr), str(args.momentum), str(args.weight_decay)))
-    f.write('LR Scheduler Step {}; LR Scheduler Gamma {}; {};\n'.format(str(args.step_size), str(args.gamma), str(args.dataset)))
-    f.write('TrainLoss,TrainAcc,ValLoss,ValAcc\n')
+# Dict to keep the final result
+stats = {
+    'best_acc': 0.0,
+    'best_epoch': 0
+}
 
 # Device
 device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else 'cpu')
@@ -80,6 +77,14 @@ optimizer = torch.optim.SGD(net.parameters(), lr=args.lr, momentum=args.momentum
 
 # Learning rate scheduler
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=args.step_size, gamma=args.gamma)
+
+# Log basic hyper-params to log file
+with open(LOG_FILE, 'w') as f:
+    f.write('Training model {}\n'.format(args.network))
+    f.write('Hyper-parameters:\n')
+    f.write('Epoch {}; Batch {}; LR {}; SGD Momentum {}; SGD Weight Decay {};\n'.format(str(args.epoch), str(args.batch), str(args.lr), str(args.momentum), str(args.weight_decay)))
+    f.write('LR Scheduler Step {}; LR Scheduler Gamma {}; {};\n'.format(str(args.step_size), str(args.gamma), str(args.dataset)))
+    f.write('TrainLoss,TrainAcc,ValLoss,ValAcc\n')
 
 # Train the model
 start = time.time()
@@ -125,6 +130,13 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
     # Calculate validation accuracy
     net.eval()
     val_acc = calculate_acc(testloader, net, device)
+    if args.save and val_acc > stats['best_acc']:
+        stats['best_acc'] = val_acc
+        stats['best_epoch'] = epoch + 1
+        # Save the model
+        torch.save(net.state_dict(), 'trained_nets/{}-{}-b{}-e{}-{}.pth'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP))
+        
+    # Switch back to training mode
     net.train()
 
     train_accuracy.append(train_acc)
@@ -145,12 +157,10 @@ print('Total time trained: {}'.format( str(timedelta(seconds=int(end - start)) )
 # Test the model
 net.eval()
 val_acc = calculate_acc(testloader, net, device)
-print('Test Accuracy of the network on the {} test images: {} %'.format(VAL_LEN, val_acc))
+print('Test Accuracy of the network on the {} test images: Epoch {}, {} % '.format(VAL_LEN, stats['best_epoch'], stats['best_acc']))
 with open(LOG_FILE, 'a+') as f:
-    f.write('Test Accuracy of the network on the {} test images: {} %'.format(VAL_LEN, val_acc))
+    f.write('Test Accuracy of the network on the {} test images: Epoch {}, {} %'.format(VAL_LEN, stats['best_epoch'], stats['best_acc']))
 
 if args.save:
-    # Save the model
-    torch.save(net.state_dict(), 'trained_nets/{}-{}-b{}-e{}-{}.pth'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP))
     # Save plot
     save_plot(train_losses, train_accuracy, val_losses, val_accuracy, args, TIME_STAMP)
