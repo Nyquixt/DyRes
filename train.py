@@ -2,6 +2,7 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 import torch.nn as nn
+from torch.utils.tensorboard import SummaryWriter
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -30,8 +31,11 @@ parser.add_argument('--ngpu', type=int, default=1)
 args = parser.parse_args()
 print(args)
 
+RESULT_FILE = 'results.txt'
 TIME_STAMP = int(round(time.time() * 1000))
-LOG_FILE = 'logs/{}-{}-b{}-e{}-{}.txt'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP)
+# LOG_FILE = 'logs/{}-{}-b{}-e{}-{}.txt'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP)
+
+tbwriter = SummaryWriter()
 
 # Dict to keep the final result
 stats = {
@@ -46,12 +50,11 @@ device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else '
 trainloader, testloader = get_dataloader(args.dataset, args.batch)
 
 # Define losses lists to plot
-train_losses = []
-val_losses = []
-train_accuracy = []
-val_accuracy = []
+# train_losses = []
+# val_losses = []
+# train_accuracy = []
+# val_accuracy = []
 
-# Define model
 if args.dataset == 'cifar100':
     VAL_LEN = 10000
 elif args.dataset == 'imagenet':
@@ -79,12 +82,12 @@ optimizer = torch.optim.SGD(net.parameters(), lr=args.lr, momentum=args.momentum
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=args.step_size, gamma=args.gamma)
 
 # Log basic hyper-params to log file
-with open(LOG_FILE, 'w') as f:
-    f.write('Training model {}\n'.format(args.network))
-    f.write('Hyper-parameters:\n')
-    f.write('Epoch {}; Batch {}; LR {}; SGD Momentum {}; SGD Weight Decay {};\n'.format(str(args.epoch), str(args.batch), str(args.lr), str(args.momentum), str(args.weight_decay)))
-    f.write('LR Scheduler Step {}; LR Scheduler Gamma {}; {};\n'.format(str(args.step_size), str(args.gamma), str(args.dataset)))
-    f.write('TrainLoss,TrainAcc,ValLoss,ValAcc\n')
+# with open(LOG_FILE, 'w') as f:
+#     f.write('Training model {}\n'.format(args.network))
+#     f.write('Hyper-parameters:\n')
+#     f.write('Epoch {}; Batch {}; LR {}; SGD Momentum {}; SGD Weight Decay {};\n'.format(str(args.epoch), str(args.batch), str(args.lr), str(args.momentum), str(args.weight_decay)))
+#     f.write('LR Scheduler Step {}; LR Scheduler Gamma {}; {};\n'.format(str(args.step_size), str(args.gamma), str(args.dataset)))
+#     f.write('TrainLoss,TrainAcc,ValLoss,ValAcc\n')
 
 # Train the model
 start = time.time()
@@ -108,6 +111,9 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
 
         training_loss += loss.item()
 
+    # SummaryWriter
+    tbwriter.add_scalar('train_loss', training_loss / len(trainloader), epoch + 1)
+
     # Print statistics
     with torch.no_grad():
         validation_loss = 0.0
@@ -120,9 +126,12 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
             loss = criterion(outputs, labels)
             
             validation_loss += loss.item()
+
+        # SummaryWriter
+        tbwriter.add_scalar('val_loss', validation_loss / len(testloader), epoch + 1)
     
-    train_losses.append(training_loss / len(trainloader))
-    val_losses.append(validation_loss / len(testloader))
+    # train_losses.append(training_loss / len(trainloader))
+    # val_losses.append(validation_loss / len(testloader))
 
     # Calculate training accuracy, top-1
     train_acc = calculate_acc(trainloader, net, device)
@@ -136,18 +145,22 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
         if args.save:
             # Save the model
             torch.save(net.state_dict(), 'trained_nets/{}-{}-b{}-e{}-{}.pth'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP))
-        
+    
+    # SummaryWriter
+    tbwriter.add_scalar('train_acc', train_acc, epoch + 1)
+    tbwriter.add_scalar('val_acc', val_acc, epoch + 1)
+
     # Switch back to training mode
     net.train()
 
-    train_accuracy.append(train_acc)
-    val_accuracy.append(val_acc)
+    # train_accuracy.append(train_acc)
+    # val_accuracy.append(val_acc)
 
     print('[Epoch: %d] Train Loss: %.3f    Train Acc: %.3f%%    Val Loss: %.3f    Val Acc: %.3f%%' %
             ( epoch + 1, training_loss / len(trainloader), train_acc, validation_loss / len(testloader), val_acc ))
     
-    with open(LOG_FILE, 'a+') as f:
-        f.write('%d,%.3f,%.3f,%.3f,%.3f\n' % (epoch + 1, training_loss / len(trainloader), train_acc, validation_loss / len(testloader), val_acc))
+    # with open(LOG_FILE, 'a+') as f:
+    #     f.write('%d,%.3f,%.3f,%.3f,%.3f\n' % (epoch + 1, training_loss / len(trainloader), train_acc, validation_loss / len(testloader), val_acc))
 
     # Step the scheduler after every epoch
     scheduler.step()
@@ -159,9 +172,16 @@ print('Total time trained: {}'.format( str(timedelta(seconds=int(end - start)) )
 net.eval()
 val_acc = calculate_acc(testloader, net, device)
 print('Test Accuracy of the network on the {} test images: Epoch {}, {} % '.format(VAL_LEN, stats['best_epoch'], stats['best_acc']))
-with open(LOG_FILE, 'a+') as f:
-    f.write('Test Accuracy of the network on the {} test images: Epoch {}, {} %'.format(VAL_LEN, stats['best_epoch'], stats['best_acc']))
+# with open(LOG_FILE, 'a+') as f:
+#     f.write('Test Accuracy of the network on the {} test images: Epoch {}, {} %'.format(VAL_LEN, stats['best_epoch'], stats['best_acc']))
 
-if args.save:
-    # Save plot
-    save_plot(train_losses, train_accuracy, val_losses, val_accuracy, args, TIME_STAMP)
+# if args.save:
+#     # Save plot
+#     save_plot(train_losses, train_accuracy, val_losses, val_accuracy, args, TIME_STAMP)
+
+tbwriter.close()
+
+with open(RESULT_FILE, 'a+') as f:
+    f.write('**********************\n')
+    f.write('Results of network {} on dataset {}:\n'.format(args.network, args.dataset))
+    f.write('Accuracy: {}, Epoch: {}, Time: {}\n'.format(stats['best_acc'], stats['best_epoch'], str(timedelta(seconds=int(end - start)) ) ))

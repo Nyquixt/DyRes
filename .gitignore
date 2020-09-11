@@ -135,3 +135,5 @@ plots/
 data/
 logs/
 tiny-imagenet-200
+results.txt
+runs/
