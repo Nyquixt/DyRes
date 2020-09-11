@@ -11,16 +11,21 @@ class Dy_AlexNet(nn.Module):
         super(Dy_AlexNet, self).__init__()
         self.features = nn.Sequential(
             DyConv(3, 64, kernel_size=11, stride=4, padding=2),
+            nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
             DyConv(64, 192, kernel_size=5, padding=2),
+            nn.BatchNorm2d(192),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
             DyConv(192, 384, kernel_size=3, padding=1),
+            nn.BatchNorm2d(384),
             nn.ReLU(inplace=True),
             DyConv(384, 256, kernel_size=3, padding=1),
+            nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             DyConv(256, 256, kernel_size=3, padding=1),
+            nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2)
         )
