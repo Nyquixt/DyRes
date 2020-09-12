@@ -24,6 +24,7 @@ parser.add_argument('--weight-decay', '-d', type=float, default=0.0005, help='We
 parser.add_argument('--step-size', '-s', type=int, default=30, help='Step in learning rate scheduler')
 parser.add_argument('--gamma', '-g', type=float, default=0.1, help='Gamma in learning rate scheduler')
 parser.add_argument('--dataset', type=str, help='cifar100 or imagenet', default='cifar100')
+parser.add_argument('--resume', type=str, help='resume training')
 parser.add_argument('--save', action='store_true')
 parser.add_argument('--cuda', action='store_true')
 parser.add_argument('--ngpu', type=int, default=1)
@@ -88,10 +89,19 @@ scheduler = torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=args.
 #     f.write('Epoch {}; Batch {}; LR {}; SGD Momentum {}; SGD Weight Decay {};\n'.format(str(args.epoch), str(args.batch), str(args.lr), str(args.momentum), str(args.weight_decay)))
 #     f.write('LR Scheduler Step {}; LR Scheduler Gamma {}; {};\n'.format(str(args.step_size), str(args.gamma), str(args.dataset)))
 #     f.write('TrainLoss,TrainAcc,ValLoss,ValAcc\n')
+if args.resume is not None:
+    checkpoint_path = args.resume
+    state = torch.load(checkpoint_path)
+    optimizer.load_state_dict(state['optimizer'])
+    net.load_state_dict(state['net'])
+    start_epoch = state['epoch']
+else:
+    checkpoint_path = 'trained_nets/{}-{}-b{}-e{}-{}.tar'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP)
+    start_epoch = 0
 
 # Train the model
 start = time.time()
-for epoch in range(args.epoch):  # loop over the dataset multiple times
+for epoch in range(start_epoch, args.epoch):  # loop over the dataset multiple times
 
     training_loss = 0.0
     for i, data in enumerate(trainloader):
@@ -143,8 +153,13 @@ for epoch in range(args.epoch):  # loop over the dataset multiple times
         stats['best_acc'] = val_acc
         stats['best_epoch'] = epoch + 1
         if args.save:
-            # Save the model
-            torch.save(net.state_dict(), 'trained_nets/{}-{}-b{}-e{}-{}.pth'.format(args.network, args.dataset, args.batch, args.epoch, TIME_STAMP))
+            # Save the checkpoint
+            state = {
+                'epoch': epoch, 
+                'optimizer': optimizer.state_dict(),
+                'net': net.state_dict()
+            }
+            torch.save(state, checkpoint_path)
     
     # SummaryWriter
     tbwriter.add_scalar('train_acc', train_acc, epoch + 1)
