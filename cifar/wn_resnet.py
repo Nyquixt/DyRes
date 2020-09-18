@@ -33,7 +33,7 @@ class BasicBlock(nn.Module):
         return out
 
 class WN_ResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10):
+    def __init__(self, block, num_blocks, num_classes=100):
         super(WN_ResNet, self).__init__()
         self.in_channels = 64
 
