@@ -5,7 +5,7 @@ import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import argparse
 import time
 from datetime import timedelta
