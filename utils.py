@@ -284,14 +284,16 @@ def get_dataloader(dataset, batch_size):
 
     elif dataset == 'imagenet':
         train_transform = transforms.Compose(
-            [transforms.RandomCrop(size=224, padding=4),
-            transforms.RandomHorizontalFlip(p=0.5),
+            [transforms.RandomSizedCrop(224),
+            transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
             ])
 
         test_transform = transforms.Compose(
-            [transforms.ToTensor(),
+            [transforms.Scale(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
             transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
             ])
         
