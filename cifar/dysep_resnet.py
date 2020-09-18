@@ -92,17 +92,5 @@ class DySep_ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def DySep_ResNet18(num_classes, mode):
-    return DySep_ResNet(BasicBlock, [2, 2, 2, 2], num_classes, mode)
-
-def DySep_ResNet34(num_classes, mode):
-    return DySep_ResNet(BasicBlock, [3, 4, 6, 3], num_classes, mode)
-
-def DySep_ResNet50(num_classes, mode):
-    return DySep_ResNet(Bottleneck, [3, 4, 6, 3], num_classes, mode)
-
-def DySep_ResNet101(num_classes, mode):
-    return DySep_ResNet(Bottleneck, [3, 4, 23, 3], num_classes, mode)
-
-def DySep_ResNet152(num_classes, mode):
-    return DySep_ResNet(Bottleneck, [3, 8, 36, 3], num_classes, mode)
+def DySep_ResNet18(mode):
+    return DySep_ResNet(BasicBlock, [2, 2, 2, 2], mode=mode)

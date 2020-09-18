@@ -65,8 +65,8 @@ class DySep_ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def DySep_ResNet18(num_classes):
-    return DySep_ResNet(BasicBlock, [2, 2, 2, 2], num_classes)
+def DySep_ResNet18(mode):
+    return DySep_ResNet(BasicBlock, [2, 2, 2, 2], mode=mode)
 
 def test():
     x = torch.randn(128, 3, 32, 32)

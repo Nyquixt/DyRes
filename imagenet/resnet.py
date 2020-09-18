@@ -31,7 +31,7 @@ class BasicBlock(nn.Module):
         return out
 
 class ResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10):
+    def __init__(self, block, num_blocks, num_classes=1000):
         super(ResNet, self).__init__()
         self.in_channels = 64
 
@@ -63,8 +63,8 @@ class ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def ResNet18(num_classes):
-    return ResNet(BasicBlock, [2, 2, 2, 2], num_classes)
+def ResNet18():
+    return ResNet(BasicBlock, [2, 2, 2, 2])
 
 def test():
     x = torch.randn(128, 3, 32, 32)

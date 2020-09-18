@@ -64,8 +64,8 @@ class MS_ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def MS_ResNet18(num_classes):
-    return MS_ResNet(BasicBlock, [2, 2, 2, 2], num_classes)
+def MS_ResNet18():
+    return MS_ResNet(BasicBlock, [2, 2, 2, 2])
 
 def test():
     x = torch.randn(128, 3, 32, 32)

@@ -91,5 +91,5 @@ class DyRes_ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def DyRes_ResNet18(num_classes, mode):
-    return DyRes_ResNet(BasicBlock, [2, 2, 2, 2], num_classes, mode)
+def DyRes_ResNet18(mode):
+    return DyRes_ResNet(BasicBlock, [2, 2, 2, 2], mode=mode)

@@ -65,8 +65,8 @@ class DyRes_ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def DyRes_ResNet18(num_classes):
-    return DyRes_ResNet(BasicBlock, [2, 2, 2, 2], num_classes)
+def DyRes_ResNet18(mode):
+    return DyRes_ResNet(BasicBlock, [2, 2, 2, 2], mode=mode)
 
 def test():
     x = torch.randn(128, 3, 32, 32)

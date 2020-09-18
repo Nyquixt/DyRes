@@ -64,12 +64,12 @@ class CC_ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def CC_ResNet18(num_classes):
-    return CC_ResNet(BasicBlock, [2, 2, 2, 2], num_classes)
+def CC_ResNet18():
+    return CC_ResNet(BasicBlock, [2, 2, 2, 2])
 
 def test():
     x = torch.randn(128, 3, 32, 32)
-    net1 = CC_ResNet18(10)
+    net1 = CC_ResNet18()
     y1 = net1(x); print(y1.size())
     
 # test()

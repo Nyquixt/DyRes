@@ -65,5 +65,5 @@ class WN_ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def WN_ResNet18(num_classes):
-    return WN_ResNet(BasicBlock, [2, 2, 2, 2], num_classes)
+def WN_ResNet18():
+    return WN_ResNet(BasicBlock, [2, 2, 2, 2])
