@@ -295,8 +295,8 @@ def get_dataloader(dataset, batch_size):
             transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
             ])
         
-        trainset = torchvision.datasets.ImageNet(root=IMAGENET_DATA_DIR, split='train', transform=train_transform, download=True)
-        testset = torchvision.datasets.ImageNet(root=IMAGENET_DATA_DIR, split='val', transform=test_transform, download=True)
+        trainset = torchvision.datasets.ImageNet(root=IMAGENET_DATA_DIR, split='train', transform=train_transform)
+        testset = torchvision.datasets.ImageNet(root=IMAGENET_DATA_DIR, split='val', transform=test_transform)
     
     else:
         print('Dataset not supported yet...')
