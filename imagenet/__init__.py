@@ -6,7 +6,6 @@ from .mobilenetv2 import *
 # Dynamic Convs
 from .condconv import *
 from .dyconv import *
-from .dyconv_group import *
 from .dyres_conv import *
 from .dysep_conv import *
 from .ms_conv import *
