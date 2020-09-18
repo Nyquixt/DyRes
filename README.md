@@ -39,13 +39,13 @@ Results on the ImageNet Dataset
 | ResNet18      | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
 | MobileNetV2   | ------        | ------        | ------        | ------        | ------        | ------        | ------        |
 
-### Training Configurations
+### Default Training Configurations
 
 | Parameter                     | Value         |
 |------------------------------ |---------------|
-| epochs                        | 120           |
-| batch                         | 256           |
-| learning rate                 | 0.1           |
+| epochs                        | 90            |
+| batch                         | 128           |
+| learning rate                 | 0.01          |
 | update learning rate every    | 30 epochs     |
 | learning rate update factor   | 0.1           |
 | SGD momentum                  | 0.9           |
@@ -86,7 +86,7 @@ If you want to play around with the hyper-parameters run ``python3 train.py -h``
 
 Another example to run
 
-    python3 train.py --network resnet_ac50 -e 300 -b 512 -l 0.1 -m 0.9 -d 0.0005 -s 80 -g 0.1 --dataset cifar10 --cuda
+    python3 train.py --network resnet18 -e 120 -b 512 -l 0.1 -m 0.9 -d 0.0005 -s 80 -g 0.1 --dataset cifar100 --cuda
 
 ### TODO:
 
