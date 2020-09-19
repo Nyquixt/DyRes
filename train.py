@@ -156,13 +156,11 @@ end = time.time()
 print('Total time trained: {}'.format( str(timedelta(seconds=int(end - start)) ) ))
 
 # Test the model
-net.eval()
-val_acc = calculate_acc(testloader, net, device)
-print('Test Accuracy of the network on the {} test images: Epoch {}, {} % '.format(VAL_LEN, stats['best_epoch'], stats['best_acc']))
+print('Test Accuracy of the {} on the {} test images: Epoch {}, {} % '.format(args.network, VAL_LEN, stats['best_epoch'], stats['best_acc']))
 
 with open(LOG_FILE, 'a+') as f:
     f.write('Total time trained: {}\n'.format( str(timedelta(seconds=int(end - start)) ) ))
-    f.write('Test Accuracy of the network on the {} test images: Epoch {}, {} %'.format(VAL_LEN, stats['best_epoch'], stats['best_acc']))
+    f.write('Test Accuracy of the {} on the {} test images: Epoch {}, {} %'.format(args.network, VAL_LEN, stats['best_epoch'], stats['best_acc']))
 
 with open(RESULT_FILE, 'a+') as f:
     f.write('**********************\n')
