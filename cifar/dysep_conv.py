@@ -7,7 +7,7 @@ __all__ = ['DySepConv'] # Dynamic "Squeeze?" Conv
 class DySepConv(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, bias=False, reduction=16, mode='A'):
         super(DySepConv, self).__init__()
-        assert mode == 'A' or mode == 'B' or mode == 'C' or mode == 'D'
+        assert mode == 'A' or mode == 'B'
         self.mode = mode
 
         # Number of experts k = 3
@@ -17,27 +17,7 @@ class DySepConv(nn.Module):
 
         squeeze_channels = max(in_channels // reduction, reduction)
         
-        if self.mode == 'A': # 1-1-3-3
-            self.dwise_separable = nn.Sequential(
-                nn.Conv2d(in_channels, squeeze_channels, kernel_size=1, stride=1, groups=1, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(squeeze_channels, self.k * in_channels, kernel_size=1, stride=1, groups=1, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(self.k * in_channels, self.k * in_channels, kernel_size=3, stride=1, groups=self.k * in_channels, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(self.k * in_channels, self.k * in_channels, kernel_size=3, stride=1, groups=self.k * in_channels, bias=False)
-            )
-        elif self.mode == 'B': # 3-3-1-1
-            self.dwise_separable = nn.Sequential(
-                nn.Conv2d(in_channels, in_channels, kernel_size=3, stride=1, groups=in_channels, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(in_channels, in_channels, kernel_size=3, stride=1, groups=in_channels, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(in_channels, squeeze_channels, kernel_size=1, stride=1, groups=1, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(squeeze_channels, self.k * in_channels, kernel_size=1, stride=1, groups=1, bias=False)
-            )
-        elif self.mode == 'C': # 1-3-3-1
+        if self.mode == 'A': # 1-3-3-1
             self.dwise_separable = nn.Sequential(
                 nn.Conv2d(in_channels, squeeze_channels, kernel_size=1, stride=1, groups=1, bias=False),
                 nn.ReLU(inplace=True),
@@ -47,7 +27,7 @@ class DySepConv(nn.Module):
                 nn.ReLU(inplace=True),
                 nn.Conv2d(squeeze_channels, self.k * in_channels, kernel_size=1, stride=1, groups=1, bias=False)                      
             )
-        elif self.mode == 'D': # 3-1-1-3
+        elif self.mode == 'B': # 3-1-1-3
             self.dwise_separable = nn.Sequential(
                 nn.Conv2d(in_channels, in_channels, kernel_size=3, stride=1, groups=in_channels, bias=False),
                 nn.ReLU(inplace=True),
@@ -83,7 +63,7 @@ class DySepConv(nn.Module):
 
 def test():
     x = torch.randn(64, 128, 32, 32)
-    conv = DySepConv(128, 256, 3, padding=1, mode='D')
+    conv = DySepConv(128, 256, 3, padding=1, mode='A')
     y = conv(x)
     print(y.shape)
 
