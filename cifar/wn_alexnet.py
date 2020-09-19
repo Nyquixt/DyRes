@@ -19,10 +19,13 @@ class WN_AlexNet(nn.Module):
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
             WeightNet(192, 384, kernel_size=3),
+            nn.BatchNorm2d(384),
             nn.ReLU(inplace=True),
             WeightNet(384, 256, kernel_size=3),
+            nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             WeightNet(256, 256, kernel_size=3),
+            nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
         )
