@@ -7,7 +7,7 @@ __all__ = ['DyResConv'] # Dynamic "Squeeze?" Conv
 class DyResConv(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, bias=False, reduction=16, mode='A'):
         super(DyResConv, self).__init__()
-        assert mode == 'A' or mode == 'B' or mode == 'C' or mode == 'D'
+        assert mode == 'A' or mode == 'B'
         self.mode = mode
 
         # Global Average Pool
@@ -17,27 +17,7 @@ class DyResConv(nn.Module):
 
         squeeze_channels = max(in_channels // reduction, reduction)
         
-        if self.mode == 'A': # 1-1-3-3
-            self.dwise_separable = nn.Sequential(
-                nn.Conv2d(in_channels, squeeze_channels, kernel_size=1, stride=1, groups=1, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(squeeze_channels, in_channels, kernel_size=1, stride=1, groups=1, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(in_channels, in_channels, kernel_size=3, stride=1, groups=in_channels, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(in_channels, in_channels, kernel_size=3, stride=1, groups=in_channels, bias=False)
-            ) 
-        elif self.mode == 'B': # 3-3-1-1
-            self.dwise_separable = nn.Sequential(
-                nn.Conv2d(in_channels, in_channels, kernel_size=3, stride=1, groups=in_channels, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(in_channels, in_channels, kernel_size=3, stride=1, groups=in_channels, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(in_channels, squeeze_channels, kernel_size=1, stride=1, groups=1, bias=False),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(squeeze_channels, in_channels, kernel_size=1, stride=1, groups=1, bias=False)
-            )
-        elif self.mode == 'C': # 1-3-3-1
+        if self.mode == 'A': # 1-3-3-1
             self.dwise_separable = nn.Sequential(
                 nn.Conv2d(in_channels, squeeze_channels, kernel_size=1, stride=1, groups=1, bias=False),
                 nn.ReLU(inplace=True),
@@ -47,7 +27,7 @@ class DyResConv(nn.Module):
                 nn.ReLU(inplace=True),
                 nn.Conv2d(squeeze_channels, in_channels, kernel_size=1, stride=1, groups=1, bias=False)
             )
-        elif self.mode == 'D': # 3-1-1-3
+        elif self.mode == 'B': # 3-1-1-3
             self.dwise_separable = nn.Sequential(
                 nn.Conv2d(in_channels, in_channels, kernel_size=3, stride=1, groups=in_channels, bias=False),
                 nn.ReLU(inplace=True),
@@ -58,7 +38,7 @@ class DyResConv(nn.Module):
                 nn.Conv2d(in_channels, in_channels, kernel_size=3, stride=1, groups=in_channels, bias=False)
             )
         
-        self.softmax = nn.Softmax(1)
+        self.sigmoid = nn.Sigmoid()
 
         # 3x3 Convs
         self.one_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, groups=groups, padding=padding, bias=bias)
@@ -76,7 +56,7 @@ class DyResConv(nn.Module):
         a1 = a1.expand_as(a5)
         attention = torch.cat([a1, a3, a5], dim=0)
         attention = self.dwise_separable(attention)
-        attention = self.softmax(attention.squeeze(dim=-1).squeeze(dim=-1)).unsqueeze(dim=-1).unsqueeze(dim=-1)
+        attention = self.sigmoid(attention.squeeze(dim=-1).squeeze(dim=-1)).unsqueeze(dim=-1).unsqueeze(dim=-1)
         x1 = x * attention[0:b].expand_as(x)
         y1 = self.one_bn(self.one_conv(x1))
         x2 = x * attention[b:2*b].expand_as(x)
@@ -87,7 +67,7 @@ class DyResConv(nn.Module):
 
 def test():
     x = torch.randn(64, 128, 32, 32)
-    conv = DyResConv(128, 256, 3, padding=1, mode='D')
+    conv = DyResConv(128, 256, 3, padding=1, mode='A')
     y = conv(x)
     print(y.shape)
 

@@ -38,7 +38,7 @@ class DyResConv(nn.Module):
                 nn.Conv2d(in_channels, in_channels, kernel_size=3, stride=1, groups=in_channels, bias=False)
             )
         
-        self.softmax = nn.Softmax(1)
+        self.sigmoid = nn.Sigmoid()
 
         # 3x3 Convs
         self.one_conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, groups=groups, padding=padding, bias=bias)
@@ -56,7 +56,7 @@ class DyResConv(nn.Module):
         a1 = a1.expand_as(a5)
         attention = torch.cat([a1, a3, a5], dim=0)
         attention = self.dwise_separable(attention)
-        attention = self.softmax(attention.squeeze(dim=-1).squeeze(dim=-1)).unsqueeze(dim=-1).unsqueeze(dim=-1)
+        attention = self.sigmoid(attention.squeeze(dim=-1).squeeze(dim=-1)).unsqueeze(dim=-1).unsqueeze(dim=-1)
         x1 = x * attention[0:b].expand_as(x)
         y1 = self.one_bn(self.one_conv(x1))
         x2 = x * attention[b:2*b].expand_as(x)
