@@ -41,18 +41,18 @@
 
 | Models            | CIFAR100      | ImageNet      |
 |-------------------|---------------|---------------|
-| AlexNet           | ------        | ------        |
-| ResNet18          | ------        | ------        |
-| MobileNetV2       | ------        | ------        |
-| CC_AlexNet        | ------        | ------        |
-| CC_ResNet18       | ------        | ------        |
-| CC_MobileNetV2    | ------        | ------        |
-| DY_AlexNet        | ------        | ------        |
-| DY_ResNet18       | ------        | ------        |
-| DY_MobileNetV2    | ------        | ------        |
-| WN_AlexNet        | ------        | ------        |
-| WN_ResNet18       | ------        | ------        |
-| WN_MobileNetV2    | ------        | ------        |
+| AlexNet           | 53.18%        | ------        |
+| CC_AlexNet        | 59.51%        | ------        |
+| DY_AlexNet        | 59.21%        | ------        |
+| WN_AlexNet        | 59.63%        | ------        |
+| ResNet18          | 72.51%        | ------        |
+| CC_ResNet18       | 74.35%        | ------        |
+| DY_ResNet18       | 73.44%        | ------        |
+| WN_ResNet18       | 73.03%        | ------        |
+| MobileNetV2       | 70.57%        | ------        |
+| CC_MobileNetV2    | 71.07%        | ------        |
+| DY_MobileNetV2    | 70.56%        | ------        |
+| WN_MobileNetV2    | 70.96%        | ------        |
 
 ### Default Training Configurations
 
