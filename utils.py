@@ -100,6 +100,10 @@ def get_network(network, dataset, device):
         else:
             from imagenet.wn_resnet import WN_ResNet18
         net = WN_ResNet18()
+    elif network == 'wnt_resnet18':
+        if dataset == 'cifar100':
+            from cifar.wnt_resnet import WNT_ResNet18
+        net = WNT_ResNet18()
     elif network == 'resnet18':
         if dataset == 'cifar100':
             from cifar.resnet import ResNet18
@@ -158,6 +162,10 @@ def get_network(network, dataset, device):
         else:
             from imagenet.wn_alexnet import WN_AlexNet
         net = WN_AlexNet()
+    elif network == 'wnt_alexnet':
+        if dataset == 'cifar100':
+            from cifar.wnt_alexnet import WNT_AlexNet
+        net = WNT_AlexNet()
     elif network == 'alexnet':
         if dataset == 'cifar100':
             from cifar.alexnet import AlexNet
@@ -216,6 +224,10 @@ def get_network(network, dataset, device):
         else:
             from imagenet.wn_mobilenetv2 import WN_MobileNetV2
         net = WN_MobileNetV2()
+    elif network == 'wnt_mobilenetv2':
+        if dataset == 'cifar100':
+            from cifar.wnt_mobilenetv2 import WNT_MobileNetV2
+        net = WNT_MobileNetV2()
     elif network == 'mobilenetv2':
         if dataset == 'cifar100':
             from cifar.mobilenetv2 import MobileNetV2

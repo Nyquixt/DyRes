@@ -12,6 +12,7 @@ from .wn_alexnet import *
 from .dyres_alexnet import *
 from .dysep_alexnet import *
 from .ms_alexnet import *
+from .wnt_alexnet import *
 
 # ResNet18
 # Related Work
@@ -22,6 +23,7 @@ from .wn_resnet import *
 from .dyres_resnet import *
 from .dysep_resnet import *
 from .ms_resnet import *
+from .wnt_resnet import *
 
 # MobileNetV2
 # Related Work
@@ -32,3 +34,4 @@ from .wn_mobilenetv2 import *
 from .dyres_mobilenetv2 import *
 from .dysep_mobilenetv2 import *
 from .ms_mobilenetv2 import *
+from .wnt_mobilenetv2 import *
