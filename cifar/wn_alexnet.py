@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from .weightnet import *
+from convs.weightnet import *
 
 __all__ = ['WN_AlexNet']
 

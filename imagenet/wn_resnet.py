@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from .weightnet import WeightNet
+from convs.weightnet import WeightNet
 
 __all__ = ['WN_ResNet18']
 

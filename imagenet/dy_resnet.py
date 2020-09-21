@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from .dyconv import DyConv
+from convs.dyconv import DyConv
 
 __all__ = ['Dy_ResNet18']
 

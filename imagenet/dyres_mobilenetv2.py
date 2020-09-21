@@ -5,7 +5,7 @@ Mobile Networks for Classification, Detection and Segmentation" for more details
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from .dyres_conv import *
+from convs.dyres_conv import *
 
 __all__ = ['DyRes_MobileNetV2']
 

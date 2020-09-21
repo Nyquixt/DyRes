@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from .dysep_conv import *
+from convs.dysep_conv import *
 
 __all__ = ['DySep_AlexNet']
 

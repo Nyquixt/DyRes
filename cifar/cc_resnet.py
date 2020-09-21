@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from .condconv import *
+from convs.condconv import *
 
 __all__ = ['CC_ResNet18']
 

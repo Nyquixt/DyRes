@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from .dyres_conv import *
+from convs.dyres_conv import *
 
 __all__ = ['DyRes_AlexNet']
 
