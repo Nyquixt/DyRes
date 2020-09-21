@@ -83,6 +83,7 @@ if args.resume is not None:
     optimizer.load_state_dict(state['optimizer'])
     net.load_state_dict(state['net'])
     start_epoch = state['epoch']
+    stats = state['stats'] if state['stats'] else { 'best_acc': 0.0, 'best_epoch': 0 }
 else:
     checkpoint_path = 'trained_nets/{}-{}-b{}-e{}.tar'.format(args.network, args.dataset, args.batch, args.epoch)
     start_epoch = 0
@@ -136,7 +137,8 @@ for epoch in range(start_epoch, args.epoch):  # loop over the dataset multiple t
             state = {
                 'epoch': epoch, 
                 'optimizer': optimizer.state_dict(),
-                'net': net.state_dict()
+                'net': net.state_dict(),
+                'stats': stats
             }
             torch.save(state, checkpoint_path)
 
