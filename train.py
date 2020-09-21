@@ -69,13 +69,14 @@ optimizer = torch.optim.SGD(net.parameters(), lr=args.lr, momentum=args.momentum
 # Learning rate scheduler
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=args.step_size, gamma=args.gamma)
 
-# Log basic hyper-params to log file
-with open(LOG_FILE, 'w') as f:
-    f.write('Training model {}\n'.format(args.network))
-    f.write('Hyper-parameters:\n')
-    f.write('Epoch {}; Batch {}; LR {}; SGD Momentum {}; SGD Weight Decay {};\n'.format(str(args.epoch), str(args.batch), str(args.lr), str(args.momentum), str(args.weight_decay)))
-    f.write('LR Scheduler Step {}; LR Scheduler Gamma {}; {};\n'.format(str(args.step_size), str(args.gamma), str(args.dataset)))
-    f.write('TrainLoss,TrainAcc,ValLoss,ValAcc\n')
+if args.save:
+    # Log basic hyper-params to log file
+    with open(LOG_FILE, 'w') as f:
+        f.write('Training model {}\n'.format(args.network))
+        f.write('Hyper-parameters:\n')
+        f.write('Epoch {}; Batch {}; LR {}; SGD Momentum {}; SGD Weight Decay {};\n'.format(str(args.epoch), str(args.batch), str(args.lr), str(args.momentum), str(args.weight_decay)))
+        f.write('LR Scheduler Step {}; LR Scheduler Gamma {}; {};\n'.format(str(args.step_size), str(args.gamma), str(args.dataset)))
+        f.write('TrainLoss,TrainAcc,ValLoss,ValAcc\n')
 
 if args.resume is not None:
     checkpoint_path = args.resume
@@ -148,8 +149,9 @@ for epoch in range(start_epoch, args.epoch):  # loop over the dataset multiple t
     print('[Epoch: %d] Train Loss: %.3f    Train Acc: %.3f%%    Val Loss: %.3f    Val Acc: %.3f%%' %
             ( epoch + 1, training_loss / len(trainloader), train_acc, validation_loss / len(testloader), val_acc ))
     
-    with open(LOG_FILE, 'a+') as f:
-        f.write('%d,%.3f,%.3f,%.3f,%.3f\n' % (epoch + 1, training_loss / len(trainloader), train_acc, validation_loss / len(testloader), val_acc))
+    if args.save:
+        with open(LOG_FILE, 'a+') as f:
+            f.write('%d,%.3f,%.3f,%.3f,%.3f\n' % (epoch + 1, training_loss / len(trainloader), train_acc, validation_loss / len(testloader), val_acc))
 
     # Step the scheduler after every epoch
     scheduler.step()
@@ -159,12 +161,12 @@ print('Total time trained: {}'.format( str(timedelta(seconds=int(end - start)) )
 
 # Test the model
 print('Test Accuracy of the {} on the {} test images: Epoch {}, {} % '.format(args.network, VAL_LEN, stats['best_epoch'], stats['best_acc']))
+if args.save:
+    with open(LOG_FILE, 'a+') as f:
+        f.write('Total time trained: {}\n'.format( str(timedelta(seconds=int(end - start)) ) ))
+        f.write('Test Accuracy of the {} on the {} test images: Epoch {}, {} %'.format(args.network, VAL_LEN, stats['best_epoch'], stats['best_acc']))
 
-with open(LOG_FILE, 'a+') as f:
-    f.write('Total time trained: {}\n'.format( str(timedelta(seconds=int(end - start)) ) ))
-    f.write('Test Accuracy of the {} on the {} test images: Epoch {}, {} %'.format(args.network, VAL_LEN, stats['best_epoch'], stats['best_acc']))
-
-with open(RESULT_FILE, 'a+') as f:
-    f.write('**********************\n')
-    f.write('Results of network {} on dataset {}:\n'.format(args.network, args.dataset))
-    f.write('Accuracy: {}, Epoch: {}, Time: {}\n'.format(stats['best_acc'], stats['best_epoch'], str(timedelta(seconds=int(end - start)) ) ))
+    with open(RESULT_FILE, 'a+') as f:
+        f.write('**********************\n')
+        f.write('Results of network {} on dataset {}:\n'.format(args.network, args.dataset))
+        f.write('Accuracy: {}, Epoch: {}, Time: {}\n'.format(stats['best_acc'], stats['best_epoch'], str(timedelta(seconds=int(end - start)) ) ))
