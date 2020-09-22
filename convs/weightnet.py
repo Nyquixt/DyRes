@@ -22,7 +22,7 @@ class WeightNet(nn.Module):
         self.kernel_size = kernel_size
         self.stride = stride
 
-        self.fc1 = nn.Conv2d(input_gap, self.M * out_channels, 1, 1, 0, groups=1, bias=False)
+        self.fc1 = nn.Conv2d(input_gap, self.M * out_channels, 1, 1, 0, groups=1, bias=True)
         self.sigmoid = nn.Sigmoid()
         self.fc2 = nn.Conv2d(self.M * out_channels, out_channels * in_channels * kernel_size * kernel_size, 1, 1, 0, groups=self.G * out_channels)
 
@@ -57,7 +57,7 @@ class WeightNet_DW(nn.Module):
         self.kernel_size = kernel_size
         self.stride = stride
 
-        self.fc1 = nn.Conv2d(input_gap, self.M // self.G * channels, 1, 1, 0, groups=1, bias=False)
+        self.fc1 = nn.Conv2d(input_gap, self.M // self.G * channels, 1, 1, 0, groups=1, bias=True)
         self.sigmoid = nn.Sigmoid()
         self.fc2 = nn.Conv2d(self.M // self.G * channels, channels * kernel_size * kernel_size, 1, 1, 0, groups=channels)
 
@@ -94,8 +94,9 @@ class WeightNet_Tanh(nn.Module):
         self.stride = stride
 
         self.fc1 = nn.Conv2d(input_gap, self.M * out_channels, 1, 1, 0, groups=1, bias=False)
-        self.tanh = nn.Tanh()
+        self.sigmoid = nn.Sigmoid()
         self.fc2 = nn.Conv2d(self.M * out_channels, out_channels * in_channels * kernel_size * kernel_size, 1, 1, 0, groups=self.G * out_channels)
+        self.tanh = nn.Tanh()
 
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.reduce = nn.Conv2d(in_channels, input_gap, 1, 1, 0, bias=True)
@@ -106,8 +107,9 @@ class WeightNet_Tanh(nn.Module):
         x_gap = self.reduce(x_gap) # N x C_in / r x 1 x 1
 
         x_w = self.fc1(x_gap) # N x M(C_out) x 1 x 1
-        x_w = self.tanh(x_w)
+        x_w = self.sigmoid(x_w)
         x_w = self.fc2(x_w) # N x (C_out)(C_in)(kH)(kW) x 1 x 1
+        x_w = self.tanh(x_w)
 
         x = x.view(1, -1, x.size(2), x.size(3)) # 1 x N(C_in) x H x W
         x_w = x_w.view(-1, self.in_channels, self.kernel_size, self.kernel_size) # (C_out)(N) x C_in x kH, kW
@@ -115,7 +117,7 @@ class WeightNet_Tanh(nn.Module):
         x = x.view(-1, self.out_channels, x.size(2), x.size(3)) # N x C_out x H x W
         return x
 
-class WeightNet_DW_Tanh(nn.Module):
+class WeightNet_DW_Tanh(nn.Module): # separable
     def __init__(self, channels, kernel_size, stride=1, reduction_ratio=16, M=2, G=2):
         super().__init__()
 
@@ -129,8 +131,9 @@ class WeightNet_DW_Tanh(nn.Module):
         self.stride = stride
 
         self.fc1 = nn.Conv2d(input_gap, self.M // self.G * channels, 1, 1, 0, groups=1, bias=False)
-        self.tanh = nn.Tanh()
+        self.sigmoid = nn.Sigmoid()
         self.fc2 = nn.Conv2d(self.M // self.G * channels, channels * kernel_size * kernel_size, 1, 1, 0, groups=channels)
+        self.tanh = nn.Tanh()
 
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.reduce = nn.Conv2d(channels, input_gap, 1, 1, 0, bias=True)
@@ -141,8 +144,9 @@ class WeightNet_DW_Tanh(nn.Module):
         x_gap = self.reduce(x_gap) # N x C_in / r x 1 x 1
 
         x_w = self.fc1(x_gap)
-        x_w = self.tanh(x_w)
+        x_w = self.sigmoid(x_w)
         x_w = self.fc2(x_w)
+        x_w = self.tanh(x_w)
 
         x = x.view(1, -1, x.size(2), x.size(3))
         x_w = x_w.view(-1, 1, self.kernel_size, self.kernel_size)
