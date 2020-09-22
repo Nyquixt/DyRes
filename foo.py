@@ -1,6 +1,10 @@
 import os
 from shutil import copyfile
 
+'''
+    refactor tiny imagenet dataset in the val set
+'''
+
 DIR = '/home/nyquixt/Desktop/dataset/tiny-imagenet-200'
 DATASET = 'val'
 ANNOTATION = 'val_annotations.txt'
