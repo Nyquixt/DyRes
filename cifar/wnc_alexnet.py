@@ -48,7 +48,7 @@ class WNC_AlexNet(nn.Module):
 
 def test():
     x = torch.randn(256, 3, 32, 32)
-    net = WN_AlexNet()
+    net = WNC_AlexNet()
     y = net(x)
     print(y.shape)
 
