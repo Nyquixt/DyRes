@@ -6,7 +6,7 @@ import torch.nn.functional as F
 https://github.com/megvii-model/WeightNet/blob/master/weightnet.py
 '''
 
-__all__ = ['WeightNet', 'WeightNet_DW', 'WeightNet_Context']
+__all__ = ['WeightNet', 'WeightNet_DW']
 
 class WeightNet(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, reduction_ratio=16, M=2, G=2):
@@ -77,42 +77,6 @@ class WeightNet_DW(nn.Module):
         x_w = x_w.view(-1, 1, self.kernel_size, self.kernel_size)
         x = F.conv2d(x, weight=x_w, stride=self.stride, padding=self.padding, groups=b * self.channels)
         x = x.view(-1, self.channels, x.size(2), x.size(3))
-        return x
-
-class WeightNet_Context(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, reduction_ratio=16):
-        super().__init__()
-
-        self.padding = kernel_size // 2
-        self.in_channels = in_channels
-        self.out_channels = out_channels
-        self.kernel_size = kernel_size
-        self.stride = stride
-
-        self.wk = nn.Conv2d(in_channels, 1, kernel_size=1, stride=1, padding=0, groups=1, bias=False)
-        self.softmax = nn.Softmax(2)
-
-        self.fc = nn.Conv2d(in_channels, out_channels * in_channels * kernel_size * kernel_size, 1, 1, 0, groups=in_channels)
-
-    def forward(self, x):
-        b, c_in, h, w = x.size()
-        input_x = x
-        input_x = input_x.view(b, c_in, h * w) # N x C_in x H*W
-        input_x = input_x.unsqueeze(1) # N x 1 x C_in x H*W
-
-        context = self.wk(x) # N x 1 x H x W
-        context = context.view(b, 1, h * w) # N x 1 x H*W
-        context = self.softmax(context).unsqueeze(3) # N x 1 x H*W x 1
-
-        context = torch.matmul(input_x, context) # N x 1 x C_in x 1
-        context = context.view(b, c_in, 1, 1)
-        
-        weight = self.fc(context)
-    
-        x = x.view(1, -1, x.size(2), x.size(3)) # 1 x N(C_in) x H x W
-        weight = weight.view(-1, self.in_channels, self.kernel_size, self.kernel_size) # (C_out)(N) x C_in x kH, kW
-        x = F.conv2d(x, weight=weight, stride=self.stride, padding=self.padding, groups=b)
-        x = x.view(-1, self.out_channels, x.size(2), x.size(3)) # N x C_out x H x W
         return x
 
 def test():

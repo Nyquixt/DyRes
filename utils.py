@@ -100,10 +100,6 @@ def get_network(network, dataset, device):
         else:
             from imagenet.wn_resnet import WN_ResNet18
         net = WN_ResNet18()
-    elif network == 'wnc_resnet18':
-        if dataset == 'cifar100':
-            from cifar.wnc_resnet import WNC_ResNet18
-        net = WNC_ResNet18()
     elif network == 'resnet18':
         if dataset == 'cifar100':
             from cifar.resnet import ResNet18
@@ -142,6 +138,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.ms_resnet import MS_ResNet18
         net = MS_ResNet18()
+    elif network == 'gcwn_resnet18':
+        if dataset == 'cifar100':
+            from cifar.gcwn_resnet import GCWN_ResNet18
+        else:
+            from imagenet.gcwn_resnet import GCWN_ResNet18
+        net = GCWN_ResNet18()
     
     # AlexNet and Related Work
     elif network == 'cc_alexnet':
@@ -162,10 +164,6 @@ def get_network(network, dataset, device):
         else:
             from imagenet.wn_alexnet import WN_AlexNet
         net = WN_AlexNet()
-    elif network == 'wnc_alexnet':
-        if dataset == 'cifar100':
-            from cifar.wnc_alexnet import WNC_AlexNet
-        net = WNC_AlexNet()
     elif network == 'alexnet':
         if dataset == 'cifar100':
             from cifar.alexnet import AlexNet
@@ -204,6 +202,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.ms_alexnet import MS_AlexNet
         net = MS_AlexNet()
+    elif network == 'gcwn_alexnet':
+        if dataset == 'cifar100':
+            from cifar.gcwn_alexnet import GCWN_AlexNet
+        else:
+            from imagenet.gcwn_alexnet import GCWN_AlexNet
+        net = GCWN_AlexNet()
 
     # MobileNetV2 and Related Work
     elif network == 'cc_mobilenetv2':
@@ -224,10 +228,6 @@ def get_network(network, dataset, device):
         else:
             from imagenet.wn_mobilenetv2 import WN_MobileNetV2
         net = WN_MobileNetV2()
-    elif network == 'wnc_mobilenetv2':
-        if dataset == 'cifar100':
-            from cifar.wnc_mobilenetv2 import WNC_MobileNetV2
-        net = WNC_MobileNetV2()
     elif network == 'mobilenetv2':
         if dataset == 'cifar100':
             from cifar.mobilenetv2 import MobileNetV2
@@ -266,6 +266,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.ms_mobilenetv2 import MS_MobileNetV2
         net = MS_MobileNetV2()
+    elif network == 'gcwn_mobilenetv2':
+        if dataset == 'cifar100':
+            from cifar.gcwn_mobilenetv2 import GCWN_MobileNetV2
+        else:
+            from imagenet.gcwn_mobilenetv2 import GCWN_MobileNetV2
+        net = GCWN_MobileNetV2()
         
     else:
         print('the network is not supported')

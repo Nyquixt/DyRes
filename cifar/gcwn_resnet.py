@@ -2,18 +2,18 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from convs.weightnet import *
+from convs.gc_weightnet import *
 
-__all__ = ['WNC_ResNet18']
+__all__ = ['GCWN_ResNet18']
 
 class BasicBlock(nn.Module):
     expansion = 1
 
     def __init__(self, in_channels, channels, stride=1):
         super(BasicBlock, self).__init__()
-        self.conv1 = WeightNet_Context(in_channels, channels, kernel_size=3, stride=stride)
+        self.conv1 = GC_WeightNet(in_channels, channels, kernel_size=3, stride=stride)
         self.bn1 = nn.BatchNorm2d(channels)
-        self.conv2 = WeightNet_Context(channels, channels, kernel_size=3, stride=1)
+        self.conv2 = GC_WeightNet(channels, channels, kernel_size=3, stride=1)
         self.bn2 = nn.BatchNorm2d(channels)
 
         self.shortcut = nn.Sequential()
@@ -32,9 +32,9 @@ class BasicBlock(nn.Module):
         out = F.relu(out)
         return out
 
-class WNC_ResNet(nn.Module):
+class GCWN_ResNet(nn.Module):
     def __init__(self, block, num_blocks, num_classes=100):
-        super(WNC_ResNet, self).__init__()
+        super(GCWN_ResNet, self).__init__()
         self.in_channels = 64
 
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3, padding=1)
@@ -65,5 +65,5 @@ class WNC_ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def WNC_ResNet18():
-    return WNC_ResNet(BasicBlock, [2, 2, 2, 2])
+def GCWN_ResNet18():
+    return GCWN_ResNet(BasicBlock, [2, 2, 2, 2])

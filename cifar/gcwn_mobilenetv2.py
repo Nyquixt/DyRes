@@ -5,9 +5,9 @@ Mobile Networks for Classification, Detection and Segmentation" for more details
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from convs.weightnet import *
+from convs.gc_weightnet import *
 
-__all__ = ['WNC_MobileNetV2']
+__all__ = ['GCWN_MobileNetV2']
 
 class Block(nn.Module):
     '''expand + depthwise + pointwise'''
@@ -18,7 +18,7 @@ class Block(nn.Module):
         planes = expansion * in_planes
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = WeightNet_Context(planes, planes, kernel_size=3, stride=stride)
+        self.conv2 = GC_WeightNet(planes, planes, kernel_size=3, stride=stride)
         self.bn2 = nn.BatchNorm2d(planes)
         self.conv3 = nn.Conv2d(planes, out_planes, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn3 = nn.BatchNorm2d(out_planes)
@@ -38,7 +38,7 @@ class Block(nn.Module):
         return out
 
 
-class WNC_MobileNetV2(nn.Module):
+class GCWN_MobileNetV2(nn.Module):
     # (expansion, out_planes, num_blocks, stride)
     cfg = [(1,  16, 1, 1),
            (6,  24, 2, 1),  # NOTE: change stride to 1 for CIFAR10, to 2 for TinyImageNet
@@ -49,7 +49,7 @@ class WNC_MobileNetV2(nn.Module):
            (6, 320, 1, 1)]
 
     def __init__(self, num_classes=100):
-        super(WNC_MobileNetV2, self).__init__()
+        super(GCWN_MobileNetV2, self).__init__()
         # NOTE: change conv1 stride 2 -> 1 for CIFAR10
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1)
         self.bn1 = nn.BatchNorm2d(32)
@@ -79,7 +79,7 @@ class WNC_MobileNetV2(nn.Module):
 
 
 def test():
-    net = WNC_MobileNetV2(num_classes=100)
+    net = GCWN_MobileNetV2(num_classes=100)
     x = torch.randn(2, 3, 32, 32)
     y = net(x)
     print(y.size())
