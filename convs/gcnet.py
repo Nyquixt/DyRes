@@ -37,7 +37,7 @@ class GCNet(nn.Module):
         return out
 
 class GC_Attention(nn.Module):
-    def __init__(self, in_channels, reduction=16):
+    def __init__(self, in_channels, out_channels, reduction=16):
         super().__init__()
         reduction_channels = max(in_channels // reduction, reduction)
         self.conv_mask = nn.Conv2d(in_channels, 1, kernel_size=1) #K
@@ -46,7 +46,7 @@ class GC_Attention(nn.Module):
             nn.Conv2d(in_channels, reduction_channels, kernel_size=1),
             nn.LayerNorm([reduction_channels, 1, 1]),
             nn.ReLU(inplace=True),
-            nn.Conv2d(reduction_channels, in_channels, kernel_size=1),
+            nn.Conv2d(reduction_channels, out_channels, kernel_size=1),
         )
 
         self.softmax = nn.Softmax(dim=2)
