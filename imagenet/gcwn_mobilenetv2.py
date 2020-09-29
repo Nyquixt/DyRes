@@ -11,14 +11,14 @@ __all__ = ['GCWN_MobileNetV2']
 
 class Block(nn.Module):
     '''expand + depthwise + pointwise'''
-    def __init__(self, in_planes, out_planes, expansion, stride):
+    def __init__(self, in_planes, out_planes, expansion, stride, normalized=False):
         super(Block, self).__init__()
         self.stride = stride
 
         planes = expansion * in_planes
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = GC_WeightNet(planes, planes, kernel_size=3, stride=stride)
+        self.conv2 = GC_WeightNet(planes, planes, kernel_size=3, stride=stride, normalized=normalized)
         self.bn2 = nn.BatchNorm2d(planes)
         self.conv3 = nn.Conv2d(planes, out_planes, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn3 = nn.BatchNorm2d(out_planes)
@@ -48,22 +48,22 @@ class GCWN_MobileNetV2(nn.Module):
            (6, 160, 3, 2),
            (6, 320, 1, 1)]
 
-    def __init__(self, num_classes=1000):
+    def __init__(self, num_classes=1000, normalized=False):
         super(GCWN_MobileNetV2, self).__init__()
         # NOTE: change conv1 stride 2 -> 1 for CIFAR10
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1)
         self.bn1 = nn.BatchNorm2d(32)
-        self.layers = self._make_layers(in_planes=32)
+        self.layers = self._make_layers(in_planes=32, normalized=normalized)
         self.conv2 = nn.Conv2d(320, 1280, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn2 = nn.BatchNorm2d(1280)
         self.linear = nn.Linear(1280, num_classes)
 
-    def _make_layers(self, in_planes):
+    def _make_layers(self, in_planes, normalized):
         layers = []
         for expansion, out_planes, num_blocks, stride in self.cfg:
             strides = [stride] + [1]*(num_blocks-1)
             for stride in strides:
-                layers.append(Block(in_planes, out_planes, expansion, stride))
+                layers.append(Block(in_planes, out_planes, expansion, stride, normalized=normalized))
                 in_planes = out_planes
         return nn.Sequential(*layers)
 
