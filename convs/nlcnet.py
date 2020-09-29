@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
+import math
 __all__ = ['NLCNet']
 
 class NLC_Attention(nn.Module):
@@ -41,6 +41,7 @@ class NLCNet(nn.Module):
         self.gc_att = NLC_Attention(in_channels, out_channels, groups)
         self.sigmoid = nn.Sigmoid()
         self.weight = nn.Parameter(torch.Tensor(out_channels, in_channels // groups, kernel_size, kernel_size))
+        nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
 
     def forward(self, x):
         att = self.gc_att(x)
