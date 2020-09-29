@@ -12,6 +12,7 @@ class NLC_Attention(nn.Module):
         self.conv_mask = nn.Conv2d(in_channels, out_channels, kernel_size=1) #K
         self.conv_value = nn.Conv2d(in_channels, in_channels // groups, kernel_size=1)
         self.softmax = nn.Softmax(dim=1)
+        self.bn = nn.BatchNorm1d(out_channels)
 
     def forward(self, x):
         b, c_in, h, w = x.size()
@@ -20,6 +21,7 @@ class NLC_Attention(nn.Module):
         value = value.view(b, c_in // self.groups, h * w).permute(0, 2, 1) # N x H*W x C_in//groups
         key = self.conv_mask(x) # N x C_out x H x W
         key = key.view(b, self.out_channels, h * w) # N x C_out x H*W
+        key = self.bn(key)
         key = self.softmax(key)
         context = torch.bmm(key, value) # N x C_out x C_in
         context = context.mean(dim=0)
@@ -51,4 +53,4 @@ def test():
     y = nlc(x)
     print(y.size())
 
-# test()
+test()
