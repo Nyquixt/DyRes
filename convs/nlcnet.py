@@ -10,23 +10,18 @@ class NLC_Attention(nn.Module):
         self.out_channels = out_channels
         self.groups = groups
         self.conv_mask = nn.Conv2d(in_channels, out_channels, kernel_size=1) #K
-        if groups > 1:
-            self.conv_value = nn.Conv2d(in_channels, in_channels // groups, kernel_size=1)
+        self.conv_value = nn.Conv2d(in_channels, in_channels // groups, kernel_size=1)
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x):
         b, c_in, h, w = x.size()
         # Context Modeling
-        input_x = x
-        if self.groups > 1:
-            input_x = self.conv_value(input_x)
-            input_x = input_x.view(b, c_in // self.groups, h * w).permute(0, 2, 1) # N x H*W x C_in//groups
-        else:
-            input_x = input_x.view(b, c_in, h * w).permute(0, 2, 1) # N x H*W x C_in
-        context_mask = self.conv_mask(x) # N x C_out x H x W
-        context_mask = context_mask.view(b, self.out_channels, h * w) # N x C_out x H*W
-        context_mask = self.softmax(context_mask)
-        context = torch.bmm(context_mask, input_x) # N x C_out x C_in
+        value = self.conv_value(x)
+        value = value.view(b, c_in // self.groups, h * w).permute(0, 2, 1) # N x H*W x C_in//groups
+        key = self.conv_mask(x) # N x C_out x H x W
+        key = key.view(b, self.out_channels, h * w) # N x C_out x H*W
+        key = self.softmax(key)
+        context = torch.bmm(key, value) # N x C_out x C_in
         context = context.mean(dim=0)
         return context
 
