@@ -13,15 +13,12 @@ class NLC_Attention(nn.Module):
         self.conv_value = nn.Conv2d(in_channels, in_channels // groups, kernel_size=1)
         self.softmax = nn.Softmax(dim=1)
         self.key_bn = nn.BatchNorm1d(out_channels)
-        self.value_bn = nn.BatchNorm1d(in_channels // groups)
 
     def forward(self, x):
         b, c_in, h, w = x.size()
         # Context Modeling
         value = self.conv_value(x)
-        value = value.view(b, c_in // self.groups, h * w)
-        value = self.value_bn(value)
-        value = value.permute(0, 2, 1) # N x H*W x C_in//groups
+        value = value.view(b, c_in // self.groups, h * w).permute(0, 2, 1) # N x H*W x C_in//groups
         key = self.conv_mask(x) # N x C_out x H x W
         key = key.view(b, self.out_channels, h * w) # N x C_out x H*W
         key = self.key_bn(key)
