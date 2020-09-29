@@ -132,18 +132,24 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dysep_resnet import DySep_ResNet18
         net = DySep_ResNet18(mode='B')
-    elif network == 'ms_resnet18':
-        if dataset == 'cifar100':
-            from cifar.ms_resnet import MS_ResNet18
-        else:
-            from imagenet.ms_resnet import MS_ResNet18
-        net = MS_ResNet18()
     elif network == 'gcwn_resnet18':
         if dataset == 'cifar100':
             from cifar.gcwn_resnet import GCWN_ResNet18
         else:
             from imagenet.gcwn_resnet import GCWN_ResNet18
         net = GCWN_ResNet18()
+    elif network == 'gcwnnl_resnet18':
+        if dataset == 'cifar100':
+            from cifar.gcwn_resnet import GCWNNL_ResNet18
+        else:
+            from imagenet.gcwn_resnet import GCWNNL_ResNet18
+        net = GCWNNL_ResNet18()
+    elif network == 'nlc_resnet18':
+        if dataset == 'cifar100':
+            from cifar.nlc_resnet import NLC_ResNet18
+        else:
+            from imagenet.nlc_resnet import NLC_ResNet18
+        net = NLC_ResNet18()
     
     # AlexNet and Related Work
     elif network == 'cc_alexnet':
@@ -196,18 +202,24 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dysep_alexnet import DySep_AlexNet
         net = DySep_AlexNet(mode='B')
-    elif network == 'ms_alexnet':
-        if dataset == 'cifar100':
-            from cifar.ms_alexnet import MS_AlexNet  
-        else:
-            from imagenet.ms_alexnet import MS_AlexNet
-        net = MS_AlexNet()
     elif network == 'gcwn_alexnet':
         if dataset == 'cifar100':
             from cifar.gcwn_alexnet import GCWN_AlexNet
         else:
             from imagenet.gcwn_alexnet import GCWN_AlexNet
         net = GCWN_AlexNet()
+    elif network == 'gcwnnl_alexnet':
+        if dataset == 'cifar100':
+            from cifar.gcwn_alexnet import GCWN_AlexNet
+        else:
+            from imagenet.gcwn_alexnet import GCWN_AlexNet
+        net = GCWN_AlexNet(normalized=True)
+    elif network == 'nlc_alexnet':
+        if dataset == 'cifar100':
+            from cifar.nlc_alexnet import NLC_AlexNet
+        else:
+            from imagenet.nlc_alexnet import NLC_AlexNet
+        net = NLC_AlexNet()
 
     # MobileNetV2 and Related Work
     elif network == 'cc_mobilenetv2':
@@ -260,18 +272,24 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dysep_mobilenetv2 import DySep_MobileNetV2
         net = DySep_MobileNetV2(mode='B')
-    elif network == 'ms_mobilenetv2':
-        if dataset == 'cifar100':
-            from cifar.ms_mobilenetv2 import MS_MobileNetV2
-        else:
-            from imagenet.ms_mobilenetv2 import MS_MobileNetV2
-        net = MS_MobileNetV2()
     elif network == 'gcwn_mobilenetv2':
         if dataset == 'cifar100':
             from cifar.gcwn_mobilenetv2 import GCWN_MobileNetV2
         else:
             from imagenet.gcwn_mobilenetv2 import GCWN_MobileNetV2
         net = GCWN_MobileNetV2()
+    elif network == 'gcwnnl_mobilenetv2':
+        if dataset == 'cifar100':
+            from cifar.gcwn_mobilenetv2 import GCWN_MobileNetV2
+        else:
+            from imagenet.gcwn_mobilenetv2 import GCWN_MobileNetV2
+        net = GCWN_MobileNetV2(normalized=True)
+    elif network == 'nlc_mobilenetv2':
+        if dataset == 'cifar100':
+            from cifar.nlc_mobilenetv2 import NLC_MobileNetV2
+        else:
+            from imagenet.nlc_mobilenetv2 import NLC_MobileNetV2
+        net = NLC_MobileNetV2()
         
     else:
         print('the network is not supported')
