@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import math
-__all__ = ['NLCNet']
+__all__ = ['NLCNet', 'NLCNet_DW']
 
 class NLC_Attention(nn.Module):
     def __init__(self, in_channels, out_channels, groups=1):
@@ -47,9 +47,29 @@ class NLCNet(nn.Module):
         out = F.conv2d(x, weight, stride=self.stride, padding=self.padding, groups=self.groups)
         return out
 
+class NLCNet_DW(nn.Module):
+    def __init__(self, channels, kernel_size, stride=1, padding=0):
+        super().__init__()
+
+        self.channels = channels
+        self.padding = padding
+        self.stride = stride
+
+        self.gc_att = NLC_Attention(channels, 1)
+        self.sigmoid = nn.Sigmoid()
+        self.weight = nn.Parameter(torch.Tensor(channels, 1, kernel_size, kernel_size))
+        nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
+
+    def forward(self, x):
+        att = self.gc_att(x)
+        att = self.sigmoid(att).squeeze(0).unsqueeze(-1).unsqueeze(-1).unsqueeze(-1)
+        weight = self.weight * att
+        out = F.conv2d(x, weight, stride=self.stride, padding=self.padding, groups=self.channels)
+        return out
+
 def test():
     x = torch.randn(64, 128, 32, 32)
-    nlc = NLCNet(128, 256, 3, groups=2)
+    nlc = NLCNet_DW(128, 3)
     y = nlc(x)
     print(y.size())
 
