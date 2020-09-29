@@ -24,7 +24,7 @@ class GCNet(nn.Module):
         # Context Modeling
         input_x = x
         input_x = input_x.view(b, c_in, h * w).unsqueeze(1) # N x 1 x C_in x H*W
-        context_mask = self.conv_mask(x) # N x C_in x H x W
+        context_mask = self.conv_mask(x) # N x 1 x H x W
         context_mask = context_mask.view(b, 1, h * w) # N x 1 x H*W
         context_mask = self.softmax(context_mask)
         context_mask = context_mask.unsqueeze(-1) # N x 1 x H*W x 1

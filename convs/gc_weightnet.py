@@ -5,17 +5,24 @@ import torch.nn.functional as F
 __all__ = ['GC_WeightNet']
 
 class GC_Attention(nn.Module):
-    def __init__(self, in_channels, out_channels, reduction=16):
+    def __init__(self, in_channels, out_channels, reduction=16, normalized=False):
         super().__init__()
         reduction_channels = max(in_channels // reduction, reduction)
         self.conv_mask = nn.Conv2d(in_channels, 1, kernel_size=1) #K
         
-        self.transform = nn.Sequential(
-            nn.Conv2d(in_channels, reduction_channels, kernel_size=1),
-            nn.LayerNorm([reduction_channels, 1, 1]),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(reduction_channels, out_channels, kernel_size=1),
-        )
+        if normalized:
+            self.transform = nn.Sequential(
+                nn.Conv2d(in_channels, reduction_channels, kernel_size=1),
+                nn.LayerNorm([reduction_channels, 1, 1]),
+                nn.ReLU(inplace=True),
+                nn.Conv2d(reduction_channels, out_channels, kernel_size=1),
+            )
+        else:
+            self.transform = nn.Sequential(
+                nn.Conv2d(in_channels, reduction_channels, kernel_size=1),
+                nn.ReLU(inplace=True),
+                nn.Conv2d(reduction_channels, out_channels, kernel_size=1),
+            )
 
         self.softmax = nn.Softmax(dim=2)
 
@@ -24,7 +31,7 @@ class GC_Attention(nn.Module):
         # Context Modeling
         input_x = x
         input_x = input_x.view(b, c_in, h * w).unsqueeze(1) # N x 1 x C_in x H*W
-        context_mask = self.conv_mask(x) # N x C_in x H x W
+        context_mask = self.conv_mask(x) # N x 1 x H x W
         context_mask = context_mask.view(b, 1, h * w) # N x 1 x H*W
         context_mask = self.softmax(context_mask)
         context_mask = context_mask.unsqueeze(-1) # N x 1 x H*W x 1
@@ -35,7 +42,7 @@ class GC_Attention(nn.Module):
         return out
 
 class GC_WeightNet(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, reduction=16, M=2, G=2):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, reduction=16, M=2, G=2, normalized=False):
         super().__init__()
 
         self.M = M
@@ -48,7 +55,7 @@ class GC_WeightNet(nn.Module):
         self.kernel_size = kernel_size
         self.stride = stride
 
-        self.gc_att = GC_Attention(in_channels=in_channels, out_channels=self.M * out_channels, reduction=reduction)
+        self.gc_att = GC_Attention(in_channels=in_channels, out_channels=self.M * out_channels, reduction=reduction, normalized=normalized)
         self.sigmoid = nn.Sigmoid()
         self.fc = nn.Conv2d(self.M * out_channels, out_channels * in_channels * kernel_size * kernel_size, 1, 1, 0, groups=self.G * out_channels)
 
