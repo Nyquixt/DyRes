@@ -44,3 +44,11 @@ class NLCWN_AlexNet(nn.Module):
         x = torch.flatten(x, 1)
         x = self.classifier(x)
         return x
+
+def test():
+    x = torch.randn(64, 3, 32, 32)
+    nlcwn = NLCWN_AlexNet()
+    z = nlcwn(x)
+    print(z.size())
+
+# test()

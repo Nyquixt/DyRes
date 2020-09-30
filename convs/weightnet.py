@@ -81,7 +81,7 @@ class WeightNet_DW(nn.Module):
 
 def test():
     x = torch.randn(64, 128, 32, 32)
-    wn = WeightNet(128, 256, 3)
+    wn = WeightNet(128, 256, 3, stride=2)
     y = wn(x)
     print(y.size())
 

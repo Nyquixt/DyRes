@@ -43,7 +43,6 @@ class NLCWNNet(nn.Module):
         self.fc = nn.Conv2d(out_channels * in_channels, out_channels * in_channels * kernel_size * kernel_size, 
                         kernel_size=1, groups=out_channels * in_channels)
         
-
     def forward(self, x):
         b, c_in, h, w = x.size()
         att = self.gc_att(x)
@@ -51,7 +50,7 @@ class NLCWNNet(nn.Module):
         weight = self.fc(att).view(-1, c_in, self.kernel_size, self.kernel_size)
         x = x.view(1, -1, h, w)
         out = F.conv2d(x, weight, stride=self.stride, padding=self.padding, groups=b)
-        out = out.view(-1, self.out_channels, h, w)
+        out = out.view(-1, self.out_channels, out.size(2), out.size(3))
         return out
 
 # Depthwise Model for MobileNetV2 in our experiments
@@ -78,13 +77,16 @@ class NLCWNNet_DW(nn.Module):
         weight = self.fc(att).view(-1, 1, self.kernel_size, self.kernel_size)
         x = x.view(1, -1, h, w)
         out = F.conv2d(x, weight, stride=self.stride, padding=self.padding, groups=self.channels * b)
-        out = out.view(-1, self.channels, h, w)
+        out = out.view(-1, self.channels, out.size(2), out.size(3))
         return out
 
 def test():
     x = torch.randn(64, 128, 32, 32)
-    nlcwn = NLCWNNet_DW(128, 3, padding=1, groups=1)
-    y = nlcwn(x)
+    nlcwn = NLCWNNet(128, 256, 3, stride=2, padding=1, groups=1)
+    z = nlcwn(x)
+    print(z.size())
+    nlcwndw = NLCWNNet_DW(128, 3, padding=1, groups=1)
+    y = nlcwndw(x)
     print(y.size())
 
 # test()
