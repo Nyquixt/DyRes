@@ -13,7 +13,7 @@ class BasicBlock(nn.Module):
         super(BasicBlock, self).__init__()
         self.conv1 = WeightNet(in_channels, channels, kernel_size=3, stride=stride)
         self.bn1 = nn.BatchNorm2d(channels)
-        self.conv2 = WeightNet_DW(channels, kernel_size=3, stride=1)
+        self.conv2 = WeightNet(channels, channels, kernel_size=3, stride=1)
         self.bn2 = nn.BatchNorm2d(channels)
 
         self.shortcut = nn.Sequential()
