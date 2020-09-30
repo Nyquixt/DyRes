@@ -8,6 +8,8 @@ import os
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 import time
 
 from config import *
@@ -356,8 +358,8 @@ def get_dataloader(dataset, batch_size):
         print('Dataset not supported yet...')
         sys.exit()
 
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=8)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=8)
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=8, pin_memory=True)
+    testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=8, pin_memory=True)
 
     return trainloader, testloader
 
