@@ -7,24 +7,24 @@ __all__ = ['DNLCWN_AlexNet']
 
 class DNLCWN_AlexNet(nn.Module):
 
-    def __init__(self, num_classes=100):
+    def __init__(self, num_classes=100, bn=False, gap_mode='prior'):
         super().__init__()
         self.features = nn.Sequential(
-            DNLCWN(3, 64, kernel_size=3, stride=2),
+            DNLCWN(3, 64, kernel_size=3, stride=2, bn=bn, gap_mode=gap_mode),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            DNLCWN(64, 192, kernel_size=3),
+            DNLCWN(64, 192, kernel_size=3, bn=bn, gap_mode=gap_mode),
             nn.BatchNorm2d(192),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            DNLCWN(192, 384, kernel_size=3),
+            DNLCWN(192, 384, kernel_size=3, bn=bn, gap_mode=gap_mode),
             nn.BatchNorm2d(384),
             nn.ReLU(inplace=True),
-            DNLCWN(384, 256, kernel_size=3),
+            DNLCWN(384, 256, kernel_size=3, bn=bn, gap_mode=gap_mode),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
-            DNLCWN(256, 256, kernel_size=3),
+            DNLCWN(256, 256, kernel_size=3, bn=bn, gap_mode=gap_mode),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
