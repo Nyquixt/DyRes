@@ -5,7 +5,7 @@ import torch.nn.functional as F
 __all__ = ['DNLCWN', 'DNLCWN_DW']
 
 class DNLCLayer(nn.Module):
-    def __init__(self, in_channels, kernel_size=3, reduction=16, bn=False, stride=2):
+    def __init__(self, in_channels, kernel_size=3, stride=2, reduction=2, bn=False, gap_mode='prior'):
         """
         Non-Local along channel dimension.
         :param in_channels: in-channel number
@@ -19,7 +19,10 @@ class DNLCLayer(nn.Module):
         self.theta = nn.Conv2d(in_channels, reduction_channels, kernel_size=kernel_size, padding=padding, groups=reduction_channels, stride=stride)
         self.phi = nn.Conv2d(in_channels, reduction_channels, kernel_size=kernel_size, padding=padding, groups=reduction_channels, stride=stride)
         self.gap = nn.AdaptiveAvgPool2d(1)
-        self.fc = nn.Conv2d(in_channels, reduction_channels, kernel_size=1, groups=reduction_channels, stride=stride)
+        if gap_mode == 'prior':
+            self.fc = nn.Conv2d(in_channels, reduction_channels, kernel_size=1, groups=reduction_channels, stride=stride)
+        else:
+            self.fc = nn.Conv2d(in_channels, reduction_channels, kernel_size=3, padding=padding, groups=reduction_channels, stride=stride)
         self.W = nn.Conv2d(reduction_channels, in_channels, kernel_size=kernel_size, padding=padding, groups=reduction_channels)
 
         self.bn = bn
@@ -27,27 +30,37 @@ class DNLCLayer(nn.Module):
             self.theta_bn = nn.BatchNorm1d(reduction_channels)
             self.phi_bn = nn.BatchNorm1d(reduction_channels)
 
+        self.gap_mode = gap_mode
+
+
     def forward(self, x):
         b, _, _, _ = x.size()
         theta = self.theta(x)
-        _, c, w, h = theta.size()
+        _, c, h, w = theta.size()
         theta = theta.view(b, c, -1)  # [b,c,w*h]
         phi = self.phi(x).view(b, c, -1) # [b,c,w*h]
 
         if self.bn:
             theta = self.theta_bn(theta)
             phi = self.phi_bn(phi)
-
         phi = phi.permute(0, 2, 1) # [n,w*h,c]
-        gap = self.gap(x)
-        g = self.fc(gap).squeeze(dim=-1)
         Mat = torch.matmul(theta, phi) # [b, c, c] c=c_in/r
         Mat = F.softmax(Mat, dim=-1)
-        out = torch.matmul(Mat, g).unsqueeze(dim=-1)
+
+        if self.gap_mode == 'prior':
+            gap = self.gap(x)
+            g = self.fc(gap).squeeze(dim=-1)
+            out = torch.matmul(Mat, g).unsqueeze(dim=-1)
+        else:
+            g = self.fc(x)
+            _, _, h, w = g.size()
+            g = g.view(b, c, -1)
+            out = torch.matmul(Mat, g).view(b, c, h, w)
+            out = self.gap(out)
         return out
 
 class DNLCWN(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, bn=False, reduction=16):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, bn=False, reduction=2, gap_mode='prior'):
         super().__init__()
 
         self.padding = kernel_size // 2
@@ -57,7 +70,7 @@ class DNLCWN(nn.Module):
         self.kernel_size = kernel_size
         self.stride = stride
 
-        self.dnlc = DNLCLayer(in_channels=in_channels, reduction=reduction, bn=bn)
+        self.dnlc = DNLCLayer(in_channels=in_channels, reduction=reduction, bn=bn, gap_mode=gap_mode)
         self.fc = nn.Conv2d(reduction_channels, out_channels * in_channels * kernel_size * kernel_size, 1, 1, 0, groups=reduction_channels)
 
     def forward(self, x):
@@ -73,7 +86,7 @@ class DNLCWN(nn.Module):
         return x
 
 class DNLCWN_DW(nn.Module):
-    def __init__(self, channels, kernel_size, stride=1, bn=False, reduction=16):
+    def __init__(self, channels, kernel_size, stride=1, bn=False, reduction=2, gap_mode='prior'):
         super().__init__()
 
         self.padding = kernel_size // 2
@@ -82,7 +95,7 @@ class DNLCWN_DW(nn.Module):
         self.kernel_size = kernel_size
         self.stride = stride
 
-        self.dnlc = DNLCLayer(in_channels=channels, reduction=reduction, bn=bn)
+        self.dnlc = DNLCLayer(in_channels=channels, reduction=reduction, bn=bn, gap_mode=gap_mode)
         self.fc = nn.Conv2d(reduction_channels, channels * kernel_size * kernel_size, 1, 1, 0, groups=reduction_channels)
 
     def forward(self, x):
@@ -100,6 +113,10 @@ class DNLCWN_DW(nn.Module):
 def test():
     x = torch.randn(64, 128, 32, 32)
     dnlcwn = DNLCWN(in_channels=128, out_channels=256, kernel_size=3, bn=True)
+    y = dnlcwn(x)
+    print(y.size())
+
+    dnlcwn = DNLCWN(in_channels=128, out_channels=256, kernel_size=3, bn=True, gap_mode='later')
     y = dnlcwn(x)
     print(y.size())
 
