@@ -14,7 +14,7 @@ class DNLCLayer(nn.Module):
         :param stride: reduce spatial size by convolutional stride.
         """
         super().__init__()
-        reduction_channels = max(in_channels // reduction, reduction)
+        reduction_channels = in_channels // reduction if in_channels > reduction else 1
         padding = (kernel_size - 1) // 2
         self.theta = nn.Conv2d(in_channels, reduction_channels, kernel_size=kernel_size, padding=padding, groups=reduction_channels, stride=stride)
         self.phi = nn.Conv2d(in_channels, reduction_channels, kernel_size=kernel_size, padding=padding, groups=reduction_channels, stride=stride)
@@ -51,7 +51,7 @@ class DNLCWN(nn.Module):
         super().__init__()
 
         self.padding = kernel_size // 2
-        reduction_channels = max(reduction, in_channels // reduction)
+        reduction_channels = in_channels // reduction if in_channels > reduction else 1
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.kernel_size = kernel_size
