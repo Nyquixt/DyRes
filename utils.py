@@ -158,6 +158,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.nlcwn_resnet import NLCWN_ResNet18
         net = NLCWN_ResNet18()
+    elif network == 'dnlcwn_resnet18':
+        if dataset == 'cifar100':
+            from cifar.dnlcwn_resnet import DNLCWN_ResNet18
+        else:
+            from imagenet.dnlcwn_resnet import DNLCWN_ResNet18
+        net = DNLCWN_ResNet18()
     
     # AlexNet and Related Work
     elif network == 'cc_alexnet':
@@ -234,6 +240,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.nlcwn_alexnet import NLCWN_AlexNet
         net = NLCWN_AlexNet()
+    elif network == 'dnlcwn_alexnet':
+        if dataset == 'cifar100':
+            from cifar.dnlcwn_alexnet import DNLCWN_AlexNet
+        else:
+            from imagenet.dnlcwn_alexnet import DNLCWN_AlexNet
+        net = DNLCWN_AlexNet()
 
     # MobileNetV2 and Related Work
     elif network == 'cc_mobilenetv2':
@@ -310,6 +322,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.nlcwn_mobilenetv2 import NLCWN_MobileNetV2
         net = NLCWN_MobileNetV2()
+    elif network == 'dnlcwn_mobilenetv2':
+        if dataset == 'cifar100':
+            from cifar.dnlcwn_mobilenetv2 import DNLCWN_MobileNetV2
+        else:
+            from imagenet.dnlcwn_mobilenetv2 import DNLCWN_MobileNetV2
+        net = DNLCWN_MobileNetV2()
         
     else:
         print('the network is not supported')
