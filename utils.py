@@ -112,7 +112,7 @@ def get_network(network, dataset, device):
     # Experiment
     elif network == 'dyc_resnet18':
         if dataset == 'cifar100':
-            from cifar.resnet import DyChannel_ResNet18
+            from cifar.dyc_resnet import DyChannel_ResNet18
         else:
             from imagenet.dyc_resnet import DyChannel_ResNet18
         net = DyChannel_ResNet18()
@@ -146,7 +146,7 @@ def get_network(network, dataset, device):
     # Experiment
     elif network == 'dyc_alexnet':
         if dataset == 'cifar100':
-            from cifar.alexnet import DyChannel_AlexNet
+            from cifar.dyc_alexnet import DyChannel_AlexNet
         else:
             from imagenet.dyc_alexnet import DyChannel_AlexNet
         net = DyChannel_AlexNet()
