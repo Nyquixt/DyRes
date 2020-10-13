@@ -3,26 +3,32 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 
-__all__ = ['CondConv']
+__all__ = ['DyChannel']
+
+# TODO: if use bias, out_channels is used in route_func instead
 
 class route_func(nn.Module):
 
-    def __init__(self, in_channels, num_experts):
+    def __init__(self, in_channels, num_experts, reduction=16):
         super().__init__()
+
+        reduction_channels = max(in_channels // reduction, reduction)
+
         self.avgpool = nn.AdaptiveAvgPool2d(1)
-        self.fc = nn.Linear(in_channels, num_experts)
+        self.conv1 = nn.Conv2d(in_channels, reduction_channels, kernel_size=1)
+        self.conv2 = nn.Conv2d(reduction_channels, num_experts * in_channels, kernel_size=1)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         x = self.avgpool(x)
-        x = x.view(x.size(0), -1)
-        x = self.fc(x)
+        x = F.relu(self.conv1(x))
+        x = self.conv2(x)
         x = self.sigmoid(x)
         return x
 
-class CondConv(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, bias=False, num_experts=3):
-        super(CondConv, self).__init__()
+class DyChannel(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, bias=False, num_experts=3, reduction=16):
+        super().__init__()
         
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -33,7 +39,7 @@ class CondConv(nn.Module):
         self.num_experts = num_experts
 
         # routing function
-        self.routing_func = route_func(in_channels, num_experts)
+        self.routing_func = route_func(in_channels, num_experts, reduction)
 
         self.weight = nn.Parameter(torch.Tensor(num_experts, out_channels, in_channels // groups, kernel_size, kernel_size))
         if bias:
@@ -47,12 +53,16 @@ class CondConv(nn.Module):
             nn.init.uniform_(self.bias, -bound, bound)
 
     def forward(self, x):
-        routing_weight = self.routing_func(x)
+        routing_weight = self.routing_func(x) # N x k*C_in
         b, c_in, h, w = x.size()
-        k, c_out, c_in, kh, kw = self.weight.size() # k is num_experts
+        k, c_out, c_in, kh, kw = self.weight.size()
+
+        routing_weight = routing_weight.view(b, k, c_in) # N x k x C_in
+        routing_weight = routing_weight.unsqueeze(dim=2).unsqueeze(dim=-1).unsqueeze(dim=-1) # N x k x 1 x C_in x 1 x 1
+
         x = x.view(1, -1, h, w) # 1 x N*C_in x H x W
-        weight = self.weight.view(k, -1) # k x C_out*C_in*kH*hW
-        combined_weight = torch.mm(routing_weight, weight).view(-1, c_in, kh, kw)
+        weight = self.weight.unsqueeze(dim=0) # 1 x k x C_out x C_in x kH x hW 
+        combined_weight = (routing_weight * weight).sum(1).view(-1, c_in, kh, kw)
 
         if self.bias is not None:
             combined_bias = torch.mm(routing_weight, self.bias).view(-1)
@@ -67,7 +77,7 @@ class CondConv(nn.Module):
 
 def test():
     x = torch.randn(4, 16 , 32, 32)
-    conv = CondConv(x.size(1), 64, 3)
+    conv = DyChannel(x.size(1), 64, 3, padding=1)
     y = conv(x)
     print(y.size())
 
