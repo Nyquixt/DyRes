@@ -55,10 +55,11 @@ class DyChannel(nn.Module):
     def forward(self, x):
         routing_weight = self.routing_func(x) # N x k*C_in
         b, c_in, h, w = x.size()
-        k, c_out, c_in, kh, kw = self.weight.size()
 
-        routing_weight = routing_weight.view(b, k, c_in) # N x k x C_in
+        routing_weight = routing_weight.view(b, self.num_experts, c_in) # N x k x C_in
         routing_weight = routing_weight.unsqueeze(dim=2).unsqueeze(dim=-1).unsqueeze(dim=-1) # N x k x 1 x C_in x 1 x 1
+
+        k, c_out, c_in, kh, kw = self.weight.size()
 
         x = x.view(1, -1, h, w) # 1 x N*C_in x H x W
         weight = self.weight.unsqueeze(dim=0) # 1 x k x C_out x C_in x kH x hW 
