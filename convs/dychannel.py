@@ -9,14 +9,14 @@ __all__ = ['DyChannel']
 
 class route_func(nn.Module):
 
-    def __init__(self, in_channels, num_experts, reduction=16):
+    def __init__(self, in_channels, out_channels, num_experts, reduction=16):
         super().__init__()
 
         reduction_channels = max(in_channels // reduction, reduction)
 
         self.avgpool = nn.AdaptiveAvgPool2d(1)
         self.conv1 = nn.Conv2d(in_channels, reduction_channels, kernel_size=1)
-        self.conv2 = nn.Conv2d(reduction_channels, num_experts * in_channels, kernel_size=1)
+        self.conv2 = nn.Conv2d(reduction_channels, num_experts * out_channels, kernel_size=1)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
@@ -39,7 +39,7 @@ class DyChannel(nn.Module):
         self.num_experts = num_experts
 
         # routing function
-        self.routing_func = route_func(in_channels // groups, num_experts, reduction)
+        self.routing_func = route_func(in_channels, out_channels, num_experts, reduction)
 
         self.weight = nn.Parameter(torch.Tensor(num_experts, out_channels, in_channels // groups, kernel_size, kernel_size))
         if bias:
@@ -53,12 +53,12 @@ class DyChannel(nn.Module):
             nn.init.uniform_(self.bias, -bound, bound)
 
     def forward(self, x):
-        routing_weight = self.routing_func(x) # N x k*C_in
+        routing_weight = self.routing_func(x) # N x k*C_out x 1 x 1
         b, c_in, h, w = x.size()
         k, c_out, c_in, kh, kw = self.weight.size()
 
-        routing_weight = routing_weight.view(b, k, c_in) # N x k x C_in
-        routing_weight = routing_weight.unsqueeze(dim=2).unsqueeze(dim=-1).unsqueeze(dim=-1) # N x k x 1 x C_in x 1 x 1
+        routing_weight = routing_weight.view(b, k, c_out) # N x k x C_out
+        routing_weight = routing_weight.unsqueeze(dim=-1).unsqueeze(dim=-1).unsqueeze(dim=-1) # N x k x C_out x 1 x 1 x 1
 
         x = x.view(1, -1, h, w) # 1 x N*C_in x H x W
         weight = self.weight.unsqueeze(dim=0) # 1 x k x C_out x C_in x kH x hW 
