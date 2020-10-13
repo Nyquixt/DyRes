@@ -9,9 +9,7 @@ from .cc_alexnet import *
 from .dy_alexnet import *
 from .wn_alexnet import *
 # Experiment
-from .gcwn_alexnet import *
-from .nlcwn_alexnet import *
-from .dnlcwn_alexnet import *
+
 
 # ResNet18
 # Related Work
@@ -19,9 +17,7 @@ from .cc_resnet import *
 from .dy_resnet import *
 from .wn_resnet import *
 # Experiment
-from .gcwn_resnet import *
-from .nlcwn_resnet import *
-from .dnlcwn_resnet import *
+
 
 # MobileNetV2
 # Related Work
@@ -29,6 +25,3 @@ from .cc_mobilenetv2 import *
 from .dy_mobilenetv2 import *
 from .wn_mobilenetv2 import *
 # Experiment
-from .gcwn_mobilenetv2 import *
-from .nlcwn_mobilenetv2 import *
-from .dnlcwn_mobilenetv2 import *

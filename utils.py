@@ -110,48 +110,6 @@ def get_network(network, dataset, device):
         net = ResNet18()
 
     # Experiment
-    elif network == 'gcwn_resnet18':
-        if dataset == 'cifar100':
-            from cifar.gcwn_resnet import GCWN_ResNet18
-        else:
-            from imagenet.gcwn_resnet import GCWN_ResNet18
-        net = GCWN_ResNet18()
-    elif network == 'gcwnnl_resnet18':
-        if dataset == 'cifar100':
-            from cifar.gcwn_resnet import GCWNNL_ResNet18
-        else:
-            from imagenet.gcwn_resnet import GCWNNL_ResNet18
-        net = GCWNNL_ResNet18()
-    elif network == 'nlcwn_resnet18':
-        if dataset == 'cifar100':
-            from cifar.nlcwn_resnet import NLCWN_ResNet18
-        else:
-            from imagenet.nlcwn_resnet import NLCWN_ResNet18
-        net = NLCWN_ResNet18()
-    elif network == 'dnlcwnp_resnet18':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_resnet import DNLCWN_ResNet18
-        else:
-            from imagenet.dnlcwn_resnet import DNLCWN_ResNet18
-        net = DNLCWN_ResNet18(bn=False, gap_mode='prior')
-    elif network == 'dnlcwnbnp_resnet18':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_resnet import DNLCWN_ResNet18
-        else:
-            from imagenet.dnlcwn_resnet import DNLCWN_ResNet18
-        net = DNLCWN_ResNet18(bn=True, gap_mode='prior')
-    elif network == 'dnlcwnl_resnet18':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_resnet import DNLCWN_ResNet18
-        else:
-            from imagenet.dnlcwn_resnet import DNLCWN_ResNet18
-        net = DNLCWN_ResNet18(bn=False, gap_mode='later')
-    elif network == 'dnlcwnbnl_resnet18':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_resnet import DNLCWN_ResNet18
-        else:
-            from imagenet.dnlcwn_resnet import DNLCWN_ResNet18
-        net = DNLCWN_ResNet18(bn=True, gap_mode='later')
     
     # AlexNet and Related Work
     elif network == 'cc_alexnet':
@@ -180,48 +138,6 @@ def get_network(network, dataset, device):
         net = AlexNet()
 
     # Experiment
-    elif network == 'gcwn_alexnet':
-        if dataset == 'cifar100':
-            from cifar.gcwn_alexnet import GCWN_AlexNet
-        else:
-            from imagenet.gcwn_alexnet import GCWN_AlexNet
-        net = GCWN_AlexNet()
-    elif network == 'gcwnnl_alexnet':
-        if dataset == 'cifar100':
-            from cifar.gcwn_alexnet import GCWN_AlexNet
-        else:
-            from imagenet.gcwn_alexnet import GCWN_AlexNet
-        net = GCWN_AlexNet(normalized=True)
-    elif network == 'nlcwn_alexnet':
-        if dataset == 'cifar100':
-            from cifar.nlcwn_alexnet import NLCWN_AlexNet
-        else:
-            from imagenet.nlcwn_alexnet import NLCWN_AlexNet
-        net = NLCWN_AlexNet()
-    elif network == 'dnlcwnp_alexnet':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_alexnet import DNLCWN_AlexNet
-        else:
-            from imagenet.dnlcwn_alexnet import DNLCWN_AlexNet
-        net = DNLCWN_AlexNet(bn=False, gap_mode='prior')
-    elif network == 'dnlcwnbnp_alexnet':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_alexnet import DNLCWN_AlexNet
-        else:
-            from imagenet.dnlcwn_alexnet import DNLCWN_AlexNet
-        net = DNLCWN_AlexNet(bn=True, gap_mode='prior')
-    elif network == 'dnlcwnl_alexnet':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_alexnet import DNLCWN_AlexNet
-        else:
-            from imagenet.dnlcwn_alexnet import DNLCWN_AlexNet
-        net = DNLCWN_AlexNet(bn=False, gap_mode='later')
-    elif network == 'dnlcwnbnl_alexnet':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_alexnet import DNLCWN_AlexNet
-        else:
-            from imagenet.dnlcwn_alexnet import DNLCWN_AlexNet
-        net = DNLCWN_AlexNet(bn=True, gap_mode='later')
 
     # MobileNetV2 and Related Work
     elif network == 'cc_mobilenetv2':
@@ -250,48 +166,6 @@ def get_network(network, dataset, device):
         net = MobileNetV2()
 
     # Experiment
-    elif network == 'gcwn_mobilenetv2':
-        if dataset == 'cifar100':
-            from cifar.gcwn_mobilenetv2 import GCWN_MobileNetV2
-        else:
-            from imagenet.gcwn_mobilenetv2 import GCWN_MobileNetV2
-        net = GCWN_MobileNetV2()
-    elif network == 'gcwnnl_mobilenetv2':
-        if dataset == 'cifar100':
-            from cifar.gcwn_mobilenetv2 import GCWN_MobileNetV2
-        else:
-            from imagenet.gcwn_mobilenetv2 import GCWN_MobileNetV2
-        net = GCWN_MobileNetV2(normalized=True)
-    elif network == 'nlcwn_mobilenetv2':
-        if dataset == 'cifar100':
-            from cifar.nlcwn_mobilenetv2 import NLCWN_MobileNetV2
-        else:
-            from imagenet.nlcwn_mobilenetv2 import NLCWN_MobileNetV2
-        net = NLCWN_MobileNetV2()
-    elif network == 'dnlcwnp_mobilenetv2':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_mobilenetv2 import DNLCWN_MobileNetV2
-        else:
-            from imagenet.dnlcwn_mobilenetv2 import DNLCWN_MobileNetV2
-        net = DNLCWN_MobileNetV2(bn=False, gap_mode='prior')
-    elif network == 'dnlcwnbnp_mobilenetv2':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_mobilenetv2 import DNLCWN_MobileNetV2
-        else:
-            from imagenet.dnlcwn_mobilenetv2 import DNLCWN_MobileNetV2
-        net = DNLCWN_MobileNetV2(bn=True, gap_mode='prior')
-    elif network == 'dnlcwnl_mobilenetv2':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_mobilenetv2 import DNLCWN_MobileNetV2
-        else:
-            from imagenet.dnlcwn_mobilenetv2 import DNLCWN_MobileNetV2
-        net = DNLCWN_MobileNetV2(bn=False, gap_mode='later')
-    elif network == 'dnlcwnbnl_mobilenetv2':
-        if dataset == 'cifar100':
-            from cifar.dnlcwn_mobilenetv2 import DNLCWN_MobileNetV2
-        else:
-            from imagenet.dnlcwn_mobilenetv2 import DNLCWN_MobileNetV2
-        net = DNLCWN_MobileNetV2(bn=True, gap_mode='later')
         
     else:
         print('the network is not supported')
