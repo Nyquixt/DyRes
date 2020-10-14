@@ -8,7 +8,7 @@ class BasicBlock(nn.Module):
     expansion = 1
 
     def __init__(self, in_channels, channels, stride=1):
-        super(BasicBlock, self).__init__()
+        super().__init__()
         self.conv1 = nn.Conv2d(in_channels, channels, kernel_size=3, stride=stride, padding=1)
         self.bn1 = nn.BatchNorm2d(channels)
         self.conv2 = nn.Conv2d(channels, channels, kernel_size=3, stride=1, padding=1)
@@ -32,7 +32,7 @@ class BasicBlock(nn.Module):
 
 class ResNet(nn.Module):
     def __init__(self, block, num_blocks, num_classes=1000):
-        super(ResNet, self).__init__()
+        super().__init__()
         self.in_channels = 64
 
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)

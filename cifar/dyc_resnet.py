@@ -9,7 +9,7 @@ class BasicBlock(nn.Module):
     expansion = 1
 
     def __init__(self, in_channels, channels, stride=1, num_experts=3, activation='sigmoid'):
-        super(BasicBlock, self).__init__()
+        super().__init__()
         self.conv1 = DyChannel(in_channels, channels, kernel_size=3, stride=stride, padding=1, 
                         num_experts=num_experts, activation=activation)
         self.bn1 = nn.BatchNorm2d(channels)

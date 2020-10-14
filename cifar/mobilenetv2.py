@@ -11,7 +11,7 @@ __all__ = ['MobileNetV2']
 class Block(nn.Module):
     '''expand + depthwise + pointwise'''
     def __init__(self, in_planes, out_planes, expansion, stride):
-        super(Block, self).__init__()
+        super().__init__()
         self.stride = stride
 
         planes = expansion * in_planes
@@ -48,7 +48,7 @@ class MobileNetV2(nn.Module):
            (6, 320, 1, 1)]
 
     def __init__(self, num_classes=100):
-        super(MobileNetV2, self).__init__()
+        super().__init__()
         # NOTE: change conv1 stride 2 -> 1 for CIFAR10
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(32)

@@ -7,24 +7,24 @@ __all__ = ['CC_AlexNet']
 
 class CC_AlexNet(nn.Module):
 
-    def __init__(self, num_classes=1000):
-        super(CC_AlexNet, self).__init__()
+    def __init__(self, num_classes=1000, num_experts=3):
+        super().__init__()
         self.features = nn.Sequential(
-            CondConv(3, 64, kernel_size=11, stride=4, padding=2),
+            CondConv(3, 64, kernel_size=11, stride=4, padding=2, num_experts=num_experts),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
-            CondConv(64, 192, kernel_size=5, padding=2),
+            CondConv(64, 192, kernel_size=5, padding=2, num_experts=num_experts),
             nn.BatchNorm2d(192),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
-            CondConv(192, 384, kernel_size=3, padding=1),
+            CondConv(192, 384, kernel_size=3, padding=1, num_experts=num_experts),
             nn.BatchNorm2d(384),
             nn.ReLU(inplace=True),
-            CondConv(384, 256, kernel_size=3, padding=1),
+            CondConv(384, 256, kernel_size=3, padding=1, num_experts=num_experts),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
-            CondConv(256, 256, kernel_size=3, padding=1),
+            CondConv(256, 256, kernel_size=3, padding=1, num_experts=num_experts),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2)

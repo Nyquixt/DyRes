@@ -63,6 +63,10 @@ class DyChannel(nn.Module):
         output = output.view(b, c_out, output.size(-2), output.size(-1))
         return output
 
+'''
+    Depthwise Dynamic Convolution
+'''
+
 class route_func_dw(nn.Module):
         def __init__(self, channels, num_experts, groups, reduction=16, activation='sigmoid'):
             super().__init__()
@@ -72,7 +76,7 @@ class route_func_dw(nn.Module):
 
             self.avgpool = nn.AdaptiveAvgPool2d(1)
             self.conv1 = nn.Conv2d(channels, reduction_channels, kernel_size=1)
-            self.conv2 = nn.Conv2d(reduction_channels, num_experts * (channels // groups), kernel_size=1)
+            self.conv2 = nn.Conv2d(reduction_channels, num_experts * channels, kernel_size=1)
             if activation == 'sigmoid':
                 self.activation = nn.Sigmoid()
             else:
@@ -82,7 +86,7 @@ class route_func_dw(nn.Module):
             x = self.avgpool(x)
             x = F.relu(self.conv1(x))
             x = self.conv2(x)
-            x = x.view(x.size(0), self.num_experts, -1) # N x k x C_in // groups
+            x = x.view(x.size(0), self.num_experts, -1) # N x k x C
             x = self.activation(x)
             return x
 
@@ -104,13 +108,13 @@ class DyChannel_DW(nn.Module): # depthwise, use for MobileNetV2
         nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
 
     def forward(self, x):
-        routing_weight = self.routing_func(x) # N x k x C_in // groups
-        routing_weight = routing_weight.unsqueeze(dim=2).unsqueeze(dim=-1).unsqueeze(dim=-1) # N x k x 1 x C_in // groups x 1 x 1
+        routing_weight = self.routing_func(x) # N x k x C
+        routing_weight = routing_weight.unsqueeze(dim=-1).unsqueeze(dim=-1).unsqueeze(dim=-1) # N x k x C x 1 x 1 x 1
 
         b, c_in, h, w = x.size()
         k, c_out, c_in, kh, kw = self.weight.size()
         x = x.view(1, -1, h, w) # 1 x N*C_in x H x W
-        weight = self.weight.unsqueeze(dim=0) # 1 x k x C_out x C_in x kH x hW 
+        weight = self.weight.unsqueeze(dim=0) # 1 x k x C x C x kH x hW 
         combined_weight = (routing_weight * weight).sum(1).view(-1, c_in, kh, kw)
 
         output = F.conv2d(x, weight=combined_weight, bias=None, 

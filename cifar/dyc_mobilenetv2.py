@@ -12,7 +12,7 @@ __all__ = ['DyChannel_MobileNetV2']
 class Block(nn.Module):
     '''expand + depthwise + pointwise'''
     def __init__(self, in_planes, out_planes, expansion, stride, num_experts=3, activation='sigmoid'):
-        super(Block, self).__init__()
+        super().__init__()
         self.stride = stride
 
         planes = expansion * in_planes
