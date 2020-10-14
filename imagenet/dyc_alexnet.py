@@ -7,24 +7,24 @@ __all__ = ['DyChannel_AlexNet']
 
 class DyChannel_AlexNet(nn.Module):
 
-    def __init__(self, num_classes=1000):
+    def __init__(self, num_classes=1000, num_experts=3, activation='sigmoid'):
         super().__init__()
         self.features = nn.Sequential(
-            DyChannel(3, 64, kernel_size=11, stride=4, padding=2),
+            DyChannel(3, 64, kernel_size=11, stride=4, padding=2, num_experts=num_experts, activation=activation),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
-            DyChannel(64, 192, kernel_size=5, padding=2),
+            DyChannel(64, 192, kernel_size=5, padding=2, num_experts=num_experts, activation=activation),
             nn.BatchNorm2d(192),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
-            DyChannel(192, 384, kernel_size=3, padding=1),
+            DyChannel(192, 384, kernel_size=3, padding=1, num_experts=num_experts, activation=activation),
             nn.BatchNorm2d(384),
             nn.ReLU(inplace=True),
-            DyChannel(384, 256, kernel_size=3, padding=1),
+            DyChannel(384, 256, kernel_size=3, padding=1, num_experts=num_experts, activation=activation),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
-            DyChannel(256, 256, kernel_size=3, padding=1),
+            DyChannel(256, 256, kernel_size=3, padding=1, num_experts=num_experts, activation=activation),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2)
