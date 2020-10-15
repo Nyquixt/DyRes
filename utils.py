@@ -102,6 +102,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.cc_resnet import CC_ResNet18
         net = CC_ResNet18(num_experts=4)
+    elif network == 'cc8_resnet18':
+        if dataset == 'cifar100':
+            from cifar.cc_resnet import CC_ResNet18
+        else:
+            from imagenet.cc_resnet import CC_ResNet18
+        net = CC_ResNet18(num_experts=8)
 
     elif network == 'dy2_resnet18':
         if dataset == 'cifar100':
@@ -121,6 +127,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dy_resnet import Dy_ResNet18
         net = Dy_ResNet18(num_experts=4)
+    elif network == 'dy4_resnet18':
+        if dataset == 'cifar100':
+            from cifar.dy_resnet import Dy_ResNet18
+        else:
+            from imagenet.dy_resnet import Dy_ResNet18
+        net = Dy_ResNet18(num_experts=8)
 
     elif network == 'wn_resnet18':
         if dataset == 'cifar100':
@@ -156,6 +168,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dyc_resnet import DyChannel_ResNet18
         net = DyChannel_ResNet18(num_experts=4)
+    elif network == 'dyc8_resnet18':
+        if dataset == 'cifar100':
+            from cifar.dyc_resnet import DyChannel_ResNet18
+        else:
+            from imagenet.dyc_resnet import DyChannel_ResNet18
+        net = DyChannel_ResNet18(num_experts=8)
     
     # AlexNet and Related Work
     elif network == 'cc2_alexnet':
@@ -176,6 +194,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.cc_alexnet import CC_AlexNet
         net = CC_AlexNet(num_experts=4)
+    elif network == 'cc8_alexnet':
+        if dataset == 'cifar100':
+            from cifar.cc_alexnet import CC_AlexNet
+        else:
+            from imagenet.cc_alexnet import CC_AlexNet
+        net = CC_AlexNet(num_experts=8)
 
     elif network == 'dy2_alexnet':
         if dataset == 'cifar100':
@@ -195,6 +219,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dy_alexnet import Dy_AlexNet
         net = Dy_AlexNet(num_experts=4)
+    elif network == 'dy8_alexnet':
+        if dataset == 'cifar100':
+            from cifar.dy_alexnet import Dy_AlexNet
+        else:
+            from imagenet.dy_alexnet import Dy_AlexNet
+        net = Dy_AlexNet(num_experts=8)
 
     elif network == 'wn_alexnet':
         if dataset == 'cifar100':
@@ -230,6 +260,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dyc_alexnet import DyChannel_AlexNet
         net = DyChannel_AlexNet(num_experts=4)
+    elif network == 'dyc8_alexnet':
+        if dataset == 'cifar100':
+            from cifar.dyc_alexnet import DyChannel_AlexNet
+        else:
+            from imagenet.dyc_alexnet import DyChannel_AlexNet
+        net = DyChannel_AlexNet(num_experts=8)
 
     # MobileNetV2 and Related Work
     elif network == 'cc2_mobilenetv2':
@@ -250,6 +286,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.cc_mobilenetv2 import CC_MobileNetV2
         net = CC_MobileNetV2(num_experts=4)
+    elif network == 'cc8_mobilenetv2':
+        if dataset == 'cifar100':
+            from cifar.cc_mobilenetv2 import CC_MobileNetV2
+        else:
+            from imagenet.cc_mobilenetv2 import CC_MobileNetV2
+        net = CC_MobileNetV2(num_experts=8)
         
     elif network == 'dy2_mobilenetv2':
         if dataset == 'cifar100':
@@ -269,6 +311,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dy_mobilenetv2 import Dy_MobileNetV2
         net = Dy_MobileNetV2(num_experts=4)
+    elif network == 'dy8_mobilenetv2':
+        if dataset == 'cifar100':
+            from cifar.dy_mobilenetv2 import Dy_MobileNetV2
+        else:
+            from imagenet.dy_mobilenetv2 import Dy_MobileNetV2
+        net = Dy_MobileNetV2(num_experts=8)
 
     elif network == 'wn_mobilenetv2':
         if dataset == 'cifar100':
@@ -304,6 +352,12 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dyc_mobilenetv2 import DyChannel_MobileNetV2
         net = DyChannel_MobileNetV2(num_experts=4)
+    elif network == 'dyc8_mobilenetv2':
+        if dataset == 'cifar100':
+            from cifar.dyc_mobilenetv2 import DyChannel_MobileNetV2
+        else:
+            from imagenet.dyc_mobilenetv2 import DyChannel_MobileNetV2
+        net = DyChannel_MobileNetV2(num_experts=8)
         
     else:
         print('the network is not supported')
