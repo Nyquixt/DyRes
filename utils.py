@@ -127,7 +127,7 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dy_resnet import Dy_ResNet18
         net = Dy_ResNet18(num_experts=4)
-    elif network == 'dy4_resnet18':
+    elif network == 'dy8_resnet18':
         if dataset == 'cifar100':
             from cifar.dy_resnet import Dy_ResNet18
         else:
