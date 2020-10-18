@@ -15,18 +15,19 @@ class route_func(nn.Module):
         self.num_experts = num_experts
 
         self.avgpool = nn.AdaptiveAvgPool2d(1)
-        self.conv1 = nn.Conv2d(in_channels, reduction_channels, kernel_size=1)
-        self.conv2 = nn.Conv2d(reduction_channels, num_experts * in_channels, kernel_size=1)
+        self.fc1 = nn.Linear(in_channels, reduction_channels)
+        self.fc2 = nn.Linear(reduction_channels, num_experts * in_channels)
         if activation == 'sigmoid':
             self.activation = nn.Sigmoid()
         else:
             self.activation = nn.Softmax(2)
 
     def forward(self, x):
-        x = self.avgpool(x)
-        x = F.relu(self.conv1(x))
-        x = self.conv2(x)
-        x = x.view(x.size(0), self.num_experts, -1) # N x k x C_out
+        b, c, _, _ = x.size()
+        x = self.avgpool(x).view(b, c)
+        x = F.relu(self.fc1(x))
+        x = self.fc2(x)
+        x = x.view(b, self.num_experts, -1) # N x k x C_out
         x = self.activation(x)
         return x
 
@@ -75,18 +76,19 @@ class route_func_dw(nn.Module):
             self.num_experts = num_experts
 
             self.avgpool = nn.AdaptiveAvgPool2d(1)
-            self.conv1 = nn.Conv2d(channels, reduction_channels, kernel_size=1)
-            self.conv2 = nn.Conv2d(reduction_channels, num_experts * channels, kernel_size=1)
+            self.fc1 = nn.Linear(channels, reduction_channels)
+            self.fc2 = nn.Linear(reduction_channels, num_experts * channels)
             if activation == 'sigmoid':
                 self.activation = nn.Sigmoid()
             else:
                 self.activation = nn.Softmax(2)
 
         def forward(self, x):
-            x = self.avgpool(x)
-            x = F.relu(self.conv1(x))
-            x = self.conv2(x)
-            x = x.view(x.size(0), self.num_experts, -1) # N x k x C
+            b, c, _, _ = x.size()
+            x = self.avgpool(x).view(b, c)
+            x = F.relu(self.fc1(x))
+            x = self.fc2(x)
+            x = x.view(b, self.num_experts, -1) # N x k x C
             x = self.activation(x)
             return x
 
