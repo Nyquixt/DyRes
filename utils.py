@@ -93,15 +93,6 @@ def get_network(network, dataset, device):
             from imagenet.cc_resnet import CC_ResNet18
         net = CC_ResNet18(num_experts=int( network[2] ))
 
-    elif network.startswith('dy') and network.endswith('resnet18'):
-        if dataset == 'cifar100':
-            from cifar.dy_resnet import Dy_ResNet18
-        elif dataset == 'tiny':
-            from tiny.dy_resnet import Dy_ResNet18
-        else:
-            from imagenet.dy_resnet import Dy_ResNet18
-        net = Dy_ResNet18(num_experts=int( network[2] ))
-
     # Experiment
     elif network.startswith('dyc') and network.endswith('resnet18'):
         if dataset == 'cifar100':
@@ -111,6 +102,15 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dyc_resnet import DyChannel_ResNet18
         net = DyChannel_ResNet18(num_experts=int( network[3] ))
+
+    elif network.startswith('dy') and network.endswith('resnet18'):
+        if dataset == 'cifar100':
+            from cifar.dy_resnet import Dy_ResNet18
+        elif dataset == 'tiny':
+            from tiny.dy_resnet import Dy_ResNet18
+        else:
+            from imagenet.dy_resnet import Dy_ResNet18
+        net = Dy_ResNet18(num_experts=int( network[2] ))
     
     # AlexNet and Related Work
     elif network.startswith('cc') and network.endswith('alexnet'):
@@ -122,15 +122,6 @@ def get_network(network, dataset, device):
             from imagenet.cc_alexnet import CC_AlexNet
         net = CC_AlexNet(num_experts=int( network[2] ))
 
-    elif network.startswith('dy') and network.endswith('alexnet'):
-        if dataset == 'cifar100':
-            from cifar.dy_alexnet import Dy_AlexNet
-        elif dataset == 'tiny':
-            from tiny.dy_alexnet import Dy_AlexNet
-        else:
-            from imagenet.dy_alexnet import Dy_AlexNet
-        net = Dy_AlexNet(num_experts=int( network[2] ))
-
     # Experiment
     elif network.startswith('dyc') and network.endswith('alexnet'):
         if dataset == 'cifar100':
@@ -140,6 +131,15 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dyc_alexnet import DyChannel_AlexNet
         net = DyChannel_AlexNet(num_experts=int( network[3] ))
+
+    elif network.startswith('dy') and network.endswith('alexnet'):
+        if dataset == 'cifar100':
+            from cifar.dy_alexnet import Dy_AlexNet
+        elif dataset == 'tiny':
+            from tiny.dy_alexnet import Dy_AlexNet
+        else:
+            from imagenet.dy_alexnet import Dy_AlexNet
+        net = Dy_AlexNet(num_experts=int( network[2] ))
 
     # MobileNetV2 and Related Work
     elif network.startswith('cc') and network.endswith('mobilenetv2'):
@@ -151,15 +151,6 @@ def get_network(network, dataset, device):
             from imagenet.cc_mobilenetv2 import CC_MobileNetV2
         net = CC_MobileNetV2(num_experts=int( network[2] ))
     
-    elif network.startswith('dy') and network.endswith('mobilenetv2'):
-        if dataset == 'cifar100':
-            from cifar.dy_mobilenetv2 import Dy_MobileNetV2
-        elif dataset == 'tiny':
-            from tiny.dy_mobilenetv2 import Dy_MobileNetV2
-        else:
-            from imagenet.dy_mobilenetv2 import Dy_MobileNetV2
-        net = Dy_MobileNetV2(num_experts=int( network[2] ))
-
     # Experiment
     elif network.startswith('dyc') and network.endswith('mobilenetv2'):
         if dataset == 'cifar100':
@@ -169,6 +160,15 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dyc_mobilenetv2 import DyChannel_MobileNetV2
         net = DyChannel_MobileNetV2(num_experts=int( network[3] ))
+
+    elif network.startswith('dy') and network.endswith('mobilenetv2'):
+        if dataset == 'cifar100':
+            from cifar.dy_mobilenetv2 import Dy_MobileNetV2
+        elif dataset == 'tiny':
+            from tiny.dy_mobilenetv2 import Dy_MobileNetV2
+        else:
+            from imagenet.dy_mobilenetv2 import Dy_MobileNetV2
+        net = Dy_MobileNetV2(num_experts=int( network[2] ))
         
     else:
         print('the network is not supported')
