@@ -43,7 +43,7 @@ device = torch.device('cuda' if (torch.cuda.is_available() and args.cuda) else '
 # Dataloader
 trainloader, testloader = get_dataloader(args.dataset, args.batch)
 
-if args.dataset == 'cifar100':
+if args.dataset == 'cifar100' or args.dataset == 'tiny':
     VAL_LEN = 10000
 elif args.dataset == 'imagenet':
     VAL_LEN = 150000
