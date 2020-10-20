@@ -209,7 +209,7 @@ def get_dataloader(dataset, batch_size):
         ])
 
         trainset = torchvision.datasets.ImageFolder(root=os.path.join(TINY_IMAGENET_DATA_DIR, 'train'), transform=train_transform)
-        testset = torchvision.datasets.ImageFolder(root=os.path.join(TINY_IMAGENET_DATA_DIR, 'val'), transform=test_transform)
+        testset = torchvision.datasets.ImageFolder(root=os.path.join(TINY_IMAGENET_DATA_DIR, 'validation'), transform=test_transform)
 
     elif dataset == 'imagenet':
         train_transform = transforms.Compose(
