@@ -141,6 +141,13 @@ def get_network(network, dataset, device):
             from imagenet.dy_alexnet import Dy_AlexNet
         net = Dy_AlexNet(num_experts=int( network[2] ))
 
+    elif network == 'kc_alexnet':
+        if dataset == 'cifar100':
+            from cifar.kc_alexnet import KC_AlexNet
+        elif dataset == 'tiny':
+            from tiny.kc_alexnet import KC_AlexNet
+        net = KC_AlexNet()
+
     # MobileNetV2 and Related Work
     elif network.startswith('cc') and network.endswith('mobilenetv2'):
         if dataset == 'cifar100':
