@@ -27,7 +27,7 @@ class route_func(nn.Module):
         x = self.avgpool(x).view(b, c)
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
-        x = x.view(b, self.num_experts, -1) # N x k x C_out
+        x = x.view(b, self.num_experts, -1) # N x k x C_in
         x = self.activation(x)
         return x
 
@@ -49,7 +49,7 @@ class DyChannel(nn.Module):
         nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
 
     def forward(self, x):
-        routing_weight = self.routing_func(x) # N x k x C_out
+        routing_weight = self.routing_func(x) # N x k x C_in
         routing_weight = routing_weight.unsqueeze(dim=2).unsqueeze(dim=-1).unsqueeze(dim=-1) # N x k x 1 x C_in x 1 x 1
 
         b, c_in, h, w = x.size()
