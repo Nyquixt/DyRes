@@ -8,7 +8,7 @@ __all__ = ['CC_AlexNet']
 class CC_AlexNet(nn.Module):
 
     def __init__(self, num_classes=100, num_experts=3):
-        super(CC_AlexNet, self).__init__()
+        super().__init__()
         self.features = nn.Sequential(
             CondConv(3, 64, kernel_size=3, stride=2, padding=1, num_experts=num_experts),
             nn.BatchNorm2d(64),

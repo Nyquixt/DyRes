@@ -16,22 +16,22 @@ class Kernel_Conv(nn.Module):
         self.kernel_size = kernel_size
 
         self.avgpool = nn.AdaptiveAvgPool2d(kernel_size + 2)
-        self.maxpool = nn.AdaptiveMaxPool2d(kernel_size + 2)
-        self.conv1 = nn.Conv2d(in_channels, self.in_channels, kernel_size=3, groups=self.in_channels)
-        self.conv2 = nn.Conv2d(self.in_channels, out_channels * self.in_channels, kernel_size=1, groups=self.in_channels)
-        self.conv_att  = nn.Conv2d(in_channels, out_channels * self.in_channels, kernel_size=3, groups=self.in_channels)
+        self.conv_att  = nn.Conv2d(in_channels, self.out_channels * self.in_channels, kernel_size=3, groups=self.in_channels)
         self.sigmoid = nn.Sigmoid()
+
+        self.weight = nn.Parameter(torch.Tensor(self.out_channels, self.in_channels, self.kernel_size, self.kernel_size))
+        nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
         
     def forward(self, x):
-        maxi = self.maxpool(x)
-        att = self.conv_att(maxi)
+        avg = self.avgpool(x)
+        att = self.conv_att(avg)
         att = self.sigmoid(att) # N x C_out*C_in x kH x kW
         att = att.view(-1, self.in_channels, self.kernel_size, self.kernel_size)
+        print(att.shape)
 
-        avg = self.avgpool(x)
-        weight = F.relu(self.conv1(avg))
-        weight = self.conv2(weight) # N x C_out*C_in x kH x kW
+        weight = self.weight
         weight = weight.view(-1, self.in_channels, self.kernel_size, self.kernel_size)
+        print(weight.shape)
         b, _, h, w = x.size()
         x = x.view(1, -1, h, w)
         output = F.conv2d(x, weight=weight * att, bias=None,

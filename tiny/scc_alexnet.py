@@ -1,30 +1,30 @@
 import torch
 import torch.nn as nn
 
-from convs.condconv import *
+from convs.scc_conv import *
 
-__all__ = ['CC_AlexNet']
+__all__ = ['SCC_AlexNet']
 
-class CC_AlexNet(nn.Module):
+class SCC_AlexNet(nn.Module):
 
     def __init__(self, num_classes=200, num_experts=3):
         super().__init__()
         self.features = nn.Sequential(
-            CondConv(3, 64, kernel_size=3, stride=2, padding=1, num_experts=num_experts),
+            SCConv(3, 64, kernel_size=3, stride=2, padding=1, num_experts=num_experts, spatial=5),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            CondConv(64, 192, kernel_size=3, padding=1, num_experts=num_experts),
+            SCConv(64, 192, kernel_size=3, padding=1, num_experts=num_experts, spatial=5),
             nn.BatchNorm2d(192),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
-            CondConv(192, 384, kernel_size=3, padding=1, num_experts=num_experts),
+            SCConv(192, 384, kernel_size=3, padding=1, num_experts=num_experts, spatial=5),
             nn.BatchNorm2d(384),
             nn.ReLU(inplace=True),
-            CondConv(384, 256, kernel_size=3, padding=1, num_experts=num_experts),
+            SCConv(384, 256, kernel_size=3, padding=1, num_experts=num_experts, spatial=5),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
-            CondConv(256, 256, kernel_size=3, padding=1, num_experts=num_experts),
+            SCConv(256, 256, kernel_size=3, padding=1, num_experts=num_experts, spatial=5),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),

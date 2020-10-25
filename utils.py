@@ -132,6 +132,20 @@ def get_network(network, dataset, device):
             from imagenet.dyc_alexnet import DyChannel_AlexNet
         net = DyChannel_AlexNet(num_experts=int( network[3] ))
 
+    elif network.startswith('sdyc') and network.endswith('alexnet'):
+        if dataset == 'cifar100':
+            from cifar.sdyc_alexnet import SDYC_AlexNet
+        elif dataset == 'tiny':
+            from tiny.sdyc_alexnet import SDYC_AlexNet
+        net = SDYC_AlexNet(num_experts=int( network[4] ))
+
+    elif network.startswith('scc') and network.endswith('alexnet'):
+        if dataset == 'cifar100':
+            from cifar.scc_alexnet import SCC_AlexNet
+        elif dataset == 'tiny':
+            from tiny.scc_alexnet import SCC_AlexNet
+        net = SCC_AlexNet(num_experts=int( network[3] ))
+
     elif network.startswith('dy') and network.endswith('alexnet'):
         if dataset == 'cifar100':
             from cifar.dy_alexnet import Dy_AlexNet

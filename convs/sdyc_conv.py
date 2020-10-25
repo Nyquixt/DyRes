@@ -16,7 +16,7 @@ class route_func(nn.Module):
         self.spatial = spatial
 
         self.avgpool = nn.AdaptiveAvgPool2d(spatial)
-        self.conv = nn.Conv2d(in_channels, self.reduction_channels)
+        self.conv = nn.Conv2d(in_channels, self.reduction_channels, 1)
         self.fc = nn.Linear(self.reduction_channels * spatial * spatial, num_experts * in_channels)
         if activation == 'sigmoid':
             self.activation = nn.Sigmoid()
@@ -32,7 +32,7 @@ class route_func(nn.Module):
         x = self.activation(x)
         return x
 
-class DyChannel(nn.Module):
+class SDYCConv(nn.Module):
 
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, groups=1, num_experts=3, spatial=4, reduction=16, activation='sigmoid'):
         super().__init__()
@@ -78,7 +78,7 @@ class route_func_dw(nn.Module):
             self.spatial = spatial
 
             self.avgpool = nn.AdaptiveAvgPool2d(spatial)
-            self.conv = nn.Conv2d(channels, self.reduction_channels)
+            self.conv = nn.Conv2d(channels, self.reduction_channels, 1)
             self.fc = nn.Linear(self.reduction_channels * spatial * spatial, num_experts * channels)
             if activation == 'sigmoid':
                 self.activation = nn.Sigmoid()
@@ -94,7 +94,7 @@ class route_func_dw(nn.Module):
             x = self.activation(x)
             return x
 
-class DyChannel_DW(nn.Module): # depthwise, use for MobileNetV2
+class SDYCConv_DW(nn.Module): # depthwise, use for MobileNetV2
 
     def __init__(self, channels, kernel_size, stride=1, padding=0, groups=1, num_experts=3, spatial=4, reduction=16, activation='sigmoid'):
         super().__init__()
@@ -129,11 +129,11 @@ class DyChannel_DW(nn.Module): # depthwise, use for MobileNetV2
 
 def test():
     x = torch.randn(4, 16 , 32, 32)
-    conv = DyChannel(x.size(1), 64, 3, padding=1, activation='softmax', num_experts=5)
+    conv = SDYCConv(in_channels=x.size(1), out_channels=64, kernel_size=3, padding=1, activation='softmax', num_experts=5)
     y = conv(x)
     print(y.size())
 
-    conv = DyChannel_DW(x.size(1), 3, padding=1, activation='softmax', num_experts=5)
+    conv = SDYCConv_DW(x.size(1), 3, padding=1, activation='softmax', num_experts=5)
     y = conv(x)
     print(y.size())
 
