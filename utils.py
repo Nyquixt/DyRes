@@ -146,6 +146,20 @@ def get_network(network, dataset, device):
             from tiny.scc_alexnet import SCC_AlexNet
         net = SCC_AlexNet(num_experts=int( network[3] ))
 
+    elif network.startswith('dyresA') and network.endswith('alexnet'):
+        if dataset == 'cifar100':
+            from cifar.dyresA_alexnet import DyResA_AlexNet
+        elif dataset == 'tiny':
+            from tiny.dyresA_alexnet import DyResA_AlexNet
+        net = DyResA_AlexNet(num_experts=int( network[6] ))
+    
+    elif network.startswith('dyresB') and network.endswith('alexnet'):
+        if dataset == 'cifar100':
+            from cifar.dyresB_alexnet import DyResB_AlexNet
+        elif dataset == 'tiny':
+            from tiny.dyresB_alexnet import DyResB_AlexNet
+        net = DyResB_AlexNet(num_experts=int( network[6] ))
+
     elif network.startswith('dy') and network.endswith('alexnet'):
         if dataset == 'cifar100':
             from cifar.dy_alexnet import Dy_AlexNet
@@ -154,13 +168,6 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dy_alexnet import Dy_AlexNet
         net = Dy_AlexNet(num_experts=int( network[2] ))
-
-    elif network == 'kc_alexnet':
-        if dataset == 'cifar100':
-            from cifar.kc_alexnet import KC_AlexNet
-        elif dataset == 'tiny':
-            from tiny.kc_alexnet import KC_AlexNet
-        net = KC_AlexNet()
 
     # MobileNetV2 and Related Work
     elif network.startswith('cc') and network.endswith('mobilenetv2'):
