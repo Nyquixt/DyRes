@@ -26,9 +26,8 @@ class route_func(nn.Module):
         channel_pool = (self.adp_pool(x)).mean(dim=1,keepdim=False).view(x.shape[0],-1)
         expert_weight = self.expert_extractor(channel_pool)
         # [n, in_channel, experts]
-        general = channel_weight.unsqueeze(-1)*expert_weight.unsqueeze(1)
+        general = channel_weight.unsqueeze(1)*expert_weight.unsqueeze(-1)
         general = torch.sigmoid(general)
-
         return general
 
 class RouterConv(nn.Module):
@@ -91,8 +90,9 @@ class route_func_dw(nn.Module):
         return general
 
 def demo():
-    net = RouterConv(3, 16, 3)
-    x = torch.randn(1,3,32,32)
+    net = RouterConv(64, 128, 3, padding=1)
+    x = torch.randn(16, 64, 32, 32)
     y = net(x)
     print(y.shape)
+
 # demo()
