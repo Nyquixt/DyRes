@@ -76,7 +76,7 @@ if args.save and not args.resume:
         f.write('Hyper-parameters:\n')
         f.write('Epoch {}; Batch {}; LR {}; SGD Momentum {}; SGD Weight Decay {};\n'.format(str(args.epoch), str(args.batch), str(args.lr), str(args.momentum), str(args.weight_decay)))
         f.write('LR Scheduler Step {}; LR Scheduler Gamma {}; {};\n'.format(str(args.step_size), str(args.gamma), str(args.dataset)))
-        f.write('Epoch,ValAcc\n')
+        f.write('Epoch,TrainLoss,ValAcc\n')
 
 if args.resume is not None:
     checkpoint_path = args.resume
@@ -93,7 +93,7 @@ else:
 start = time.time()
 for epoch in range(start_epoch, args.epoch):  # loop over the dataset multiple times
 
-    # training_loss = 0.0
+    training_loss = 0.0
     for i, data in enumerate(trainloader):
         # Get the inputs; data is a list of [inputs, labels]
         inputs, labels = data
@@ -109,20 +109,20 @@ for epoch in range(start_epoch, args.epoch):  # loop over the dataset multiple t
         loss.backward()
         optimizer.step()
 
-        # training_loss += loss.item()
+        training_loss += loss.item()
 
     # Print statistics
-    with torch.no_grad():
-        validation_loss = 0.0
-        for j, data in enumerate(testloader): # (10,000 / args.batch) batches
-            inputs, labels = data
-            inputs = inputs.to(device)
-            labels = labels.to(device)
+    # with torch.no_grad():
+    #     validation_loss = 0.0
+    #     for j, data in enumerate(testloader): # (10,000 / args.batch) batches
+    #         inputs, labels = data
+    #         inputs = inputs.to(device)
+    #         labels = labels.to(device)
 
-            outputs = net(inputs)
-            loss = criterion(outputs, labels)
+    #         outputs = net(inputs)
+    #         loss = criterion(outputs, labels)
             
-            validation_loss += loss.item()
+    #         validation_loss += loss.item()
     # Calculate training accuracy, top-1
     # train_acc = calculate_acc(trainloader, net, device)
 
@@ -145,11 +145,11 @@ for epoch in range(start_epoch, args.epoch):  # loop over the dataset multiple t
     # Switch back to training mode
     net.train()
 
-    print('[Epoch: %d]  Val Loss: %.3f   Val Acc: %.3f%%' % ( epoch + 1, validation_loss / (VAL_LEN / args.batch), val_acc ))
+    print('[Epoch: %d]  Train Loss: %.3f   Val Acc: %.3f%%' % ( epoch + 1, training_loss, val_acc ))
     
     if args.save:
         with open(LOG_FILE, 'a+') as f:
-            f.write('%d,%.3f\n' % (epoch + 1, val_acc))
+            f.write('%d,%.3f,%.3f\n' % (epoch + 1, training_loss, val_acc))
 
     # Step the scheduler after every epoch
     scheduler.step()

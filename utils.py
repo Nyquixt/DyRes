@@ -197,6 +197,13 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dy_mobilenetv2 import Dy_MobileNetV2
         net = Dy_MobileNetV2(num_experts=int( network[2] ))
+
+    elif network.startswith('router') and network.endswith('alexnet'):
+        if dataset == 'cifar100':
+            from cifar.router_alexnet import Router_AlexNet
+        elif dataset == 'tiny':
+            from tiny.router_alexnet import Router_AlexNet
+        net = Router_AlexNet(num_experts=int( network[6] ))
         
     else:
         print('the network is not supported')
