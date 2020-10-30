@@ -66,9 +66,10 @@ class DyResConv(nn.Module):
         # convs
         self.convs = nn.ModuleList([nn.Conv2d(in_channels, out_channels, kernel_size, stride=stride, padding=padding, groups=groups) for i in range(num_experts)])
         self.bns = nn.ModuleList([nn.BatchNorm2d(out_channels) for i in range(num_experts)])
-        self.outputs = []
-
+        
     def forward(self, x):
+        outputs = []
+        
         _, c_in, _, _ = x.size()
         routing_weight = self.routing_func(x) # N x k x C
 
@@ -77,9 +78,9 @@ class DyResConv(nn.Module):
             attention = x * route.expand_as(x)
             out = self.convs[i](attention)
             out = self.bns[i](out)
-            self.outputs.append(out)
+            outputs.append(out)
         
-        return sum(self.outputs)
+        return sum(outputs)
 
 def test():
     x = torch.randn(1, 16, 32, 32)
