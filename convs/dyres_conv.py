@@ -49,7 +49,6 @@ class route_func(nn.Module):
         a1 = a1.expand_as(a5)
         attention = torch.cat([a1, a3, a5], dim=1)
         attention = self.sigmoid(self.dwise_separable(attention))
-        attention = attention.view(b, self.num_experts, -1)
         return attention
 
 class DyResConv(nn.Module):
@@ -57,41 +56,37 @@ class DyResConv(nn.Module):
         super().__init__()
         assert mode == 'A' or mode == 'B'
         self.mode = mode
-
         self.stride = stride
         self.padding = padding
         self.groups = groups
+        self.num_experts = num_experts
 
         # routing function
         self.routing_func = route_func(in_channels, num_experts, reduction, mode)
-
-        self.weight = nn.Parameter(torch.Tensor(num_experts, out_channels, in_channels // groups, kernel_size, kernel_size))
-        
-        self.register_parameter('bias', None)
-        nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
+        # convs
+        self.convs = nn.ModuleList([nn.Conv2d(in_channels, out_channels, kernel_size, stride=stride, padding=padding, groups=groups) for i in range(num_experts)])
+        self.bns = nn.ModuleList([nn.BatchNorm2d(out_channels) for i in range(num_experts)])
+        self.outputs = []
 
     def forward(self, x):
+        _, c_in, _, _ = x.size()
         routing_weight = self.routing_func(x) # N x k x C
-        routing_weight = routing_weight.unsqueeze(dim=2).unsqueeze(dim=-1).unsqueeze(dim=-1) # N x k x C x 1 x 1 x 1
 
-        b, c_in, h, w = x.size()
-        k, c_out, c_in, kh, kw = self.weight.size()
-        x = x.view(1, -1, h, w) # 1 x N*C_in x H x W
-        weight = self.weight.unsqueeze(dim=0) # 1 x k x C x C x kH x hW 
-        combined_weight = (routing_weight * weight).sum(1).view(-1, c_in, kh, kw)
-
-        output = F.conv2d(x, weight=combined_weight, bias=None, 
-                            stride=self.stride, padding=self.padding, groups=self.groups * b)
-
-        output = output.view(b, c_out, output.size(-2), output.size(-1))
-        return output
+        for i in range(self.num_experts):
+            route = routing_weight[:, i*c_in:(i+1)*c_in]
+            attention = x * route.expand_as(x)
+            out = self.convs[i](attention)
+            out = self.bns[i](out)
+            self.outputs.append(out)
+        
+        return sum(self.outputs)
 
 def test():
-    x = torch.randn(1, 3, 32, 32)
-    conv = DyResConv(3, 64, 3, padding=1, mode='A')
+    x = torch.randn(1, 16, 32, 32)
+    conv = DyResConv(16, 64, 3, padding=1, mode='A')
     y = conv(x)
     print(y.shape)
-    conv = DyResConv(3, 64, 3, padding=1, mode='B')
+    conv = DyResConv(16, 64, 3, padding=1, mode='B')
     y = conv(x)
     print(y.shape)
 

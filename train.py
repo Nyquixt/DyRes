@@ -145,11 +145,11 @@ for epoch in range(start_epoch, args.epoch):  # loop over the dataset multiple t
     # Switch back to training mode
     net.train()
 
-    print('[Epoch: %d]  Train Loss: %.3f   Val Acc: %.3f%%' % ( epoch + 1, training_loss, val_acc ))
+    print('[Epoch: %d]  Train Loss: %.3f   Val Acc: %.3f%%' % ( epoch + 1, training_loss / len(trainloader), val_acc ))
     
     if args.save:
         with open(LOG_FILE, 'a+') as f:
-            f.write('%d,%.3f,%.3f\n' % (epoch + 1, training_loss, val_acc))
+            f.write('%d,%.3f,%.3f\n' % (epoch + 1, training_loss / len(trainloader), val_acc))
 
     # Step the scheduler after every epoch
     scheduler.step()
