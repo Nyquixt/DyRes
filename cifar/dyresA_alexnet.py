@@ -12,21 +12,16 @@ class DyResA_AlexNet(nn.Module):
         super().__init__()
         self.features = nn.Sequential(
             DyResConv(3, 64, kernel_size=3, stride=2, padding=1, num_experts=num_experts, mode='A'),
-            nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
             DyResConv(64, 192, kernel_size=3, padding=1, num_experts=num_experts, mode='A'),
-            nn.BatchNorm2d(192),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
             DyResConv(192, 384, kernel_size=3, padding=1, num_experts=num_experts, mode='A'),
-            nn.BatchNorm2d(384),
             nn.ReLU(inplace=True),
             CondConv(384, 256, kernel_size=3, padding=1, num_experts=num_experts),
-            nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             CondConv(256, 256, kernel_size=3, padding=1, num_experts=num_experts),
-            nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
         )
