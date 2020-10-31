@@ -1,16 +1,13 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import math
 
-__all__ = ['DyResConv'] # Dynamic "Squeeze?" Conv
+__all__ = ['DyResConv']
 
 class route_func(nn.Module):
     def __init__(self, in_channels, num_experts=3, reduction=16, mode='A'):
         super().__init__()
         assert mode == 'A' or mode == 'B'
-        self.mode = mode
-        self.num_experts = num_experts
         # Global Average Pool
         self.gap1 = nn.AdaptiveAvgPool2d(1)
         self.gap3 = nn.AdaptiveAvgPool2d(3)
@@ -18,7 +15,7 @@ class route_func(nn.Module):
 
         squeeze_channels = max(in_channels // reduction, reduction)
         
-        if self.mode == 'A': # 1-3-3-1
+        if mode == 'A': # 1-3-3-1
             self.dwise_separable = nn.Sequential(
                 nn.Conv2d(3 * in_channels, squeeze_channels, kernel_size=1, stride=1, groups=1, bias=False),
                 nn.ReLU(inplace=True),
@@ -28,7 +25,7 @@ class route_func(nn.Module):
                 nn.ReLU(inplace=True),
                 nn.Conv2d(squeeze_channels, num_experts * in_channels, kernel_size=1, stride=1, groups=1, bias=False)
             )
-        elif self.mode == 'B': # 3-1-1-3
+        elif mode == 'B': # 3-1-1-3
             self.dwise_separable = nn.Sequential(
                 nn.Conv2d(3 * in_channels, in_channels, kernel_size=3, stride=1, groups=in_channels, bias=False),
                 nn.ReLU(inplace=True),
@@ -55,10 +52,6 @@ class DyResConv(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, num_experts=3, stride=1, padding=0, groups=1, reduction=16, mode='A'):
         super().__init__()
         assert mode == 'A' or mode == 'B'
-        self.mode = mode
-        self.stride = stride
-        self.padding = padding
-        self.groups = groups
         self.num_experts = num_experts
 
         # routing function
