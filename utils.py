@@ -189,6 +189,20 @@ def get_network(network, dataset, device):
             from imagenet.dyc_mobilenetv2 import DyChannel_MobileNetV2
         net = DyChannel_MobileNetV2(num_experts=int( network[3] ))
 
+    elif network.startswith('dyresA') and network.endswith('mobilenetv2'):
+        if dataset == 'cifar100':
+            from cifar.dyresA_mobilenetv2 import DyResA_MobileNetV2
+        elif dataset == 'tiny':
+            from tiny.dyresA_mobilenetv2 import DyResA_MobileNetV2
+        net = DyResA_MobileNetV2(num_experts=int( network[6] ))
+
+    elif network.startswith('dyresB') and network.endswith('mobilenetv2'):
+        if dataset == 'cifar100':
+            from cifar.dyresB_mobilenetv2 import DyResB_MobileNetV2
+        elif dataset == 'tiny':
+            from tiny.dyresB_mobilenetv2 import DyResB_MobileNetV2
+        net = DyResB_MobileNetV2(num_experts=int( network[6] ))
+
     elif network.startswith('dy') and network.endswith('mobilenetv2'):
         if dataset == 'cifar100':
             from cifar.dy_mobilenetv2 import Dy_MobileNetV2
