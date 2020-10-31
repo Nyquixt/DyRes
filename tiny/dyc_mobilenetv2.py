@@ -5,7 +5,7 @@ Mobile Networks for Classification, Detection and Segmentation" for more details
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from convs.dychannel import DyChannel_DW
+from convs.dychannel import DyChannel
 
 __all__ = ['DyChannel_MobileNetV2']
 
@@ -18,7 +18,7 @@ class Block(nn.Module):
         planes = expansion * in_planes
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = DyChannel_DW(planes, kernel_size=3, stride=stride, padding=1, groups=planes, 
+        self.conv2 = DyChannel(planes, kernel_size=3, stride=stride, padding=1, groups=planes, 
                         num_experts=num_experts, activation=activation)
         self.bn2 = nn.BatchNorm2d(planes)
         self.conv3 = nn.Conv2d(planes, out_planes, kernel_size=1, stride=1, padding=0, bias=False)

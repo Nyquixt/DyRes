@@ -11,21 +11,16 @@ class DyChannel_AlexNet(nn.Module):
         super().__init__()
         self.features = nn.Sequential(
             DyChannel(3, 64, kernel_size=3, stride=2, padding=1, num_experts=num_experts, activation=activation),
-            nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
             DyChannel(64, 192, kernel_size=3, padding=1, num_experts=num_experts, activation=activation),
-            nn.BatchNorm2d(192),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
             DyChannel(192, 384, kernel_size=3, padding=1, num_experts=num_experts, activation=activation),
-            nn.BatchNorm2d(384),
             nn.ReLU(inplace=True),
             DyChannel(384, 256, kernel_size=3, padding=1, num_experts=num_experts, activation=activation),
-            nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             DyChannel(256, 256, kernel_size=3, padding=1, num_experts=num_experts, activation=activation),
-            nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2),
         )

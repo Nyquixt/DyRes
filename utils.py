@@ -103,6 +103,20 @@ def get_network(network, dataset, device):
             from imagenet.dyc_resnet import DyChannel_ResNet18
         net = DyChannel_ResNet18(num_experts=int( network[3] ))
 
+    elif network.startswith('dyresA') and network.endswith('resnet18'):
+        if dataset == 'cifar100':
+            from cifar.dyresA_resnet import DyResA_ResNet18
+        elif dataset == 'tiny':
+            from tiny.dyresA_resnet import DyResA_ResNet18
+        net = DyResA_ResNet18(num_experts=int( network[6] ))
+
+    elif network.startswith('dyresB') and network.endswith('resnet18'):
+        if dataset == 'cifar100':
+            from cifar.dyresB_resnet import DyResB_ResNet18
+        elif dataset == 'tiny':
+            from tiny.dyresB_resnet import DyResB_ResNet18
+        net = DyResB_ResNet18(num_experts=int( network[6] ))
+
     elif network.startswith('dy') and network.endswith('resnet18'):
         if dataset == 'cifar100':
             from cifar.dy_resnet import Dy_ResNet18
@@ -131,20 +145,6 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dyc_alexnet import DyChannel_AlexNet
         net = DyChannel_AlexNet(num_experts=int( network[3] ))
-
-    elif network.startswith('sdyc') and network.endswith('alexnet'):
-        if dataset == 'cifar100':
-            from cifar.sdyc_alexnet import SDYC_AlexNet
-        elif dataset == 'tiny':
-            from tiny.sdyc_alexnet import SDYC_AlexNet
-        net = SDYC_AlexNet(num_experts=int( network[4] ))
-
-    elif network.startswith('scc') and network.endswith('alexnet'):
-        if dataset == 'cifar100':
-            from cifar.scc_alexnet import SCC_AlexNet
-        elif dataset == 'tiny':
-            from tiny.scc_alexnet import SCC_AlexNet
-        net = SCC_AlexNet(num_experts=int( network[3] ))
 
     elif network.startswith('dyresA') and network.endswith('alexnet'):
         if dataset == 'cifar100':
@@ -197,13 +197,6 @@ def get_network(network, dataset, device):
         else:
             from imagenet.dy_mobilenetv2 import Dy_MobileNetV2
         net = Dy_MobileNetV2(num_experts=int( network[2] ))
-
-    elif network.startswith('router') and network.endswith('alexnet'):
-        if dataset == 'cifar100':
-            from cifar.router_alexnet import Router_AlexNet
-        elif dataset == 'tiny':
-            from tiny.router_alexnet import Router_AlexNet
-        net = Router_AlexNet(num_experts=int( network[6] ))
         
     else:
         print('the network is not supported')
