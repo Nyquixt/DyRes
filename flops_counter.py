@@ -26,7 +26,7 @@ def get_model_complexity_info(model, input_res, print_per_layer_stat=True, as_st
 
     return flops_count, params_count
 
-def flops_to_string(flops, units='GMac', precision=2):
+def flops_to_string(flops, units='KMac', precision=2):
     if units is None:
         if flops // 10**9 > 0:
             return str(round(flops / 10.**9, precision)) + ' GMac'

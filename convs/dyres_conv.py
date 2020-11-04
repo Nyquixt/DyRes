@@ -49,31 +49,40 @@ class route_func(nn.Module):
         return attention
 
 class DyResConv(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, num_experts=3, stride=1, padding=0, groups=1, reduction=16, mode='A'):
+    def __init__(self, in_channels, out_channels, kernel_size, num_experts=3, stride=1, padding=0, groups=1, reduction=16, mode='A', deploy=True):
         super().__init__()
         assert mode == 'A' or mode == 'B'
+        self.deploy = deploy
         self.num_experts = num_experts
 
         # routing function
         self.routing_func = route_func(in_channels, num_experts, reduction, mode)
         # convs
-        self.convs = nn.ModuleList([nn.Conv2d(in_channels, out_channels, kernel_size, stride=stride, padding=padding, groups=groups) for i in range(num_experts)])
-        self.bns = nn.ModuleList([nn.BatchNorm2d(out_channels) for i in range(num_experts)])
+        if deploy:
+            self.convs = nn.Conv2d(in_channels, out_channels, kernel_size, stride=stride, padding=padding, groups=groups)
+        else:
+            self.convs = nn.ModuleList([nn.Conv2d(in_channels, out_channels, kernel_size, stride=stride, padding=padding, groups=groups) for i in range(num_experts)])
+            self.bns = nn.ModuleList([nn.BatchNorm2d(out_channels) for i in range(num_experts)])
         
     def forward(self, x):
-        outputs = []
-        
         _, c_in, _, _ = x.size()
         routing_weight = self.routing_func(x) # N x k x C
-
-        for i in range(self.num_experts):
-            route = routing_weight[:, i*c_in:(i+1)*c_in]
-            attention = x * route.expand_as(x)
-            out = self.convs[i](attention)
-            out = self.bns[i](out)
-            outputs.append(out)
-        
-        return sum(outputs)
+        if self.deploy:
+            inp = x * routing_weight[:, :c_in].expand_as(x)
+            for i in range(1, self.num_experts):
+                route = routing_weight[:, i*c_in:(i+1)*c_in]
+                inp += x * route
+            output = self.convs(inp)
+        else:
+            outputs = []
+            for i in range(self.num_experts):
+                route = routing_weight[:, i*c_in:(i+1)*c_in]
+                attention = x * route.expand_as(x)
+                out = self.convs[i](attention)
+                out = self.bns[i](out)
+                outputs.append(out)
+            output = sum(outputs)
+        return output
 
 def test():
     x = torch.randn(1, 16, 32, 32)
