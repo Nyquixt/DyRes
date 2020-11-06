@@ -6,7 +6,7 @@ from flops_counter import get_model_complexity_info
 
 import torch
 
-x = torch.randn(1, 64, 32, 32)
+x = torch.randn(1, 16, 32, 32)
 net = CondConv(x.size(1), x.size(1), 3, num_experts=4)
 flops, params = get_model_complexity_info(net, (x.size(1), 32, 32), as_strings=True, print_per_layer_stat=False)
 print('Flops: {}\n{}'.format(flops, params))

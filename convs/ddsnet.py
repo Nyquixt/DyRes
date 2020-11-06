@@ -76,7 +76,7 @@ class DDSConv(nn.Module):
         return output
 
 def test():
-    x = torch.randn(1, 16, 32, 32)
+    x = torch.randn(64, 16, 32, 32)
     conv = DDSConv(16, 64, 3, padding=1)
     y = conv(x)
     print(y.shape)

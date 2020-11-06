@@ -49,17 +49,21 @@ class route_func(nn.Module):
         return attention
 
 class DyResConv(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, num_experts=3, stride=1, padding=0, groups=1, reduction=16, mode='A', deploy=False):
+    def __init__(self, in_channels, out_channels, kernel_size, num_experts=3, stride=1, padding=0, groups=1, reduction=16, mode='A', deploy=True):
         super().__init__()
         assert mode == 'A' or mode == 'B'
         self.deploy = deploy
         self.num_experts = num_experts
 
+        self.stride = stride
+        self.padding = padding
+        self.groups = groups
+
         # routing function
         self.routing_func = route_func(in_channels, num_experts, reduction, mode)
         # convs
         if deploy:
-            self.convs = nn.Conv2d(in_channels, out_channels, kernel_size, stride=stride, padding=padding, groups=groups)
+            self.convs = [nn.Parameter(torch.Tensor(out_channels, in_channels, kernel_size, kernel_size)) for i in range(num_experts)]
         else:
             self.convs = nn.ModuleList([nn.Conv2d(in_channels, out_channels, kernel_size, stride=stride, padding=padding, groups=groups) for i in range(num_experts)])
             self.bns = nn.ModuleList([nn.BatchNorm2d(out_channels) for i in range(num_experts)])
@@ -68,11 +72,14 @@ class DyResConv(nn.Module):
         _, c_in, _, _ = x.size()
         routing_weight = self.routing_func(x) # N x k x C
         if self.deploy:
-            inp = x * routing_weight[:, :c_in].expand_as(x)
-            for i in range(1, self.num_experts):
-                route = routing_weight[:, i*c_in:(i+1)*c_in]
-                inp += x * route
-            output = self.convs(inp)
+            convs = []
+            for i in range(self.num_experts):
+                route = routing_weight[:, i * c_in : (i+1) * c_in]
+                weight = self.convs[i]
+                weight = weight * route
+                convs.append(weight)
+            conv = sum(convs)
+            output = F.conv2d(x, weight=conv, stride=self.stride, padding=self.padding, groups=self.groups)
         else:
             outputs = []
             for i in range(self.num_experts):
