@@ -49,7 +49,7 @@ class route_func(nn.Module):
         return attention
 
 class DyResConv(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, num_experts=3, stride=1, padding=0, groups=1, reduction=16, mode='A', deploy=True):
+    def __init__(self, in_channels, out_channels, kernel_size, num_experts=3, stride=1, padding=0, groups=1, reduction=16, mode='A', deploy=False):
         super().__init__()
         assert mode == 'A' or mode == 'B'
         self.deploy = deploy

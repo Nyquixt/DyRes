@@ -5,21 +5,20 @@ Mobile Networks for Classification, Detection and Segmentation" for more details
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from convs.dychannel import DyChannel_DW
+from convs.ddsnet import *
 
-__all__ = ['DyChannel_MobileNetV2']
+__all__ = ['DDS_MobileNetV2']
 
 class Block(nn.Module):
     '''expand + depthwise + pointwise'''
-    def __init__(self, in_planes, out_planes, expansion, stride, num_experts=3, activation='sigmoid'):
-        super().__init__()
+    def __init__(self, in_planes, out_planes, expansion, stride, num_experts=3):
+        super(Block, self).__init__()
         self.stride = stride
 
         planes = expansion * in_planes
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = DyChannel_DW(planes, kernel_size=3, stride=stride, padding=1, groups=planes,
-                            num_experts=num_experts, activation=activation)
+        self.conv2 = DDSConv(planes, planes, kernel_size=3, stride=stride, padding=1, groups=planes, num_experts=num_experts)
         self.bn2 = nn.BatchNorm2d(planes)
         self.conv3 = nn.Conv2d(planes, out_planes, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn3 = nn.BatchNorm2d(out_planes)
@@ -39,32 +38,32 @@ class Block(nn.Module):
         return out
 
 
-class DyChannel_MobileNetV2(nn.Module):
+class DDS_MobileNetV2(nn.Module):
     # (expansion, out_planes, num_blocks, stride)
     cfg = [(1,  16, 1, 1),
-           (6,  24, 2, 2),  # NOTE: change stride to 1 for CIFAR10, to 2 for TinyImageNet
+           (6,  24, 2, 1),  # NOTE: change stride to 1 for CIFAR10, to 2 for TinyImageNet
            (6,  32, 3, 2),
            (6,  64, 4, 2),
            (6,  96, 3, 1),
            (6, 160, 3, 2),
            (6, 320, 1, 1)]
 
-    def __init__(self, num_classes=1000, num_experts=3, activation='sigmoid'):
+    def __init__(self, num_classes=200, num_experts=3):
         super().__init__()
         # NOTE: change conv1 stride 2 -> 1 for CIFAR10
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(32)
-        self.layers = self._make_layers(in_planes=32, num_experts=num_experts, activation=activation)
+        self.layers = self._make_layers(in_planes=32, num_experts=num_experts)
         self.conv2 = nn.Conv2d(320, 1280, kernel_size=1, stride=1, padding=0, bias=False)
         self.bn2 = nn.BatchNorm2d(1280)
         self.linear = nn.Linear(1280, num_classes)
 
-    def _make_layers(self, in_planes, num_experts=3, activation='sigmoid'):
+    def _make_layers(self, in_planes, num_experts):
         layers = []
         for expansion, out_planes, num_blocks, stride in self.cfg:
             strides = [stride] + [1]*(num_blocks-1)
             for stride in strides:
-                layers.append(Block(in_planes, out_planes, expansion, stride, num_experts, activation))
+                layers.append(Block(in_planes, out_planes, expansion, stride, num_experts))
                 in_planes = out_planes
         return nn.Sequential(*layers)
 
@@ -73,14 +72,14 @@ class DyChannel_MobileNetV2(nn.Module):
         out = self.layers(out)
         out = F.relu(self.bn2(self.conv2(out)))
         # NOTE: change pooling kernel_size 7 -> 4 for CIFAR10
-        out = F.avg_pool2d(out, 7)
+        out = F.avg_pool2d(out, 5)
         out = out.view(out.size(0), -1)
         out = self.linear(out)
         return out
 
 
 def test():
-    net = DyChannel_MobileNetV2()
+    net = DDS_MobileNetV2(num_classes=100)
     x = torch.randn(2,3,32,32)
     y = net(x)
     print(y.size())
