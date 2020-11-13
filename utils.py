@@ -105,6 +105,13 @@ def get_network(network, dataset, device):
             from tiny.dyresB_resnet import DyResB_ResNet18
         net = DyResB_ResNet18(num_experts=int( network[6] ))
 
+    elif network.startswith('dyresS') and network.endswith('resnet18'):
+        if dataset == 'cifar100':
+            from cifar.dyresS_resnet import DyResS_ResNet18
+        elif dataset == 'tiny':
+            from tiny.dyresS_resnet import DyResS_ResNet18
+        net = DyResS_ResNet18(num_experts=int( network[6] ))
+
     elif network.startswith('dy') and network.endswith('resnet18'):
         if dataset == 'cifar100':
             from cifar.dy_resnet import Dy_ResNet18
@@ -141,6 +148,13 @@ def get_network(network, dataset, device):
         elif dataset == 'tiny':
             from tiny.dyresB_alexnet import DyResB_AlexNet
         net = DyResB_AlexNet(num_experts=int( network[6] ))
+    
+    elif network.startswith('dyresS') and network.endswith('alexnet'):
+        if dataset == 'cifar100':
+            from cifar.dyresS_alexnet import DyResS_AlexNet
+        elif dataset == 'tiny':
+            from tiny.dyresS_alexnet import DyResS_AlexNet
+        net = DyResS_AlexNet(num_experts=int( network[6] ))
 
     elif network.startswith('dy') and network.endswith('alexnet'):
         if dataset == 'cifar100':
@@ -180,6 +194,13 @@ def get_network(network, dataset, device):
         elif dataset == 'tiny':
             from tiny.dyresB_mobilenetv2 import DyResB_MobileNetV2
         net = DyResB_MobileNetV2(num_experts=int( network[6] ))
+
+    elif network.startswith('dyresS') and network.endswith('mobilenetv2'):
+        if dataset == 'cifar100':
+            from cifar.dyresS_mobilenetv2 import DyResS_MobileNetV2
+        elif dataset == 'tiny':
+            from tiny.dyresS_mobilenetv2 import DyResS_MobileNetV2
+        net = DyResS_MobileNetV2(num_experts=int( network[6] ))
 
     elif network.startswith('dy') and network.endswith('mobilenetv2'):
         if dataset == 'cifar100':
