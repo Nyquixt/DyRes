@@ -131,7 +131,7 @@ def get_network(network, dataset, device):
             from cifar.dds_resnet import DDS_ResNet18
         elif dataset == 'tiny':
             from tiny.dds_resnet import DDS_ResNet18
-        net = DDS_ResNet18(num_experts=int( network[3] ))
+        net = DDS_ResNet18(num_experts=int( network[3] ), mode='out')
     
     # AlexNet and Related Work
 
@@ -182,7 +182,7 @@ def get_network(network, dataset, device):
             from cifar.dds_alexnet import DDS_AlexNet
         elif dataset == 'tiny':
             from tiny.dds_alexnet import DDS_AlexNet
-        net = DDS_AlexNet(num_experts=int( network[3] ))
+        net = DDS_AlexNet(num_experts=int( network[3] ), mode='out')
 
     #MobileNetV2 and Related Work    
 
@@ -223,7 +223,7 @@ def get_network(network, dataset, device):
             from tiny.dy_mobilenetv2 import Dy_MobileNetV2
         net = Dy_MobileNetV2(num_experts=int( network[2] ))
 
-    elif network.startswith('dds') and network.endswith('mobilenetv2'):
+    elif network.startswith('ddsin') and network.endswith('mobilenetv2'):
         if dataset == 'cifar100':
             from cifar.dds_mobilenetv2 import DDS_MobileNetV2
         elif dataset == 'tiny':
@@ -235,7 +235,7 @@ def get_network(network, dataset, device):
             from cifar.dds_mobilenetv2 import DDS_MobileNetV2
         elif dataset == 'tiny':
             from tiny.dds_mobilenetv2 import DDS_MobileNetV2
-        net = DDS_MobileNetV2(num_experts=int( network[3] ))
+        net = DDS_MobileNetV2(num_experts=int( network[3] ), mode='out')
         
     else:
         print('the network is not supported')
