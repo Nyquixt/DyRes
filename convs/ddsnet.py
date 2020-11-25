@@ -5,7 +5,7 @@ import torch.nn.functional as F
 __all__ = ['DDSConv']
 
 class route_func(nn.Module):
-    def __init__(self, in_channels, out_channels, num_experts=3, reduction=16):
+    def __init__(self, in_channels, out_channels, num_experts=3, reduction=16, mode='out'):
         super().__init__()
         # Global Average Pool
         self.gap1 = nn.AdaptiveAvgPool2d(1)
@@ -18,7 +18,7 @@ class route_func(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(squeeze_channels, squeeze_channels, kernel_size=3, stride=1, groups=squeeze_channels, bias=False),
             nn.ReLU(inplace=True),
-            nn.Conv2d(squeeze_channels, num_experts * out_channels, kernel_size=1, stride=1, groups=1, bias=False)
+            nn.Conv2d(squeeze_channels, num_experts * out_channels if mode=='out' else num_experts * in_channels, kernel_size=1, stride=1, groups=1, bias=False)
         )
         
         self.sigmoid = nn.Sigmoid()
@@ -33,10 +33,12 @@ class route_func(nn.Module):
         return attention
 
 class DDSConv(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, num_experts=3, stride=1, padding=0, groups=1, reduction=16, deploy=True):
+    def __init__(self, in_channels, out_channels, kernel_size, num_experts=3, stride=1, padding=0, groups=1, reduction=16, deploy=False, mode='in'):
         super().__init__()
         self.deploy = deploy
+        self.mode = mode
         self.num_experts = num_experts
+        self.in_channels = in_channels
         self.out_channels = out_channels
 
         self.stride = stride
@@ -65,22 +67,32 @@ class DDSConv(nn.Module):
             output = F.conv2d(x, weight=conv, stride=self.stride, padding=self.padding, groups=self.groups)
         else:
             outputs = []
-            for i in range(self.num_experts):
-                route = routing_weight[:, i * self.out_channels : (i+1) * self.out_channels]
-                # X * W
-                out = self.convs[i](x)
-                out = self.bns[i](out)
-                out = out * route.expand_as(out)
-                outputs.append(out)
-            output = sum(outputs)
+            if self.mode == 'out':
+                for i in range(self.num_experts):
+                    route = routing_weight[:, i * self.out_channels : (i+1) * self.out_channels]
+                    # X * W
+                    out = self.convs[i](x)
+                    out = self.bns[i](out)
+                    out = out * route.expand_as(out)
+                    outputs.append(out)
+                output = sum(outputs)
+            else:
+                for i in range(self.num_experts):
+                    route = routing_weight[:, i * self.in_channels : (i+1) * self.in_channels]
+                    attention = x * route.expand_as(x)
+                    # X * W
+                    out = self.convs[i](attention)
+                    out = self.bns[i](out)
+                    outputs.append(out)
+                output = sum(outputs)
         return output
 
 def test():
     x = torch.randn(64, 16, 32, 32)
-    conv = DDSConv(16, 64, 3, padding=1)
+    conv = DDSConv(16, 64, 3, padding=1, mode='out')
     y = conv(x)
     print(y.shape)
-    conv = DDSConv(16, 64, 3, padding=1)
+    conv = DDSConv(16, 64, 3, padding=1, mode='in')
     y = conv(x)
     print(y.shape)
 
