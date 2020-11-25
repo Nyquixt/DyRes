@@ -46,7 +46,7 @@ class DDSConv(nn.Module):
         self.groups = groups
 
         # routing function
-        self.routing_func = route_func(in_channels, out_channels, num_experts, reduction)
+        self.routing_func = route_func(in_channels, out_channels, num_experts, reduction, mode)
         # convs
         if deploy:
             self.convs = [nn.Parameter(torch.Tensor(out_channels, in_channels, kernel_size, kernel_size)) for i in range(num_experts)]
