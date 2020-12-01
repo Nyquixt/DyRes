@@ -84,7 +84,15 @@ def accuracy(output, target, topk=(1,5)):
 def get_network(network, dataset, device):
 
     # ResNet18 and Related Work
-    if network.startswith('cc') and network.endswith('resnet18'):
+    if network == 'resnet18':
+        if dataset == 'cifar100':
+            from cifar.resnet import ResNet18
+        elif dataset == 'tiny':
+            from tiny.resnet import ResNet18
+
+        net = ResNet18()
+
+    elif network.startswith('cc') and network.endswith('resnet18'):
         if dataset == 'cifar100':
             from cifar.cc_resnet import CC_ResNet18
         elif dataset == 'tiny':
@@ -135,6 +143,14 @@ def get_network(network, dataset, device):
     
     # AlexNet and Related Work
 
+    elif network == 'alexnet':
+        if dataset == 'cifar100':
+            from cifar.alexnet import AlexNet
+        elif dataset == 'tiny':
+            from tiny.alexnet import AlexNet
+
+        net = AlexNet()
+
     elif network.startswith('cc') and network.endswith('alexnet'):
         if dataset == 'cifar100':
             from cifar.cc_alexnet import CC_AlexNet
@@ -184,7 +200,15 @@ def get_network(network, dataset, device):
             from tiny.dds_alexnet import DDS_AlexNet
         net = DDS_AlexNet(num_experts=int( network[3] ), mode='out')
 
-    #MobileNetV2 and Related Work    
+    #MobileNetV2 and Related Work   
+
+    elif network == 'mobilenetv2':
+        if dataset == 'cifar100':
+            from cifar.mobilenetv2 import MobileNetV2
+        elif dataset == 'tiny':
+            from tiny.mobilenetv2 import MobileNetV2
+
+        net = MobileNetV2()
 
     elif network.startswith('cc') and network.endswith('mobilenetv2'):
         if dataset == 'cifar100':
